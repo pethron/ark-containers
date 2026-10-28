@@ -1,6 +1,6 @@
-# ARK: Docker
+# ARK: Containers
 
-**ARK — Architecture, Runbook, Katas.** A complete Docker course where every topic is split into three independent tracks. Pick the one you need, or follow all three.
+**ARK — Architecture, Runbook, Katas.** A complete course on Linux containers, covering both **Docker** and **containerd**. Every topic is split into three independent tracks. Pick the one you need, or follow all three.
 
 | | Track | For whom | What you get |
 |---|-------|----------|--------------|
@@ -13,7 +13,7 @@
 | # | Module | A | R | K |
 |---|--------|---|---|---|
 | 01 | Foundations | [Architecture](01-foundations/A-architecture.md) | [Runbook](01-foundations/R-runbook.md) | [Katas](01-foundations/K-katas/) |
-| 02 | Dockerfile and images | [Architecture](02-dockerfile-and-images/A-architecture.md) | [Runbook](02-dockerfile-and-images/R-runbook.md) | [Katas](02-dockerfile-and-images/K-katas/) |
+| 02 | Images and builds | [Architecture](02-images-and-builds/A-architecture.md) | [Runbook](02-images-and-builds/R-runbook.md) | [Katas](02-images-and-builds/K-katas/) |
 | 03 | Networking and Compose | [Architecture](03-networking-and-compose/A-architecture.md) | [Runbook](03-networking-and-compose/R-runbook.md) | [Katas](03-networking-and-compose/K-katas/) |
 | 04 | Production and troubleshooting | [Architecture](04-production-and-troubleshooting/A-architecture.md) | [Runbook](04-production-and-troubleshooting/R-runbook.md) | [Katas](04-production-and-troubleshooting/K-katas/) |
 
