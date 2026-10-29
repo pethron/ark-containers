@@ -9,7 +9,7 @@ You have an application to deploy, and someone asks whether it should run in a v
 
 Slow down a minute. Lighter is useful, but it doesn't tell us which kernel the application needs, who we trust to run code, or what happens when something goes wrong.
 
-In this chapter, we'll compare the two models using those questions. We won't configure the security mechanisms yet; the goal is to make a sensible deployment choice before getting lost in flags.
+Let's use those questions to compare the two. By the end, you should be able to explain why you'd choose one, the other, or both for an application. We'll leave the security flags for later.
 
 ## Where does the kernel live?
 
@@ -40,7 +40,7 @@ A useful starting comparison is:
 | What does starting normally involve? | Booting or resuming a guest, then starting the application | Preparing isolation and starting the application's processes |
 | Can different kernels coexist? | Yes, in separate guests | Not within an ordinary shared-kernel container host |
 
-Notice that neither column says "perfect security." They describe where the boundary is implemented, which tells us what we need to protect and what a failure might affect.
+Notice that neither column says "perfect security." The useful question is where the separation comes from: once we know that, we can ask what happens if that part fails.
 
 ## If something breaks inside
 
@@ -54,7 +54,7 @@ That is why ordinary containers are generally not the first boundary I would cho
 
 Configuration can weaken either model. A container given broad privileges, sensitive host mounts, or access to the Docker socket may gain control over the host without needing a kernel vulnerability at all.
 
-**Isolation is a property of the whole configuration, not a label attached to the workload.** We'll return to rootless execution, capabilities, seccomp, and sandboxed runtimes in [module 10](../10-security/README.md).
+So when someone tells you that an application is safe because it's "in a container," ask how that container is configured. We'll work through those choices in [module 08](../08-security/README.md), including rootless execution, capabilities and syscall filtering.
 
 ## If something uses all the memory
 
@@ -74,7 +74,7 @@ But "containers start instantly" is not a useful performance requirement. Pullin
 
 The same applies to density. If the application needs most of the machine's memory, packaging it differently will not create more memory, and adding strict security or networking layers can introduce costs of its own.
 
-For a fair comparison, measure the workload you actually care about: image or disk availability, initialization time, steady-state resource usage, and the controls you need. Don't compare the startup of an empty container with a full VM running a collection of unrelated services.
+In my opinion, a useful comparison starts with the application you actually need to run. Is its image already available? How long does it take to initialize, and how much memory does it need once it's ready? An empty container starting faster than a VM full of services doesn't tell us much about that.
 
 ## Different hosts can still mean different behavior
 
@@ -98,7 +98,7 @@ And very often the answer is **both**. A cloud VM gives you a Linux host and a v
 
 VMs separate machines and kernels; containers separate application environments and processes using a shared kernel. That leads to different overheads, compatibility requirements, and failure boundaries, rather than a universal winner.
 
-**Choose the boundary for the workload and the threat model, then choose the workflow for delivering the application.**
+For our little HTTP service, containers are a reasonable starting point. Change the requirement to running untrusted programs or needing another kernel, and the answer changes. That's why "which is better?" is less useful than "what do I need to separate?"
 
 ## Return to the application
 
@@ -108,6 +108,6 @@ The first exercise let you run two differently configured instances. Before chec
 - If one instance needs a different Linux kernel, what changes?
 - Would you use the same isolation arrangement to run arbitrary programs uploaded by strangers? Which risk changes your answer?
 
-Compare your reasoning with a peer if you can. If you're working alone, write down the boundary you are relying on and one failure it does not contain, then check it against the earlier sections.
+If you're working with someone, compare your choices. Otherwise, try naming one thing your chosen setup keeps separate and one failure it doesn't protect against, then check your answer against the chapter.
 
-You now have a working example and a reason to investigate its internals. In [module 02](../02-linux-primitives/README.md), we'll revisit what the process can see and how the host controls it. The optional [containerd installation](02-installing-docker-and-containerd.md#optional-add-nerdctl-to-the-linux-lab) is available when you are ready for a second runtime path; it is not required to complete this module.
+That's the end of our first module. To do more with the application, continue to [running containers](../02-running-containers/README.md). If you're curious about how the isolation works first, [Linux primitives](../advanced/linux-primitives/README.md) is the deep dive. You can keep using Docker in either case.

@@ -5,13 +5,11 @@ track: architecture
 
 # A short history of isolation: chroot to OCI
 
-The first application exercise used Docker, a prepared Python image, and a launch command. Which parts of that experience depend on Docker itself, and which come from the operating system?
-
-If containers are processes using features of the operating system, why did everyone start talking about them when Docker appeared? Did those features arrive all at once in 2013?
+In our application exercise, Docker did quite a bit of work for one command. It prepared a filesystem, started the process, and connected a port so we could reach it. Did Docker invent all of that, or was it putting existing pieces together?
 
 Not quite. The idea of giving a process a restricted environment is much older, and several operating systems developed their own versions of it. Docker's contribution was to make packaging, sharing, and running applications fit into a workflow that developers could actually use every day.
 
-Let's follow the useful parts of that history. We won't list every project or kernel release; the goal is to understand what each step added, not to memorize dates.
+Let's follow that history far enough to see where the pieces came from. You don't need to memorize the dates; pay attention to what each step could separate, and what it still shared.
 
 ## Start with the filesystem: chroot
 
@@ -23,7 +21,7 @@ That is useful when you want to test software against a different set of files, 
 
 Beware, though, **chroot is not a complete isolation or security boundary**. It does not create a separate process list, network stack, or resource budget, and it does not automatically close file descriptors that already refer outside the new root. A sufficiently privileged process can escape it in circumstances that a proper sandbox must prevent.
 
-So a different root directory is one useful ingredient, not a container by itself. That distinction matters because a surprisingly convincing-looking environment can still share almost everything with the host.
+So we have a different root directory, but not a container yet. The files might look different from inside the box while almost everything else is still shared with the host.
 
 ## More than a directory: jails and zones
 
@@ -52,7 +50,7 @@ The distinction between these mechanisms is worth keeping:
 - **Namespaces** change which resources a process can see and interact with.
 - **Cgroups** account for and control its use of resources.
 
-Neither one automatically provides every protection an application needs. Capabilities, syscall filtering, filesystem permissions, and security modules also contribute to the result. We'll build this bottom-up in [module 02](../02-linux-primitives/README.md), where the names will become something you can inspect yourself.
+Neither one automatically provides every protection an application needs. Capabilities, syscall filtering, filesystem permissions, and security modules also contribute to the result. The core security module will help you choose those protections. For the kernel mechanisms behind them, the optional [Linux primitives deep dive](../advanced/linux-primitives/README.md) lets you inspect what each boundary actually changes.
 
 ## LXC makes the pieces usable
 
@@ -92,13 +90,13 @@ These are contracts, not an operating system or a guarantee that every image run
 
 **runc** is a low-level implementation of the OCI runtime specification. **containerd** is a service that manages concerns such as image content and container execution, using a low-level runtime to create the container processes.
 
-Docker Engine uses containerd as part of its implementation, but containerd can also be used without Docker Engine. In this course, `nerdctl` will give us a familiar command-line interface for that second path, and `ctr` will help us inspect the lower-level machinery later.
+Docker Engine uses containerd internally, so using Docker doesn't mean containerd is absent: Docker is managing that part for us. We'll follow those steps in the runtime architecture module. If you want to use containerd directly after that, there will be a separate advanced lab; for now, keep using Docker.
 
 ## Recap
 
 So, to sum up: chroot restricted filesystem path lookup; jails and zones offered broader shared-kernel environments; Linux added mechanisms that tools such as LXC could combine. Docker built a widely usable application workflow around containers, and OCI defined contracts that different implementations could share.
 
-**A modern container is the result of several mechanisms and tools working together, not a feature invented by one product.** Look back at the launch command: which argument selects the packaged runtime, and which part of the running system must still come from the Linux host?
+The useful distinction is that Docker gives us the workflow, while several Linux mechanisms make the isolation possible. Look back at the launch command: which argument selects the image containing Python, and which part of the running system must still come from the Linux host?
 
 The [next chapter](06-virtual-machines-vs-containers.md) compares that shared-kernel model with a VM's separate-kernel model and helps you decide when to choose each.
 

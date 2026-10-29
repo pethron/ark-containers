@@ -1,11 +1,18 @@
 # ARK: Containers
 
-A complete course on Linux containers, covering both **Docker** and **containerd**.
+A course on Linux containers, using **Docker** throughout the main learning path.
+We'll also explain the components underneath it, including containerd; using
+containerd directly is reserved for optional advanced labs.
 
 ## Website preview
 
 The [public preview](https://pethron.github.io/ark-containers/) currently contains
 the first module. It is work in progress, not the completed course.
+
+Module 01 has completed its first editorial review. Modules 02–03 and the
+optional Under the hood deep dives remain drafts, with their labs and katas.
+The local build includes all of them. Core modules 04–09 are in preparation. The live
+preview changes only after an explicit manual publication.
 
 The site uses Zensical and GitHub Pages from this repository only. Existing
 chapter Markdown is staged automatically during the build; do not edit the
@@ -32,9 +39,9 @@ The course is a sequence of modules, and each module is a sequence of chapters. 
 
 | | Track | For whom | What you get |
 |---|-------|----------|--------------|
-| **A** | **Architecture** — *Deep Dive* | You want to understand what happens under the hood | Kernel namespaces, cgroups, OverlayFS, networking internals, OCI. No shortcuts. |
-| **R** | **Runbook** — *Fast Track* | You already work with it, or you are in a hurry | Clean syntax, commented CLI flags, minimal ready-to-use configs. |
-| **K** | **Katas** — *Hands-On* | You learn by doing | Exercises of increasing difficulty: broken setups to fix, apps to containerize. |
+| **A** | **Architecture** (*Deep Dive*) | You want to understand what happens under the hood | Kernel namespaces, cgroups, OverlayFS, networking internals, OCI. No shortcuts. |
+| **R** | **Runbook** (*Fast Track*) | You already work with it, or you are in a hurry | Clean syntax, commented CLI flags, minimal ready-to-use configs. |
+| **K** | **Katas** (*Hands-On*) | You learn by doing | Exercises of increasing difficulty: broken setups to fix, apps to containerize. |
 
 These are complementary views, not an obligatory A → R → K sequence. The guided
 path starts with a small working application, then returns to its mechanisms,
@@ -46,43 +53,49 @@ Expect to predict outcomes, make controlled mistakes, inspect evidence, and adap
 examples to a changed requirement. Technical depth remains part of the course,
 but is not an admission requirement for the first useful result.
 
-## Modules
+## Core course
 
-Start with **module 01**, including the supplied application in its third
-chapter.
+Follow modules **01 → 09** in order: run a service, operate it, package and
+connect it, then harden it and recover from incidents. Start with module 01,
+including the supplied application in its third chapter.
 
-The draft guided route is **01 → 04 → 05 → 06 → 07 → 08 → 09 → 02 → 03 →
-10 → 11**: use and deliver a working system, then reconstruct its mechanisms,
-then harden and operate it. The existing numbers identify topics, not a required
-reading order.
-
-You can also choose the next question:
-
-- **How does it work underneath?** Continue with modules 02–03, using the
-  application experience as context.
-- **How do I do more with it?** Continue with module 04, then images, builds,
-  storage, networking and Compose; then return to modules 02–03 for the mechanisms
-  before security and production.
-
-Module numbers group topics; they do not require completing every Architecture
-chapter before doing practical work. Later module content is still being
-developed; its exercises will revisit earlier ideas with less guidance.
+The core includes the theory needed to explain observations and justify
+decisions, not just commands to copy. You don't need the optional deep dives
+to complete the course or its final project. Module 01 is reviewed; modules
+02–03 and the optional deep dives are drafts. Core
+modules 04–09 are still in preparation.
 
 | # | Module |
 |---|--------|
 | 01 | [Why containers](01-why-containers/) |
-| 02 | [Linux primitives](02-linux-primitives/) |
-| 03 | [Runtime architecture](03-runtime-architecture/) |
-| 04 | [Running containers](04-running-containers/) |
-| 05 | [Images and registries](05-images-and-registries/) |
-| 06 | [Building images](06-building-images/) |
-| 07 | [Storage](07-storage/) |
-| 08 | [Networking](08-networking/) |
-| 09 | [Compose](09-compose/) |
-| 10 | [Security](10-security/) |
-| 11 | [Production and troubleshooting](11-production-and-troubleshooting/) |
+| 02 | [Running containers](02-running-containers/) |
+| 03 | [Images and registries](03-images-and-registries/) |
+| 04 | [Building images](04-building-images/) |
+| 05 | [Storage](05-storage/) |
+| 06 | [Networking](06-networking/) |
+| 07 | [Compose](07-compose/) |
+| 08 | [Security](08-security/) |
+| 09 | [Production and troubleshooting](09-production-and-troubleshooting/) |
+
+## Under the hood: optional advanced deep dives
+
+Want to understand how Linux and the runtime arrange those boundaries?
+[Under the hood](advanced/README.md) connects advanced explanations and
+experiments to the same application:
+
+- [Linux primitives](advanced/linux-primitives/README.md): processes,
+  namespaces, cgroups, credentials and filesystems.
+- [Runtime architecture](advanced/runtime-architecture/README.md): Docker
+  Engine, containerd, shims, OCI and the wider ecosystem.
+
+These are not numbered steps in the core course. Open them when a mechanism
+interests you, then return to the application with a prediction or observation
+to check. Linux VM prerequisites apply only to the experiments that name them.
 
 ## Layout
+
+Numbered directories contain the core course. Optional deep dives live under
+`advanced/`, with the same chapter, image and kata layout:
 
 ```
 NN-module/

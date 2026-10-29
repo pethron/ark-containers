@@ -71,9 +71,9 @@ There's a catch, though. The box contains everything above the kernel, but not t
 
 ## Common misconceptions
 
-The most common one I hear is that **a container is a lightweight virtual machine**. It's not, and it's worth getting this right from day one. A virtual machine emulates hardware and boots its own kernel; a container is a process on the host kernel that can only see a part of the system. In module 02, you'll build one by hand without Docker at all, and it will be much clearer.
+The most common one I hear is that **a container is a lightweight virtual machine**. It's not, and it's worth getting this right from day one. A virtual machine emulates hardware and boots its own kernel; a container is a process on the host kernel that can only see a part of the system. If you want to inspect those mechanisms yourself, the optional [Linux primitives deep dive](../advanced/linux-primitives/README.md) includes a deliberately limited manual sandbox. You don't need it to continue the course.
 
-Another one is that **containers are Docker**. Docker made containers popular, but it didn't invent them, and today it's one tool among many. In this course, we'll run the same containers with both **Docker** and **containerd**.
+Another one is that **containers are Docker**. Docker made containers popular, but it didn't invent them, and today it's one tool among many. We'll use Docker throughout the main course, then look underneath it to understand which parts of the work it handles for us.
 
 The last one is that **with containers, you don't have to care about the environment anymore**. You still do, but you describe it once, in a file that lives next to your code and is versioned with it. And that's a lot better than a wiki page nobody updates.
 
@@ -81,4 +81,4 @@ The last one is that **with containers, you don't have to care about the environ
 
 So, to sum up: your application is your code plus its environment, and environments tend to drift apart from machine to machine. Containers solve this by putting the application and its environment in the same box, a box with a standard format that can run anywhere. Under the hood, **a container is just a packaged and isolated process that shares the kernel with the host**.
 
-Next, [set up one Docker environment](02-installing-docker-and-containerd.md), then [run your first application](03-your-first-application.md). You don't need to understand every part of the configuration before trying it; we'll use the result to give those details a purpose.
+Next, [set up one Docker environment](02-installing-docker.md), then [run your first application](03-your-first-application.md). You don't need to understand every part of the configuration before trying it; we'll use the result to give those details a purpose.
