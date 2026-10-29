@@ -2,6 +2,30 @@
 
 A complete course on Linux containers, covering both **Docker** and **containerd**.
 
+## Website preview
+
+The [public preview](https://pethron.github.io/ark-containers/) currently contains
+the first module. It is work in progress, not the completed course.
+
+The site uses Zensical and GitHub Pages from this repository only. Existing
+chapter Markdown is staged automatically during the build; do not edit the
+generated `.site-docs/` or `site/` directories.
+
+```bash
+uv run scripts/build_site.py
+uv run --no-project python -m http.server 8000 --bind 127.0.0.1 --directory site
+```
+
+Open `http://127.0.0.1:8000/` for the local build. The build inserts and verifies
+`noindex, nofollow` on every generated HTML page, including the error page.
+This asks compliant crawlers not to index the preview; it is not privacy or
+authentication. Use this build script rather than deploying raw Zensical output.
+
+Publication is manual: run **Publish course preview** from GitHub Actions after
+pushing reviewed changes. Pushes alone do not deploy. GitHub Pages must use
+**GitHub Actions** as its source. Before a production launch, remove the preview
+indexing policy intentionally and verify the resulting HTML.
+
 ## How the course is built: ARK
 
 The course is a sequence of modules, and each module is a sequence of chapters. Every chapter belongs to one of three tracks, **ARK**:
@@ -12,11 +36,37 @@ The course is a sequence of modules, and each module is a sequence of chapters. 
 | **R** | **Runbook** — *Fast Track* | You already work with it, or you are in a hurry | Clean syntax, commented CLI flags, minimal ready-to-use configs. |
 | **K** | **Katas** — *Hands-On* | You learn by doing | Exercises of increasing difficulty: broken setups to fix, apps to containerize. |
 
-Read everything in order, or follow only the track you need: each module's README marks the track of every chapter.
+These are complementary views, not an obligatory A → R → K sequence. The guided
+path starts with a small working application, then returns to its mechanisms,
+trade-offs and harder variations. Each module's README connects the chapters
+and marks their tracks; reference readers can still go directly to the material
+they need.
+
+Expect to predict outcomes, make controlled mistakes, inspect evidence, and adapt
+examples to a changed requirement. Technical depth remains part of the course,
+but is not an admission requirement for the first useful result.
 
 ## Modules
 
-Flow: **why → under the hood → use → build → connect → secure → operate**. Modules 01–03 are mostly Architecture; jump to 04 if you only need the Runbook.
+Start with **module 01**, including the supplied application in its third
+chapter.
+
+The draft guided route is **01 → 04 → 05 → 06 → 07 → 08 → 09 → 02 → 03 →
+10 → 11**: use and deliver a working system, then reconstruct its mechanisms,
+then harden and operate it. The existing numbers identify topics, not a required
+reading order.
+
+You can also choose the next question:
+
+- **How does it work underneath?** Continue with modules 02–03, using the
+  application experience as context.
+- **How do I do more with it?** Continue with module 04, then images, builds,
+  storage, networking and Compose; then return to modules 02–03 for the mechanisms
+  before security and production.
+
+Module numbers group topics; they do not require completing every Architecture
+chapter before doing practical work. Later module content is still being
+developed; its exercises will revisit earlier ideas with less guidance.
 
 | # | Module |
 |---|--------|
@@ -47,7 +97,10 @@ NN-module/
 ```
 ## Credits
 
-<!-- List the sources this course drew inspiration from. -->
+The teaching approach is inspired by
+[fast.ai's teaching philosophy](https://www.fast.ai/posts/2016-10-08-teaching-philosophy.html)
+and its discussion of David Perkins's *Making Learning Whole*: start with a
+manageable whole task, investigate its parts, and return to meaningful work.
 
 ## License
 
