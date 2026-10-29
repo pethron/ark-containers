@@ -1,0 +1,35 @@
+[project]
+site_name = "ARK: Containers — Preview"
+site_description = "A work-in-progress Docker and Linux containers course: working applications, technical deep dives, and practical exercises."
+site_url = "https://pethron.github.io/ark-containers/"
+repo_url = "https://github.com/pethron/ark-containers"
+docs_dir = ".site-docs"
+site_dir = "site"
+nav = [
+  { "Start here" = "index.md" },
+  { "Why containers" = [
+    { "Overview" = "01-why-containers/README.md" },
+    { "The problem containers solve" = "01-why-containers/01-the-problem-containers-solve.md" },
+    { "Installation" = "01-why-containers/02-installing-docker-and-containerd.md" },
+    { "Your first application" = "01-why-containers/03-your-first-application.md" },
+    { "Physical servers and virtual machines" = "01-why-containers/04-from-physical-servers-to-virtual-machines.md" },
+    { "A short history of isolation" = "01-why-containers/05-a-short-history-of-isolation-chroot-to-oci.md" },
+    { "Virtual machines vs containers" = "01-why-containers/06-virtual-machines-vs-containers.md" },
+    { "Example files" = "01-why-containers/first-app/README.md" },
+  ] },
+]
+
+[project.theme]
+language = "en"
+features = ["navigation.footer", "content.code.copy"]
+font = false
+
+[project.markdown_extensions]
+attr_list = {}
+md_in_html = {}
+"pymdownx.details" = {}
+"pymdownx.superfences" = {}
+"pymdownx.highlight" = {}
+
+[project.markdown_extensions.toc]
+permalink = true
