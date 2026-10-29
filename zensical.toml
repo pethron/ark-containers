@@ -21,14 +21,12 @@ nav = [
     ] },
     { "02: Running containers" = [
       { "Overview" = "02-running-containers/README.md" },
-      { "Observe a running service" = "02-running-containers/01-observe-a-running-service.md" },
-      { "Lifecycle and states" = "02-running-containers/02-container-lifecycle-and-states.md" },
-      { "Configure and replace" = "02-running-containers/03-configure-and-replace.md" },
-      { "Stopping a service" = "02-running-containers/04-pid-1-and-signals.md" },
-      { "Limits and restart policies" = "02-running-containers/05-limits-and-restart-policies.md" },
-      { "Resource usage and failure" = "02-running-containers/06-resource-usage-and-failure.md" },
-      { "Supplied service" = "02-running-containers/service/README.md" },
-      { "Kata: next-shift handover" = "02-running-containers/katas/README.md" },
+      { "Pick up the service" = "02-running-containers/01-pick-up-the-service.md" },
+      { "Inside the running container" = "02-running-containers/02-inside-the-running-container.md" },
+      { "Restarting isn't replacing" = "02-running-containers/03-restarting-isnt-replacing.md" },
+      { "Stopping a service" = "02-running-containers/04-stopping-a-service.md" },
+      { "Choose the fix" = "02-running-containers/05-choose-the-fix.md" },
+      { "Kata: a repeatable service change" = "02-running-containers/katas/README.md" },
     ] },
     { "03: Images and registries" = [
       { "Overview" = "03-images-and-registries/README.md" },
@@ -57,6 +55,7 @@ nav = [
       { "Capabilities, seccomp and LSMs" = "advanced/linux-primitives/04-capabilities-seccomp-and-lsms.md" },
       { "Root filesystems" = "advanced/linux-primitives/05-root-filesystems-chroot-and-pivot-root.md" },
       { "Inspecting boundaries" = "advanced/linux-primitives/06-inspecting-namespaces-and-cgroups.md" },
+      { "Optional: application shutdown" = "advanced/linux-primitives/shutdown-service/README.md" },
       { "Katas: review and manual sandbox" = "advanced/linux-primitives/katas/README.md" },
     ] },
     { "Runtime architecture" = [
