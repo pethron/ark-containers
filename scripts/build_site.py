@@ -23,7 +23,11 @@ def main() -> None:
         if not module.is_dir():
             continue
         destination = DOCS / module.name
-        if module.name == "01-why-containers":
+        if module.name in {
+            "01-why-containers",
+            "02-running-containers",
+            "03-images-and-registries",
+        }:
             shutil.copytree(
                 module,
                 destination,
@@ -37,6 +41,12 @@ def main() -> None:
                 "[Return to the first module](../01-why-containers/README.md).\n",
                 encoding="utf-8",
             )
+
+    shutil.copytree(
+        ROOT / "advanced",
+        DOCS / "advanced",
+        ignore=shutil.ignore_patterns("__pycache__", ".*"),
+    )
 
     subprocess.run(["zensical", "build", "--clean"], cwd=ROOT, check=True)
     pages = sorted(SITE.rglob("*.html"))
