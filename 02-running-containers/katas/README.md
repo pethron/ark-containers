@@ -1,65 +1,84 @@
-# A service for the next shift
+# A service change someone else can repeat
 
-The demonstration has become a small internal service. Your colleague will
-operate it tomorrow, and you won't be there to explain which commands are
-safe. Prepare a handover that survives a configuration mistake.
+A team has adopted your message service for a small status page. They want
+to change its message without depending on you to remember what was typed
+last time. Your job is to make the change, verify it, and leave a procedure
+another person can use.
 
-Complete the module walkthrough first. Use Bash or PowerShell 7, Linux containers and the
-course root. Reserve only `ark-shift-bad` and `ark-shift`; check that the names
-and your chosen loopback port are free. Use the supplied
-[operations wrapper](../service/README.md), a read-only course mount and a
-loopback port. Use the paired launch commands as your reference.
+Choose the audience for the page and two useful messages: the current one and
+its replacement. Use the original [application](../../01-why-containers/first-app/README.md),
+Linux containers and a terminal in `01-why-containers/first-app`. You can refer to the
+[paired launch commands](../01-pick-up-the-service.md#start-from-a-known-result),
+but plan the sequence before executing it.
 
-## 1. Diagnose before replacing
+## The change request
 
-Launch an instance called `ark-shift-bad` with
-`SHUTDOWN_MODE=automatic`. You are not expected to repair the Python code.
-Find it in `docker ps -a`, read its logs and explain why it stopped.
+Use only a container named `ark-change` and a free loopback port other than
+8082. Check that the name is unused; don't remove someone else's container
+to make it available.
 
-Write the next action before changing anything. Demonstrate that restarting
-the same bad object doesn't replace its configuration, then remove only that
-stopped fixture.
+Your procedure must satisfy these conditions:
 
-## 2. A new operating requirement
+- The original service returns your first message and a successful `/health`.
+- You open an interactive shell alongside the server, identify the main
+  process and create `/tmp/change-note` outside the read-only application mount.
+  Leaving that shell doesn't stop HTTP; stopping the container from a second
+  host terminal while a new shell is open ends that session too.
+- The note is still readable after starting the same container again.
+- A replacement on the same host port returns your second message. The old
+  note is absent, while the host's source files are unchanged.
+- You can stop the replacement, verify that it is `Exited`, read its request
+  logs, start it again and get the second message back. Don't require a
+  shutdown-complete log: this application doesn't produce one.
 
-Your colleague needs a message identifying their shift, a host port other
-than 8082, and a working stop/start procedure. Create
-`ark-shift` with a valid configuration and satisfy those requirements.
+The page can be unavailable during the change. Zero-downtime replacement,
+volumes, image builds and Python edits are outside this task.
 
-Check `/` and `/health`, and write down which result would make you reject the
-deployment. Then stop it, check the shutdown log, start it again and verify
-the response. Include both Bash and PowerShell launch variants in the handover.
+## Before you launch the replacement
+
+Write down which actions keep the existing container and which create a new
+one, and predict what will happen when the extra shell or the main process
+ends. Compare those predictions with the shell and HTTP observations before
+moving on to replacement. The note should survive a stop/start but disappear
+in the replacement; that missing file is a required result here, not something
+to repair.
+
+## Leave a usable procedure
+
+Include the launch command, the order of the change, checks with expected
+results and the named cleanup. Use your chosen
+shell for the procedure and link the paired reference for someone using the
+other shell.
+
+Also explain what you'd change if the note were valuable application data.
+You don't need to implement that storage solution yet. The important part
+is recognizing when replacement would throw away something you need.
 
 <details>
-<summary>The setting changed, but the result didn't</summary>
+<summary>Hint: the name stayed the same, but the note disappeared</summary>
 
-Compare the environment stored in the container with your launch procedure.
-A new shell variable and `docker restart` do not recreate the container.
-Check the image/command boundary when placing `-e`.
+A name identifies a container; reusing the name doesn't restore the previous
+instance's files. Compare stop/start with remove/run.
 
 </details>
 
 <details>
-<summary>It stopped, but was it clean?</summary>
+<summary>Hint: the new message didn't appear</summary>
 
-Look for the supplied wrapper's shutdown-complete log. Merely disappearing
-from the running list doesn't tell you what the application did before exiting.
+Compare the launch you intended with the container you actually started.
+Restarting an old instance doesn't apply a newly edited `-e MESSAGE` option.
 
 </details>
 
-## 3. Leave an explanation, not a command dump
+<details>
+<summary>Hint: the new container won't start</summary>
 
-Your handover should answer:
+Read the error before changing anything. Is the old container still holding
+the name or port, or is the source file missing from your current directory? Docker's launch
+error and the application's logs answer different questions.
 
-- Which command checks user-visible behavior rather than process existence?
-- What survives restart, and what disappears on replacement?
-- What evidence explains the bad configuration?
-- Which restart policy fits this service, and what can't it repair?
-- Which resources does the reset remove, and which remain?
+</details>
 
-The optional OOM, forced-stop and retry fixtures are not required here.
-No host configuration or daemon restart is part of this kata.
-
-Ask a colleague to follow the handover, or return in a fresh terminal the next
-day and use only your notes. Stop and remove only the two named kata containers
-that you created. The images and source files remain.
+Ask someone to follow your procedure, or try it yourself in a fresh terminal
+using only your notes. Remove only the `ark-change` you created when finished.
+No signal-handling code or host/daemon reconfiguration is part of this kata.

@@ -23,13 +23,13 @@ There's no requirement to finish both before returning to the core course.
 
 ## Follow a question from the core
 
-- After [resource failure diagnosis](../02-running-containers/06-resource-usage-and-failure.md),
+- For resource failure diagnosis in module 09 (in preparation),
   read [cgroups v2](linux-primitives/03-cgroups-v2.md) for enforcement details,
   then compare a chosen budget with the service's actual settings.
 - After [image identity](../03-images-and-registries/03-digests-manifests-and-multi-arch-images.md),
   read [OCI image contracts](runtime-architecture/04-oci-image-and-distribution-specs.md)
   for the content graph, then identify the objects in your handover.
-- After [observing the service](../02-running-containers/01-observe-a-running-service.md),
+- After [observing the service](../02-running-containers/01-pick-up-the-service.md),
   follow [the Engine request path](runtime-architecture/01-the-docker-engine.md)
   if you want to understand which component owns each step.
 

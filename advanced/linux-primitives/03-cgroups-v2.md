@@ -109,7 +109,7 @@ alone wouldn't have imposed any of those budgets.
 
 ## Before moving on
 
-If you came from the core [resource-failure chapter](../../02-running-containers/06-resource-usage-and-failure.md),
+When investigating resource failures in module 09 (in preparation),
 return to its OOM and explicit-kill comparison. Which additional accounting
 would help you distinguish memory pressure from a shutdown timeout in a real
 service? Don't repeat a memory-exhaustion experiment without its small limits.
