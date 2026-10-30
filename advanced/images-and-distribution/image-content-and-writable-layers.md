@@ -5,7 +5,8 @@ track: architecture
 
 # Image content and writable layers
 
-You gave one image a second tag, saved it, and loaded it without installing
+After the [local image handover](../../03-images-and-registries/README.md),
+you gave one image a second tag, saved it, and loaded it without installing
 Python again. What exactly was in that archive? Not a running machine and not
 just one executable: it carried filesystem content plus configuration describing
 how that content can be used.
@@ -36,10 +37,9 @@ runtime choices can override several of these values.
 
 Image history can help explain how content was built:
 
-```bash
+```text
 docker image history --no-trunc docker.io/library/python:3.12-alpine
-docker image inspect docker.io/library/python:3.12-alpine --format \
-  'user={{json .Config.User}} command={{json .Config.Cmd}} layers={{json .RootFS.Layers}}'
+docker image inspect docker.io/library/python:3.12-alpine --format 'user={{json .Config.User}} command={{json .Config.Cmd}} layers={{json .RootFS.Layers}}'
 ```
 
 These are read-only inspections. History isn't a complete trustworthy build
@@ -73,10 +73,13 @@ engine's database or layer directories.
 Check that `ark-layer-note` is a free container name. This finite
 command writes a single small file; keep the stopped object for inspection:
 
-```bash
-docker run --name ark-layer-note \
-  docker.io/library/python:3.12-alpine python -c \
-  'from pathlib import Path; Path("/tmp/ark-layer-note").write_text("one instance\n")'
+```text
+docker run --name ark-layer-note --pull never python:3.12-alpine sh -c 'echo one-instance > /tmp/ark-layer-note'
+```
+
+Then inspect the changes and compare the image ID:
+
+```text
 docker diff ark-layer-note
 docker image inspect docker.io/library/python:3.12-alpine --format '{{.Id}}'
 ```
@@ -90,9 +93,9 @@ the note: its previous writable layer wasn't a new image layer. Module 05
 will give intentional data a separate persistence plan.
 
 For how mounts and root paths are assembled, see the optional
-[root filesystem deep dive](../advanced/linux-primitives/05-root-filesystems-chroot-and-pivot-root.md).
+[root filesystem deep dive](../linux-primitives/05-root-filesystems-chroot-and-pivot-root.md).
 The main decision is already available: image content is an input, container
 writes are instance state, and mounted data has its own lifecycle.
 
-Next, [tags, digests and manifests](03-digests-manifests-and-multi-arch-images.md)
+Next, [tags, digests and manifests](digests-manifests-and-multi-arch-images.md)
 explain which of those inputs a name actually identifies.

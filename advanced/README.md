@@ -15,6 +15,7 @@ we go further into implementation and kernel behavior.
 |-----------|---------------------------|---------------------------|
 | [Linux primitives](linux-primitives/README.md) | Two services have different process and port views but share a kernel | Inspect their actual boundaries, budgets and permissions |
 | [Runtime architecture](runtime-architecture/README.md) | A Docker request creates an object, then starts a process | Distinguish client, runtime-start and application failures |
+| [Images and distribution](images-and-distribution/README.md) | One image has several names, and a local archive restores it | Choose a versioning strategy and understand distributed content identity |
 
 Start with the [first application](../01-why-containers/03-your-first-application.md)
 before either deep dive. The Linux primitives chapters provide useful background
@@ -26,7 +27,7 @@ There's no requirement to finish both before returning to the core course.
 - For resource failure diagnosis in module 09 (in preparation),
   read [cgroups v2](linux-primitives/03-cgroups-v2.md) for enforcement details,
   then compare a chosen budget with the service's actual settings.
-- After [image identity](../03-images-and-registries/03-digests-manifests-and-multi-arch-images.md),
+- After [image identity](../03-images-and-registries/05-choose-the-reference-to-hand-over.md),
   read [OCI image contracts](runtime-architecture/04-oci-image-and-distribution-specs.md)
   for the content graph, then identify the objects in your handover.
 - After [observing the service](../02-running-containers/01-pick-up-the-service.md),

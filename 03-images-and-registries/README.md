@@ -1,43 +1,51 @@
 # 03: Images and registries
 
-Your colleague needs the same runtime artifact you tested, not whatever a tag
-points to tomorrow. Start by identifying and transferring the current Python
-image, then follow that content through layers, digests and a loopback registry.
+Your message service is running, and a colleague would like to try it too.
+What should you send them? So far, we've brought together an image that
+supplies Python and a file on your computer that supplies the application.
+Let's follow the image through a local handover so we can explain what
+it gives our colleague and what they need alongside it.
 
-The application still comes from a source mount. This module makes delivery
-identity explicit; module 04 packages the code into our own image.
+We'll use the image already downloaded for the first service, inspect it,
+give it a handover name and save it to an archive. After loading that archive
+back into Docker, we'll run the familiar service and compare the results.
+You can complete the whole path locally; publication is an optional next
+experiment, and building an image containing our code comes in module 04.
 
 ## What you will learn
 
-- Layers, union mounts and OverlayFS
-- Content addressing: digests, manifests, multi-arch indexes
-- Tags vs digests; how registries distribute images
+- Find the image used by a container
+- Read repository names and tags and find the publisher's versioning conventions
+- Explain how image files, defaults and layers provide a container's starting point
+- Save and load an image locally, checking identity and platform
+- Explain when a registry is useful for distributing images
 
 ## Chapters
 
 | # | Chapter | Track |
 |---|---------|-------|
-| 01 | [Identify and transfer an image](01-identify-and-transfer-an-image.md) | R |
-| 02 | [Image content and writable layers](02-image-content-and-layers.md) | A |
-| 03 | [Digests, manifests and multi-arch images](03-digests-manifests-and-multi-arch-images.md) | A |
-| 04 | [Run a local registry](04-run-a-local-registry.md) | R |
-| 05 | [Registry contracts and authentication](05-registry-contract-and-authentication.md) | A |
-| 06 | [Platforms and execution compatibility](06-platforms-and-compatibility.md) | A |
+| 01 | [Find the image behind the container](01-find-the-image-behind-the-container.md) | R |
+| 02 | [One image, several names](02-one-image-several-names.md) | R |
+| 03 | [What an image contains](03-what-an-image-contains.md) | A |
+| 04 | [Transfer an image locally](04-transfer-an-image-locally.md) | R |
+| 05 | [Choose the reference to hand over](05-choose-the-reference-to-hand-over.md) | A |
 
-## Katas
+Finish with [a local image handover](katas/README.md), where you choose
+the tag and message and prepare a procedure someone else can follow.
+Your notes will include the image identity, the platform and the checks
+you performed, giving the receiver a starting point for their own test.
 
-- [An artifact for another environment](katas/README.md): recover a missing
-  reference, justify the platform selection and verify a registry handover.
+## Optional paths
 
-## Before moving on
+You can [publish to a temporary local registry](optional/run-a-local-registry.md)
+without a cloud account. The separate
+[image and distribution deep dives](../advanced/images-and-distribution/README.md)
+cover versioning strategies, layer mechanics, manifests, authentication
+and platform details. Choose whichever question interests you and return
+to the core path when you're ready.
 
-Explain the difference between a moving tag, an index digest, a platform
-manifest and a local image ID. Show which identity your handover actually
-checked and why a matching version string wasn't enough.
-
-For deeper contracts, the optional [OCI image and distribution chapter](../advanced/runtime-architecture/04-oci-image-and-distribution-specs.md)
-connects the objects. You don't need OCI runtime setup or a second client to
-complete this module.
-
-Next, [Building images](../04-building-images/README.md), where the application
-code finally travels inside its own image.
+Before moving on, use your experiment to explain how the original and
+handover tags relate, where the old container's note lived and how `app.py`
+becomes available to the service. Those answers will help us decide what
+to put in our own image in
+[Building images](../04-building-images/README.md).

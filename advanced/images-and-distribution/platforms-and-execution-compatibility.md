@@ -34,13 +34,11 @@ execution contract that an image alone can't provide.
 Use your ordinary Linux Docker context. These observations create only a
 short-lived diagnostic container:
 
-```bash
+```text
 docker info --format 'engine={{.OSType}}/{{.Architecture}}'
-docker image inspect docker.io/library/python:3.12-alpine --format \
-  'image={{.Os}}/{{.Architecture}}'
-docker run --rm \
-  docker.io/library/python:3.12-alpine python -c \
-  'import platform; print("userspace machine:", platform.machine()); print("kernel:", platform.release())'
+docker image inspect docker.io/library/python:3.12-alpine --format 'image={{.Os}}/{{.Architecture}}'
+docker run --rm docker.io/library/python:3.12-alpine uname -m
+docker run --rm docker.io/library/python:3.12-alpine uname -r
 ```
 
 Engine architecture naming may use `x86_64` where image descriptors use `amd64`,
@@ -48,7 +46,7 @@ or `aarch64` where they use `arm64`. Under emulation, userspace observations can
 also differ from the physical host. Inspect image metadata and platform
 selection rather than treating one `uname` string as a complete answer.
 
-Return to the manifest output from chapter 03. Find a second supported
+Return to the [manifest exercise](digests-manifests-and-multi-arch-images.md). Find a second supported
 architecture without running it. Describe which descriptor another machine
 would select and why its local image ID could legitimately differ.
 
@@ -61,9 +59,8 @@ privileged binfmt helper on a shared host just for this course.
 
 On an amd64 engine with arm64 emulation available:
 
-```bash
-docker run --rm --platform linux/arm64 \
-  docker.io/library/python:3.12-alpine python --version
+```text
+docker run --rm --platform linux/arm64 docker.io/library/python:3.12-alpine python --version
 ```
 
 On arm64, use `linux/amd64` only if that direction is supported. If execution
@@ -83,7 +80,7 @@ that an older engine's seccomp policy handles differently. Diagnose the actual
 error, image identity, host/kernel version and policy rather than assuming
 "same image" eliminates environmental differences.
 
-The optional [kernel-policy example](../advanced/linux-primitives/04-capabilities-seccomp-and-lsms.md#same-image-a-different-host-result)
+The optional [kernel-policy example](../linux-primitives/04-capabilities-seccomp-and-lsms.md#same-image-a-different-host-result)
 shows why an unavailable syscall and a denied syscall can have different
 effects. No unsupported kernel installation is needed to understand the case.
 
@@ -93,7 +90,7 @@ Your artifact notes should now name the repository digest, intended platform,
 observed local image ID and any material host requirements. They should also
 admit what isn't yet inside the image: our service code and launch settings.
 
-Try the [artifact handover kata](katas/README.md), then continue to
-[Building images](../04-building-images/README.md). That's where we finally
+Return to the [local handover kata](../../03-images-and-registries/katas/README.md), then continue to
+[Building images](../../04-building-images/README.md). That's where we finally
 remove the source-mount shortcut instead of pretending the runtime image
 already contains our application.
