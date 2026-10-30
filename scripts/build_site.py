@@ -4,8 +4,11 @@
 # ///
 """Build the public, noindex course preview from the existing chapter files."""
 
+import argparse
 import shutil
 import subprocess
+from functools import partial
+from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -15,6 +18,11 @@ NOINDEX = '<meta name="robots" content="noindex, nofollow">'
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--serve", action="store_true", help="serve the site on loopback after building")
+    parser.add_argument("--port", type=int, default=8000, help="local port for --serve (default 8000)")
+    args = parser.parse_args()
+
     if DOCS.exists():
         shutil.rmtree(DOCS)
     DOCS.mkdir()
@@ -27,6 +35,10 @@ def main() -> None:
             "01-why-containers",
             "02-running-containers",
             "03-images-and-registries",
+            "04-building-images",
+            "05-storage",
+            "06-networking",
+            "07-compose",
         }:
             shutil.copytree(
                 module,
@@ -62,6 +74,15 @@ def main() -> None:
         if NOINDEX not in page.read_text(encoding="utf-8"):
             raise RuntimeError(f"Missing noindex in {page.relative_to(SITE)}")
     print(f"Verified noindex on all {len(pages)} generated HTML pages.")
+
+    if args.serve:
+        handler = partial(SimpleHTTPRequestHandler, directory=str(SITE))
+        with ThreadingHTTPServer(("127.0.0.1", args.port), handler) as server:
+            print(f"Serving http://127.0.0.1:{args.port}/ (Ctrl+C to stop)")
+            try:
+                server.serve_forever()
+            except KeyboardInterrupt:
+                pass
 
 
 if __name__ == "__main__":

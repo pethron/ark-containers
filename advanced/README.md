@@ -16,6 +16,8 @@ we go further into implementation and kernel behavior.
 | [Linux primitives](linux-primitives/README.md) | Two services have different process and port views but share a kernel | Inspect their actual boundaries, budgets and permissions |
 | [Runtime architecture](runtime-architecture/README.md) | A Docker request creates an object, then starts a process | Distinguish client, runtime-start and application failures |
 | [Images and distribution](images-and-distribution/README.md) | One image has several names, and a local archive restores it | Choose a versioning strategy and understand distributed content identity |
+| [Image builds](image-builds/README.md) | The runtime needs a compiled package, but not its compiler | Choose a stage boundary and control build caches and inputs |
+| [Container networking](container-networking/README.md) | Two services both listen on port 8000, and one finds the other by name | Explain the bridge, published ports and when another network type fits |
 
 Start with the [first application](../01-why-containers/03-your-first-application.md)
 before either deep dive. The Linux primitives chapters provide useful background

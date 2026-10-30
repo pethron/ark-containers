@@ -9,21 +9,28 @@ containerd directly is reserved for optional advanced labs.
 The [public preview](https://pethron.github.io/ark-containers/) currently contains
 the first module. It is work in progress, not the completed course.
 
-Module 01 has completed its first editorial review. Modules 02–03 and the
+Module 01 has completed its first editorial review. Modules 02–07 and the
 optional Under the hood deep dives remain drafts, with their labs and katas.
-The local build includes all of them. Core modules 04–09 are in preparation. The live
-preview changes only after an explicit manual publication.
+The current course scope ends at module 07; modules 08–09 remain in preparation.
+The local build includes all of them. The live preview changes only after an
+explicit manual publication.
 
 The site uses Zensical and GitHub Pages from this repository only. Existing
 chapter Markdown is staged automatically during the build; do not edit the
 generated `.site-docs/` or `site/` directories.
 
+To read the course locally, install [uv](https://docs.astral.sh/uv/) and run
+this from the course root, in Bash or PowerShell:
+
 ```bash
-uv run scripts/build_site.py
-uv run --no-project python -m http.server 8000 --bind 127.0.0.1 --directory site
+uv run scripts/build_site.py --serve
 ```
 
-Open `http://127.0.0.1:8000/` for the local build. The build inserts and verifies
+Then open `http://127.0.0.1:8000/`. Press Ctrl+C to stop the server; after
+editing a chapter, run the command again to rebuild. Use `--port 8001` if
+port 8000 is busy, or omit `--serve` to build without serving.
+
+The build inserts and verifies
 `noindex, nofollow` on every generated HTML page, including the error page.
 This asks compliant crawlers not to index the preview; it is not privacy or
 authentication. Use this build script rather than deploying raw Zensical output.
@@ -46,8 +53,8 @@ The course is a sequence of modules, and each module is a sequence of chapters. 
 These are complementary views, not an obligatory A → R → K sequence. The guided
 path starts with a small working application, then returns to its mechanisms,
 trade-offs and harder variations. Each module's README connects the chapters
-and marks their tracks; reference readers can still go directly to the material
-they need.
+and marks their tracks. Within the guided path, follow chapters in order so
+each one can build on the state and reasoning from the previous one.
 
 Expect to predict outcomes, make controlled mistakes, inspect evidence, and adapt
 examples to a changed requirement. Technical depth remains part of the course,
@@ -55,15 +62,19 @@ but is not an admission requirement for the first useful result.
 
 ## Core course
 
-Follow modules **01 → 09** in order: run a service, operate it, package and
-connect it, then harden it and recover from incidents. Start with module 01,
-including the supplied application in its third chapter.
+Modules **01 → 07** form the current course: run a service, operate it,
+package it, keep its data, connect it and describe the stack with Compose.
+The numbering is the suggested module order, but you can choose a module by
+the question you want to answer. Set up Docker with module 01, then start the
+chosen module at its first practical chapter and follow the chapters in order.
+Each module brings its own files; the exercises carry their state from one
+chapter to the next.
 
 The core includes the theory needed to explain observations and justify
 decisions, not just commands to copy. You don't need the optional deep dives
 to complete the course or its final project. Module 01 is reviewed; modules
-02–03 and the optional deep dives are drafts. Core
-modules 04–09 are still in preparation.
+02–07 and the optional deep dives are drafts. Core
+modules 08–09 are still in preparation.
 
 | # | Module |
 |---|--------|
@@ -89,6 +100,10 @@ experiments to the same application:
   Engine, containerd, shims, OCI and the wider ecosystem.
 - [Images and distribution](advanced/images-and-distribution/README.md):
   versioning conventions, layers, manifests, registries and platform compatibility.
+- [Image builds](advanced/image-builds/README.md): multi-stage builds,
+  BuildKit cache mounts, reproducible inputs and multi-platform builds.
+- [Container networking](advanced/container-networking/README.md): network
+  namespaces, bridges, published ports and the other network drivers.
 
 These are not numbered steps in the core course. Open them when a mechanism
 interests you, then return to the application with a prediction or observation
@@ -110,6 +125,12 @@ NN-module/
         ├── starter/    work here
         └── solution/   try first, peek later
 ```
+## When you return
+
+When you pause, leave in place what the next chapter needs and follow the
+cleanup at the end of the module. You can move to another module without
+carrying containers, images or data from this one.
+
 ## Credits
 
 The teaching approach is inspired by

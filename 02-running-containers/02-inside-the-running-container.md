@@ -13,8 +13,7 @@ between the container, its processes and its files.
 
 ## Open a shell alongside the server
 
-Continue with the running `ark-ops` from the previous chapter. From your host
-terminal, ask Docker to start a shell in that container:
+From your host terminal, ask Docker to start a shell in `ark-ops`:
 
 ```text
 docker exec -it ark-ops sh
@@ -65,7 +64,7 @@ Then run:
 exit
 ```
 
-You're back at your host prompt. Refresh `http://127.0.0.1:8082/` and check
+You're back at your host prompt. Refresh `http://127.0.0.1:8080/` and check
 `docker ps -a`: the service is still running because the process you ended
 was the extra shell, not the Python server. Opening and closing a shell is
 therefore useful for inspection without restarting the application.
@@ -131,8 +130,8 @@ exit
 
 The note remains even though neither the old server process nor the old shell
 survived. Docker kept the stopped container's name, settings and writable
-files, then used them to start execution again. This is the distinction we
-need for the next change: **stopping execution isn't deleting the container**.
+files, then used them to start execution again. The note survived because Docker kept the stopped container and its writable
+filesystem. **Stopping execution isn't deleting the container.**
 
 An image supplies the starting files and defaults; the container adds its own
 configuration and writable filesystem. Its processes use those files while
@@ -144,8 +143,8 @@ it left off.
 
 Our server waits for requests, so it is supposed to keep running. Not every
 container has that job, though: imagine using the same Python image simply
-to check which version it contains. Check that `ark-once` is a free name,
-then run these commands from a host terminal:
+to check which version it contains. Run these commands from a host terminal.
+Check that the name `ark-once` is free before using it:
 
 ```text
 docker run --name ark-once python:3.12-alpine python --version
@@ -167,7 +166,7 @@ docker rm ark-once
 
 You'll often see `--rm` on short jobs to remove them automatically when they
 finish. We left it out so you could inspect the result, just as keeping a
-failed service around gives you time to read its logs. Leave `ark-ops`
-running, with its note, for
-[the replacement experiment](03-restarting-isnt-replacing.md). If pausing instead,
-stop it and start it again later; don't remove it yet.
+failed service around gives you time to read its logs.
+
+Leave `ark-ops` running with its note; the
+[replacement experiment](03-restarting-isnt-replacing.md) starts from that state.

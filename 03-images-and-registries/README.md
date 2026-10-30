@@ -6,11 +6,9 @@ supplies Python and a file on your computer that supplies the application.
 Let's follow the image through a local handover so we can explain what
 it gives our colleague and what they need alongside it.
 
-We'll use the image already downloaded for the first service, inspect it,
+We'll start from the Python image that runs our message service, inspect it,
 give it a handover name and save it to an archive. After loading that archive
 back into Docker, we'll run the familiar service and compare the results.
-You can complete the whole path locally; publication is an optional next
-experiment, and building an image containing our code comes in module 04.
 
 ## What you will learn
 
@@ -44,8 +42,10 @@ cover versioning strategies, layer mechanics, manifests, authentication
 and platform details. Choose whichever question interests you and return
 to the core path when you're ready.
 
-Before moving on, use your experiment to explain how the original and
-handover tags relate, where the old container's note lived and how `app.py`
-becomes available to the service. Those answers will help us decide what
-to put in our own image in
-[Building images](../04-building-images/README.md).
+## Before moving on
+
+Use your experiment to explain how the original and handover tags relate,
+where the old container's note lived and how `app.py` becomes available to
+the service.
+
+Next: [Building images](../04-building-images/README.md).

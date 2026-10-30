@@ -12,8 +12,8 @@ asking a program to finish and forcing it to end.
 
 ## What Docker waits for
 
-Use the running `ark-ops` from the configuration chapter, and send a request
-in the browser before stopping it:
+Open `http://127.0.0.1:8080/` in the browser, so that the service has
+a request to log, then stop it:
 
 ```text
 docker stop ark-ops
@@ -52,14 +52,11 @@ by remove: it can forcibly kill running work without the initial waiting
 period. For normal changes, stop the container, check its state and logs,
 and only remove it when you no longer need that instance.
 
-For now, we still want ours. Start it again and verify the replacement's
-message and `/health` response:
+Start the same container again and verify its message and `/health` response:
 
 ```text
 docker start ark-ops
 ```
 
-You are reusing the container's settings, not bringing the old Python
-process back to life. Leave it running for the
-[final recap and kata](05-choose-the-fix.md), or stop and remove only your
-`ark-ops` if finishing here.
+Docker reuses the container's settings to start a new Python process. Leave
+`ark-ops` running for the [final recap](05-choose-the-fix.md).

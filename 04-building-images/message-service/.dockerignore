@@ -1,0 +1,7 @@
+.git
+.env
+*.secret
+__pycache__
+*.pyc
+*.tar
+build-notes.txt

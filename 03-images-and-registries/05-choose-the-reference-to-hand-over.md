@@ -50,7 +50,8 @@ Passing an archive works well for this exercise, but you can imagine the
 extra work if every colleague needs a copy each time an image changes.
 A **registry** provides a shared place to store and distribute images:
 you publish content with `push`, and others retrieve it with `pull`.
-We already used one in module 01, when Docker Hub supplied the Python image.
+Docker Hub is one of them: it's where Docker downloaded the Python image
+we've been using.
 
 The destination is part of the image reference. Written in full, our Python
 reference is `docker.io/library/python:3.12-alpine`, which includes Docker
@@ -77,5 +78,26 @@ then we'll simplify the package by
 Keep the archive and extra tag if you want to try the optional publication
 lab first. When you're finished, remove only `ark-runtime:handover`, your
 exact archive file and its empty directory, leaving the original Python
-image and other exercises in place. A global prune would affect work
-outside this lab, so keep the cleanup limited to what you created here.
+image and other exercises in place. From
+`03-images-and-registries/first-app`, where the archive exercise created
+them:
+
+=== "Linux (Bash)"
+
+    ```bash
+    docker image rm ark-runtime:handover
+    rm ark-image-handover/runtime.tar
+    rmdir ark-image-handover
+    ```
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    docker image rm ark-runtime:handover
+    Remove-Item .\ark-image-handover\runtime.tar
+    Remove-Item .\ark-image-handover
+    ```
+
+Skip the file commands if you didn't create the archive. A global prune
+would affect work outside this lab, so keep the cleanup limited to what
+you created here.

@@ -1,0 +1,15 @@
+FROM python:3.12-alpine AS wheels
+RUN apk add --no-cache build-base
+WORKDIR /build
+COPY --chmod=644 requirements-compiled.txt ./requirements.txt
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip wheel --no-binary=MarkupSafe --wheel-dir=/wheels -r requirements.txt
+
+FROM python:3.12-alpine AS runtime
+RUN adduser -D ark
+WORKDIR /app
+RUN --mount=type=bind,from=wheels,source=/wheels,target=/wheels \
+    pip install --no-cache-dir --no-index /wheels/*.whl
+COPY --chmod=644 app.py serve.py ./
+USER ark
+CMD ["python", "/app/serve.py"]

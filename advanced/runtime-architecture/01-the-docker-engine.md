@@ -65,7 +65,7 @@ docker ps -a --filter name=ark-runtime-message
 ```
 
 Proceed only if that exact name is free or belongs to your own previous lab
-attempt. Port 8088 must also be free on loopback.
+attempt. Port 8080 must also be free on loopback.
 
 ```bash
 docker create --name ark-runtime-message \
@@ -74,7 +74,7 @@ docker create --name ark-runtime-message \
   --memory 64m --memory-swap 64m --pids-limit 32 \
   --mount "type=bind,source=$(pwd)/app.py,target=/app/app.py,readonly" \
   -e MESSAGE="Following the runtime" \
-  -p 127.0.0.1:8088:8000 \
+  -p 127.0.0.1:8080:8000 \
   docker.io/library/python:3.12-alpine python -u /app/app.py
 docker inspect --format 'status={{.State.Status}} pid={{.State.Pid}} image={{.Image}}' \
   ark-runtime-message
@@ -99,8 +99,8 @@ docker inspect --format 'status={{.State.Status}} pid={{.State.Pid}}' ark-runtim
 docker top ark-runtime-message
 ```
 
-Wait for the listening message before opening `http://127.0.0.1:8088/` and
-`http://127.0.0.1:8088/health`. On a remote VM, check from that VM or use an SSH
+Wait for the listening message before opening `http://127.0.0.1:8080/` and
+`http://127.0.0.1:8080/health`. On a remote VM, check from that VM or use an SSH
 tunnel; loopback belongs to the engine host. Expect the configured message and
 a healthy response. If the service exits, inspect its state and logs.
 

@@ -18,13 +18,13 @@ history of virtualization and what it does, and does not, isolate.
 
 Start with chapters 01–03 to get the application running. Then chapters 04–06
 explain how we got here and what separates a container from a VM. We'll use
-Docker and `docker run`; Compose comes later, when we connect several services.
+Docker and `docker run`. Chapters 04–06 need nothing running.
 
 Use Bash on Linux or PowerShell 7 on Windows. The
 [installation chapter](02-installing-docker.md) explains the setup; command tabs
 in the application walkthrough remember your shell choice across pages.
-You don't need prior Linux administration experience: mounts and ports are
-introduced when the application needs them; user configuration comes later.
+You don't need prior Linux administration experience: we'll introduce mounts
+and ports when the application needs them.
 
 ## Chapters
 
@@ -54,9 +54,8 @@ When you return for the next session, try explaining why the container kept
 running when you couldn't reach the application. Then check your explanation
 against the launch command. If you're studying with someone, compare answers.
 
-Next in the core course is [Running containers](../02-running-containers/README.md).
-You'll keep the same HTTP behavior, add explicit shutdown handling, and learn
-to tell configuration failures, forced kills and memory failures apart.
+Next: [Running containers](../02-running-containers/README.md).
+
 The optional [Under the hood](../advanced/README.md) deep dives explore Linux
 and runtime mechanisms when you're curious. They are not required to complete
 the course or its final project.

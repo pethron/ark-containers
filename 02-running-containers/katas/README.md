@@ -6,15 +6,44 @@ last time. Your job is to make the change, verify it, and leave a procedure
 another person can use.
 
 Choose the audience for the page and two useful messages: the current one and
-its replacement. Use the original [application](../../01-why-containers/first-app/README.md),
-Linux containers and a terminal in `01-why-containers/first-app`. You can refer to the
-[paired launch commands](../01-pick-up-the-service.md#start-from-a-known-result),
-but plan the sequence before executing it.
+its replacement. Plan the sequence before executing anything.
+
+## Before you start
+
+You need a working Docker setup running Linux containers, using Bash on Linux
+or PowerShell 7 on Windows. The kata uses this module's
+[message service](../first-app/README.md); open a terminal in
+`02-running-containers/first-app`, the directory containing `app.py`.
+
+??? note "Reference: the module's launch command"
+
+    This is how the walkthrough started `ark-ops`. Your procedure needs its own
+    name, port and messages.
+
+    === "Linux (Bash)"
+
+        ```bash
+        docker run -d --name ark-ops \
+          --mount "type=bind,source=$(pwd)/app.py,target=/app/app.py,readonly" \
+          -e MESSAGE="Ready for the next shift" \
+          -p 127.0.0.1:8080:8000 \
+          python:3.12-alpine python /app/app.py
+        ```
+
+    === "Windows (PowerShell)"
+
+        ```powershell
+        docker run -d --name ark-ops `
+          --mount "type=bind,source=$($PWD.Path)\app.py,target=/app/app.py,readonly" `
+          -e MESSAGE="Ready for the next shift" `
+          -p 127.0.0.1:8080:8000 `
+          python:3.12-alpine python /app/app.py
+        ```
 
 ## The change request
 
-Use only a container named `ark-change` and a free loopback port other than
-8082. Check that the name is unused; don't remove someone else's container
+Use only a container named `ark-change`, published on `127.0.0.1:8080`.
+Check that the name and port are unused; don't remove someone else's container
 to make it available.
 
 Your procedure must satisfy these conditions:
@@ -47,8 +76,8 @@ to repair.
 
 Include the launch command, the order of the change, checks with expected
 results and the named cleanup. Use your chosen
-shell for the procedure and link the paired reference for someone using the
-other shell.
+shell for the procedure and link the module's
+[example README](../first-app/README.md) for someone using the other shell.
 
 Also explain what you'd change if the note were valuable application data.
 You don't need to implement that storage solution yet. The important part
@@ -80,5 +109,11 @@ error and the application's logs answer different questions.
 </details>
 
 Ask someone to follow your procedure, or try it yourself in a fresh terminal
-using only your notes. Remove only the `ark-change` you created when finished.
+using only your notes. Remove only the `ark-change` you created when finished:
+
+```text
+docker stop ark-change
+docker rm ark-change
+```
+
 No signal-handling code or host/daemon reconfiguration is part of this kata.

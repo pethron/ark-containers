@@ -5,17 +5,15 @@ track: runbook
 
 # Restarting isn't replacing
 
-You left the shell, stopped the server and started it again, yet both the
-original message and your note remained. That's useful when you want to resume
-the same service, but now someone wants the page to say `Configured replacement`.
-To make that change, we need to supply a new setting rather than simply start
-the old process again.
+When the server stopped and started again in the shell experiment, both the
+original message and a note written inside the container remained. That's
+useful when you want to resume the same service, but now someone wants the
+page to say `Configured replacement`. To make that change, we need to supply
+a new setting rather than simply start the old process again.
 
 ## Replace the configuration
 
-Continue with `ark-ops` from the previous chapter, starting it first if you
-paused. Before replacing anything, let's also try the shortcut people often
-reach for:
+Before replacing anything, let's try the shortcut people often reach for:
 
 ```text
 docker restart ark-ops
@@ -32,9 +30,30 @@ docker stop ark-ops
 docker rm ark-ops
 ```
 
-Run the [launch command](01-pick-up-the-service.md#start-from-a-known-result)
-again, changing only `-e MESSAGE="Ready for the next shift"` to
-`-e MESSAGE="Configured replacement"`. Once you've checked the new message
+Now create the replacement with the same launch options, changing only
+the message:
+
+=== "Linux (Bash)"
+
+    ```bash
+    docker run -d --name ark-ops \
+      --mount "type=bind,source=$(pwd)/app.py,target=/app/app.py,readonly" \
+      -e MESSAGE="Configured replacement" \
+      -p 127.0.0.1:8080:8000 \
+      python:3.12-alpine python /app/app.py
+    ```
+
+=== "Windows (PowerShell)"
+
+    ```powershell
+    docker run -d --name ark-ops `
+      --mount "type=bind,source=$($PWD.Path)\app.py,target=/app/app.py,readonly" `
+      -e MESSAGE="Configured replacement" `
+      -p 127.0.0.1:8080:8000 `
+      python:3.12-alpine python /app/app.py
+    ```
+
+Once you've checked the new message
 in the browser, predict whether reusing the name also brought back the note:
 
 ```text
@@ -58,7 +77,5 @@ in your notes. Fixing files by hand inside
 a running container might appear quicker, but you've just seen why that change
 wouldn't automatically reach its replacement.
 
-Options such as `-e` go before the image name; the command after the image
-starts the application. We'll explore that division further when we build
-images. For now, keep the working `ark-ops` for
-[the shutdown chapter](04-stopping-a-service.md).
+The replacement `ark-ops` is running with the message `Configured replacement`.
+Leave it running for [the shutdown experiment](04-stopping-a-service.md).

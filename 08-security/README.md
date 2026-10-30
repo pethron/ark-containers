@@ -4,6 +4,7 @@
 
 - User namespaces and rootless containers
 - Capabilities, read-only filesystems, seccomp profiles
+- Build-time and runtime credentials
 - Supply chain: scanning, SBOM, signing
 
 ## Chapters
@@ -15,6 +16,10 @@
 | 03 | [Supply chain security](03-supply-chain-security.md) | A |
 | 04 | [Hardening the runtime](04-hardening-the-runtime.md) | R |
 | 05 | [Scanning, SBOM and signing](05-scanning-sbom-and-signing.md) | R |
+
+Build-time secret handling belongs with credential and supply-chain decisions.
+The [build-time secret exercise](build-secrets.md) uses only a dummy value and
+the packaged service's optional Dockerfile.
 
 ## Katas
 

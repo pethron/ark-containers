@@ -1,8 +1,8 @@
 # Docker and Linux Containers Course
 
 **Preview: work in progress.** Module 01 has completed its first editorial review.
-Core modules 02–03 and the optional Under the hood deep dives are drafts.
-Core modules 04–09 are in preparation.
+Core modules 02–07 and the optional Under the hood deep dives are drafts.
+The current course scope ends at module 07; modules 08–09 remain in preparation.
 This public preview requests that search
 engines do not index its pages; it is not private or access-controlled.
 
@@ -22,20 +22,24 @@ are not prerequisites.
 
 ## Core course
 
-The numbered modules are the reading order. You'll run and operate a service,
-deliver it as an image, preserve its data, connect it to other services, then
-harden and troubleshoot it. Each step includes the theory needed to explain
-what happened and choose the next action.
+The numbered modules are the suggested reading order. You'll run and operate a
+service, deliver it as an image, preserve its data, connect it to other
+services and describe the whole stack with Compose. Each step includes the
+theory needed to explain what happened and choose the next action.
+
+Set up Docker in module 01, then start each module at its first practical
+chapter and follow the chapters in order. The exercises carry their state
+forward within the module, and each module brings its own files.
 
 | Module | Topic | Status |
 |--------|-------|--------|
 | 01 | [Why containers](01-why-containers/README.md) | Reviewed |
 | 02 | [Running containers](02-running-containers/README.md) | Draft available |
 | 03 | [Images and registries](03-images-and-registries/README.md) | Draft available |
-| 04 | [Building images](04-building-images/README.md) | In preparation |
-| 05 | [Storage](05-storage/README.md) | In preparation |
-| 06 | [Networking](06-networking/README.md) | In preparation |
-| 07 | [Compose](07-compose/README.md) | In preparation |
+| 04 | [Building images](04-building-images/README.md) | Draft available |
+| 05 | [Storage](05-storage/README.md) | Draft available |
+| 06 | [Networking](06-networking/README.md) | Draft available |
+| 07 | [Compose](07-compose/README.md) | Draft available |
 | 08 | [Security](08-security/README.md) | In preparation |
 | 09 | [Production and troubleshooting](09-production-and-troubleshooting/README.md) | In preparation |
 
@@ -47,6 +51,8 @@ for completing the core course or its final project**:
 - [Linux primitives](advanced/linux-primitives/README.md)
 - [Runtime architecture](advanced/runtime-architecture/README.md)
 - [Images and distribution](advanced/images-and-distribution/README.md)
+- [Image builds](advanced/image-builds/README.md)
+- [Container networking](advanced/container-networking/README.md)
 
 They start from the application you already know, investigate its mechanisms,
 and return to it with observations to check. You can open a relevant deep dive
@@ -57,7 +63,7 @@ before their commands.
 
 ## Preview scope
 
-Modules 01–03 offer Bash and native PowerShell 7 variants where syntax differs.
+Modules 01–07 offer Bash and native PowerShell 7 variants where syntax differs.
 Their command tabs remember your selection across pages.
 Introductory commands focus on the task, not a production hardening template.
 Module 02 uses the original application for shell, process lifetime, stop/start
@@ -65,6 +71,16 @@ and replacement experiments. Signal-handling code is in advanced; resource
 limits, retry policies and memory failures belong to module 09.
 Module 03's required path is local tagging and archive restoration with the
 already-downloaded image. Publication to a temporary local registry is optional.
+Module 04 packages that same application without a source mount and shows
+how to keep dependency installation cached after an application edit.
+Module 05 adds notes to the service and keeps them in a volume through
+replacement, compares bind mounts and tmpfs, and restores a backup into
+a new volume.
+Module 06 connects a frontend and API on a network you create, publishes
+only the frontend, and tells name failures from port failures by the
+frontend's answer.
+Module 07 moves that stack into a Compose file, and shows what Compose
+recreates on a change and which volumes survive `down`.
 
 The first application's Docker path has been tested on Windows amd64 using
 Docker Desktop with native PowerShell 7 and Ubuntu WSL Bash: launch,
@@ -86,6 +102,9 @@ fixtures. Bash tests used the Windows Docker client from WSL because native
 WSL integration was unavailable; integrated WSL paths remain a separate setup check.
 No daemon restart, global prune or unrelated container cleanup was required.
 
+Module 04's labs passed on Docker Desktop Linux amd64 with native PowerShell 7
+and Git Bash using the Windows Docker client.
+
 On the same Docker Desktop setup, the deep dives' Docker exercises have also
 been checked: namespace comparison and selective sharing, cgroup v2 limits,
 process credentials and policy indicators, create/start/stop events, and the
@@ -99,3 +118,6 @@ Compose, Linux primitives, runtime architecture, security and troubleshooting.
 Download or clone the [course repository](https://github.com/pethron/ark-containers)
 for the complete example files. The chapters on this site are rendered from
 the same Markdown files, not a second edition maintained by hand.
+
+When you pause, keep what the next chapter needs; clean up at the end of the
+module. Moving to another module doesn't require containers or data from this one.

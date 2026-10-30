@@ -11,8 +11,7 @@ stack, and you will usually get a different result. What did Docker change?
 
 It gave the processes different **network namespaces**. A namespace is a kernel
 mechanism that gives a group of processes a particular view of a resource. It
-doesn't copy the kernel, and it doesn't automatically apply a resource budget.
-Let's separate those ideas before collecting a truckload of namespace names.
+doesn't copy the kernel or automatically apply a resource budget.
 
 ## Views belong to processes
 
@@ -46,10 +45,10 @@ the table into a claim that every row is enabled by default.
 
 ## A different mount table is not a copied disk
 
-This distinction deserves a minute. A mount namespace controls which mounted
-filesystems and paths a process sees. Two namespaces can still refer to the
-same underlying files. Our read-only bind mount did exactly that: it made a
-host file visible at a chosen container path.
+A mount namespace controls which mounted filesystems and paths a process sees.
+Two namespaces can still refer to the same underlying files. Our read-only
+bind mount did exactly that: it made a host file visible at a chosen
+container path.
 
 The `readonly` option constrained writes through that mount. It did not prevent
 the owner from changing the host file, and it did not package its contents into
@@ -62,10 +61,9 @@ parent mount tree. That is why the sandbox kata explicitly performs that step.
 
 ## Sharing is a configuration, too
 
-You don't need a second application to observe namespace sharing. In the
-[Docker inspection lab](06-inspecting-namespaces-and-cgroups.md), two isolated
-sleep processes will provide a quieter example. Docker normally separates
-their network views, but a diagnostic process can be started with
+The [Docker inspection lab](06-inspecting-namespaces-and-cgroups.md) uses two
+sleep processes to compare namespace views. Docker normally separates their
+networks, but a diagnostic process can be started with
 `--network container:<name>` to join another container's network namespace.
 
 That option shares the network stack, not the other container's filesystem or

@@ -10,6 +10,8 @@ says "restart it". That might resume a service you deliberately stopped, or
 it might leave an unwanted message unchanged. The command
 is the same, but the reason for using it makes all the difference.
 
+## Choose by what you observed
+
 The experiments give you a way to make that decision without guessing. When
 you left the extra shell, the server kept answering; when the main process
 ended, both the service and the open shell stopped. The note survived because
@@ -41,5 +43,11 @@ you have rather than removing the instance and losing the chance to investigate.
 You now have a model for planning a change, not just commands to repeat. Use
 it in the [service-change kata](katas/README.md), where you'll choose the
 sequence yourself and leave the reasoning for someone else to follow.
-When finished with the walkthrough, stop and remove only your `ark-ops`;
-its source files and runtime image remain available for the next exercise.
+If you started `ark-ops` for this chapter, or kept one from an earlier one,
+stop and remove only that container; its source files and runtime image
+remain available for the next exercise:
+
+```text
+docker stop ark-ops
+docker rm ark-ops
+```

@@ -10,6 +10,8 @@ can use for our handover. Docker allows several references to point to the
 same image, which comes in handy when you want to organize local work or
 prepare an image for a particular destination.
 
+## Read the reference we've been using
+
 First, take a look at the reference we've used all along:
 `python:3.12-alpine`. The part before the colon, `python`, is the repository
 name; `3.12-alpine` is the **tag**, chosen by the publisher to describe a
@@ -66,4 +68,6 @@ for your own images.
 For now, keep `ark-runtime:handover` available and let's look at
 [what the image contains](03-what-an-image-contains.md). That will help us
 decide which parts of the service will travel in the archive and which
-parts our colleague will need alongside it.
+parts our colleague will need alongside it. This chapter leaves no container
+running; if you stop here, `docker image rm ark-runtime:handover` removes
+only the extra tag and leaves the Python image in place.

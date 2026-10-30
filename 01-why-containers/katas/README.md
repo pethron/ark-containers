@@ -5,20 +5,54 @@ but no Python installation, and port 8080 is already reserved. You won't be
 there to fix the command while they present it. Can you hand over something
 they can actually use?
 
-Complete [the first application](../03-your-first-application.md) first. Use the
-same Bash or PowerShell 7 environment and the supplied [source file](../first-app/app.py).
-This exercise creates at most two containers, no volumes and no cloud resources.
+## Before you start
+
+You need one working Docker setup from the
+[installation chapter](../02-installing-docker.md), using Bash on Linux or
+PowerShell 7 on Windows, and the course files. Open a terminal in
+`01-why-containers/first-app`, beside the supplied [source file](../first-app/app.py).
+The names `ark-handover` and `ark-handover-review` must be free, along with
+two loopback ports other than 8080. This exercise creates at most two
+containers, no volumes and no cloud resources.
+
+The kata adapts the launch command from
+[the first application](../03-your-first-application.md#2-read-the-launch-command);
+if a setting looks unfamiliar, the option table there explains what it does.
+
+??? note "Reference: the base launch command"
+
+    This is the walkthrough's launch command, run from `first-app`. Your
+    handover needs its own name, port and message.
+
+    === "Linux (Bash)"
+
+        ```bash
+        docker run -d --name ark-message \
+          --mount "type=bind,source=$(pwd)/app.py,target=/app/app.py,readonly" \
+          -p 127.0.0.1:8080:8000 \
+          python:3.12-alpine python /app/app.py
+        ```
+
+    === "Windows (PowerShell)"
+
+        ```powershell
+        docker run -d --name ark-message `
+          --mount "type=bind,source=$($PWD.Path)\app.py,target=/app/app.py,readonly" `
+          -p 127.0.0.1:8080:8000 `
+          python:3.12-alpine python /app/app.py
+        ```
 
 ## The handover
 
 Write a short launch-and-check procedure using an available loopback port other
 than 8080. Use the container name `ark-handover` and set a message that identifies
 the demonstration. Include the source file with your instructions: the image
-does not contain our application yet.
+does not contain our application yet. The `MESSAGE` environment variable,
+passed with `-e`, sets the text the service returns.
 
-Use the [paired launch commands](../03-your-first-application.md#1-start-the-application)
-as a reference for your shell. In your handover, provide both the Bash and
-PowerShell versions. The Docker settings and expected service behavior must match.
+Use the base launch command above as a reference for your shell. In your
+handover, provide both the Bash and PowerShell versions. The Docker settings
+and expected service behavior must match.
 
 Then run a second instance named `ark-handover-review`, with another message and
 host port. Do not stop the first instance to make the second work. Keep both

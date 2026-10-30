@@ -1,0 +1,13 @@
+FROM python:3.12-alpine AS build
+RUN apk add --no-cache build-base
+WORKDIR /build
+COPY --chmod=644 requirements-compiled.txt ./requirements.txt
+RUN pip install --no-cache-dir --prefix=/install --no-binary=MarkupSafe -r requirements.txt
+
+FROM python:3.12-alpine AS runtime
+RUN adduser -D ark
+COPY --from=build /install /usr/local
+WORKDIR /app
+COPY --chmod=644 app.py serve.py ./
+USER ark
+CMD ["python", "/app/serve.py"]

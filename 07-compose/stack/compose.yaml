@@ -1,0 +1,13 @@
+name: ark
+
+services:
+  api:
+    build: ./network-service
+
+  web:
+    build: ./network-service
+    command: ["python", "/app/web.py"]
+    environment:
+      BACKEND_URL: http://api:8000/health
+    ports:
+      - "127.0.0.1:8080:8000"

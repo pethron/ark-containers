@@ -33,10 +33,8 @@ docker image history ark-runtime:handover
 ```
 
 Read through a few entries and look at the kinds of changes they describe.
-You'll find both steps that add filesystem content and steps that record
-configuration, which is why the history can have more entries than file
-layers. We'll return to this output when we write a Dockerfile in module 04
-and can connect our own instructions to the resulting image.
+Some add filesystem content; others record configuration, so the history can
+have more entries than the image has filesystem layers.
 
 There is one consequence worth keeping in mind already: a later layer can
 hide a file whose bytes remain in an earlier layer. If that file contains
@@ -46,22 +44,26 @@ including intermediate steps.
 
 ## The container's files are a different lifetime
 
-Remember `/tmp/ark-note` from module 02? It survived a stop/start because
-Docker kept that container's writable filesystem, including the note.
-When we created a replacement, Docker gave it a fresh writable filesystem
-on top of the same image, so we saw the original starting files again.
-Changes made during the first container's life stayed with that container.
+Suppose you write a note to `/tmp/ark-note` inside a running service
+container, an experiment that module 02 walks through. The note survives a
+stop/start because Docker keeps that container's writable filesystem.
+When you create a replacement, Docker gives it a fresh writable filesystem
+on top of the same image, so the note is gone and the original starting
+files are back. Changes made during the first container's life stay with
+that container.
 
-We can now account for the three sources of files in our experiment:
+We can now account for the three sources of files in our service:
 the image supplies Python, the host mount supplies `app.py`, and the
 container's writable filesystem holds the note. Saving the image will
 capture the first of those, along with its configuration. Our colleague
 will still need the source file and the launch settings to bring the
 service together.
 
-That's enough to predict what we'll recover in the
-[local archive exercise](04-transfer-an-image-locally.md). If you'd also
-like to see how Docker implements the filesystem view, the optional
+The [local archive exercise](04-transfer-an-image-locally.md) will test which
+of these inputs the image preserves. To see how Docker implements the
+filesystem view, the optional
 [layer deep dive](../advanced/images-and-distribution/image-content-and-writable-layers.md)
 follows writes through copy-up and explains the different layer identifiers;
-you can explore that mechanism whenever you're curious about it.
+it follows the write path in more detail. Keep `ark-runtime:handover` for the
+archive exercise, or remove just that tag with
+`docker image rm ark-runtime:handover` if you stop here.

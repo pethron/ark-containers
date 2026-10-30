@@ -9,8 +9,18 @@ you tested and which results they should expect.
 Choose a use for the page and a message that fits its audience, then
 prepare the archive using the existing Python image, an unused tag of
 your own and a new archive path. Keep the exercise local and use the
-application unchanged, working from `01-why-containers/first-app` when
-you launch it. You have everything you need from the core chapters.
+application unchanged. You have everything you need from the core chapters.
+
+## Your starting point
+
+Work from a fresh terminal opened in
+`03-images-and-registries/first-app`, the module's copy of the
+[message service](../first-app/README.md), and launch the service from
+there. Check that `python:3.12-alpine` appears in `docker image ls python`;
+if it doesn't, download it with `docker pull python:3.12-alpine`. Before
+choosing your tag and archive path, check `docker image ls`,
+`docker ps -a` and the directory listing so that you don't overwrite
+someone else's work. The container name `ark-artifact-service` and local port 8080 must be free.
 
 ## The handover must work locally first
 
@@ -20,8 +30,8 @@ satisfy these conditions:
 - The new tag points to the same full local image ID as your chosen Python image.
 - An archive restores that tag after you remove only the extra reference.
 - The restored image's full ID and platform match what you recorded.
-- A container named `ark-artifact-service`, on a free loopback port of your
-  choice, uses the restored image without pulling and returns your message
+- A container named `ark-artifact-service`, published on `127.0.0.1:8080`,
+  uses the restored image without pulling and returns your message
   and a successful `/health`.
 - Its `.Image` value matches the image ID in your notes.
 

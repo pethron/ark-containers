@@ -12,17 +12,15 @@ then load that archive back into an engine. We'll do both steps on your
 computer so that we can check the procedure before asking someone else
 to follow it.
 
-Open a terminal in **`01-why-containers/first-app`**, where `app.py` lives,
-and keep `ark-runtime:handover` from chapter 02 available. The archive will
-take additional disk space alongside Docker's stored image, so make sure
-you have room for both before starting.
-
 ## Save the named image
 
-We'll keep the handover in its own directory so it's easy to find and
+The `ark-runtime:handover` tag from the previous chapter is still available.
+We'll keep the archive in its own directory so it's easy to find and
 remove after the exercise. Create it with the command for your shell;
 if the directory already exists, stop and inspect its contents before
 continuing to avoid overwriting an earlier archive or someone else's files.
+The archive uses additional disk space alongside Docker's stored image, so
+make sure you have room for both before saving.
 
 === "Linux (Bash)"
 
@@ -93,8 +91,8 @@ the cache in place, since clearing shared images would disrupt other work.
 ## Use the restored image for our service
 
 Now let's use the restored reference to run the application again.
-Check that `ark-image-service` and loopback port 8085 are free, then launch
-it from the same `first-app` directory. We've kept `--pull never` in the
+Check that `ark-image-service` and loopback port 8080 are still free, then
+launch it from the same `first-app` directory. We've kept `--pull never` in the
 command so that the service must use the locally available image:
 
 === "Linux (Bash)"
@@ -103,7 +101,7 @@ command so that the service must use the locally available image:
     docker run -d --name ark-image-service --pull never \
       --mount "type=bind,source=$(pwd)/app.py,target=/app/app.py,readonly" \
       -e MESSAGE="Loaded from our archive" \
-      -p 127.0.0.1:8085:8000 \
+      -p 127.0.0.1:8080:8000 \
       ark-runtime:handover python /app/app.py
     ```
 
@@ -113,11 +111,11 @@ command so that the service must use the locally available image:
     docker run -d --name ark-image-service --pull never `
       --mount "type=bind,source=$($PWD.Path)\app.py,target=/app/app.py,readonly" `
       -e MESSAGE="Loaded from our archive" `
-      -p 127.0.0.1:8085:8000 `
+      -p 127.0.0.1:8080:8000 `
       ark-runtime:handover python /app/app.py
     ```
 
-Open `http://127.0.0.1:8085/` and `/health` on that address to check the
+Open `http://127.0.0.1:8080/` and `/health` on that address to check the
 message and health response. You should see `Loaded from our archive` and
 `{"status": "ok"}`; if the application needs a moment to start, retry,
 then read `docker logs ark-image-service` if it keeps failing. Once it
@@ -131,16 +129,15 @@ The returned ID should match the one in your notes, connecting the running
 service to the image we saved and restored. Notice that the launch still
 mounts `app.py`: the archive supplied Python and its supporting files,
 while your source file and message setting completed the service at launch.
-In module 04 we'll bring the source into an image of our own.
-
-For now, keep the archive and tag while you finish the handover notes,
-and stop and remove only this test service:
+Keep the archive and tag while you finish the handover notes. Stop and remove
+only this test service:
 
 ```text
 docker stop ark-image-service
 docker rm ark-image-service
 ```
 
-With the local test complete, let's put together
+The tag and `ark-image-handover/runtime.tar` remain available for the
+handover. Use them to put together
 [the information your colleague will need](05-choose-the-reference-to-hand-over.md)
 to use the archive.

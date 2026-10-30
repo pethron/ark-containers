@@ -14,7 +14,7 @@ failure. The code is supplied: you do not need to write Python or build an image
 before trying it. We'll use `docker run` throughout this exercise; saving a
 multi-service configuration in Compose comes later in the course.
 
-## Before you start
+## 1. Start the application
 
 Complete **one Docker setup** in the [installation chapter](02-installing-docker.md).
 You need Docker, the downloaded course files, and a browser or `curl`. You do not
@@ -42,8 +42,9 @@ From the root of your course checkout, move into the supplied example:
 
 All commands in this chapter run from that directory. If you have not downloaded
 the course yet, use the Git or ZIP instructions in the installation chapter first.
-
-## 1. Start the application
+Check `docker ps -a` before starting: the walkthrough uses the names
+`ark-message` and `ark-second-message` and local ports 8080 and 8081, so they
+must be free.
 
 Here's what we're asking Docker to do: start the supplied service using Python
 from an existing image, let it read our local `app.py` without changing that

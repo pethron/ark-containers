@@ -27,10 +27,8 @@ connection or allocate memory. The image supplied Python's executable and
 userspace libraries; it did not supply the kernel answering those requests.
 
 That is true even when the laptop itself runs Windows or macOS. With Linux
-containers on Docker Desktop, the relevant kernel is inside Docker's Linux VM.
-Your laptop, the Docker engine host and the container are therefore not always
-three names for the same environment. Keep that distinction nearby: it prevents
-quite a few confusing afternoons.
+containers on Docker Desktop, the relevant kernel is inside Docker's Linux VM;
+the laptop, engine host and container are separate environments.
 
 ![Two Python processes have separate namespace views and resource groups above one shared Linux kernel](images/process-boundaries.svg)
 

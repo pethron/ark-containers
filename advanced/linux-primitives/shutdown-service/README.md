@@ -22,8 +22,8 @@ a registered handler don't get the ordinary default termination behavior.
 
 To see this with the unchanged application, use the
 [module-02 launch](../../../02-running-containers/01-pick-up-the-service.md#start-from-a-known-result),
-but choose the unused name `ark-pid-signals` and a free loopback port such as
-8084. Keep this separate from any service you're currently studying. From
+but choose the unused name `ark-pid-signals` and loopback port 8080, which
+must be free. From
 your host terminal, open a shell:
 
 ```text
@@ -84,7 +84,7 @@ the main process actually exits, the container's execution ends.
 ## Run the handled-shutdown experiment
 
 Open a terminal at the course repository root, containing `01-why-containers`
-and `advanced`. Check that `ark-shutdown` and loopback port 8083 are free.
+and `advanced`. Check that `ark-shutdown` and loopback port 8080 are free.
 The mount below exposes that checkout read-only at `/course` so the wrapper
 can locate the shared application; don't mount a parent with private files.
 
@@ -93,7 +93,7 @@ can locate the shared application; don't mount a parent with private files.
     ```bash
     docker run -d --name ark-shutdown \
       --mount "type=bind,source=$(pwd),target=/course,readonly" \
-      -p 127.0.0.1:8083:8000 \
+      -p 127.0.0.1:8080:8000 \
       python:3.12-alpine python /course/advanced/linux-primitives/shutdown-service/operations.py
     ```
 
@@ -102,11 +102,11 @@ can locate the shared application; don't mount a parent with private files.
     ```powershell
     docker run -d --name ark-shutdown `
       --mount "type=bind,source=$($PWD.Path),target=/course,readonly" `
-      -p 127.0.0.1:8083:8000 `
+      -p 127.0.0.1:8080:8000 `
       python:3.12-alpine python /course/advanced/linux-primitives/shutdown-service/operations.py
     ```
 
-Check `http://127.0.0.1:8083/health`, then stop and read the log:
+Check `http://127.0.0.1:8080/health`, then stop and read the log:
 
 ```text
 docker stop ark-shutdown
