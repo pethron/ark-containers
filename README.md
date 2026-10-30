@@ -87,6 +87,8 @@ experiments to the same application:
   namespaces, cgroups, credentials and filesystems.
 - [Runtime architecture](advanced/runtime-architecture/README.md): Docker
   Engine, containerd, shims, OCI and the wider ecosystem.
+- [Images and distribution](advanced/images-and-distribution/README.md):
+  versioning conventions, layers, manifests, registries and platform compatibility.
 
 These are not numbered steps in the core course. Open them when a mechanism
 interests you, then return to the application with a prediction or observation

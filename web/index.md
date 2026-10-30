@@ -46,6 +46,7 @@ for completing the core course or its final project**:
 
 - [Linux primitives](advanced/linux-primitives/README.md)
 - [Runtime architecture](advanced/runtime-architecture/README.md)
+- [Images and distribution](advanced/images-and-distribution/README.md)
 
 They start from the application you already know, investigate its mechanisms,
 and return to it with observations to check. You can open a relevant deep dive
@@ -56,11 +57,14 @@ before their commands.
 
 ## Preview scope
 
-Modules 01–02 offer Bash and native PowerShell 7 launch variants. Their command
-tabs remember your selection across pages; module 03 still uses Bash.
+Modules 01–03 offer Bash and native PowerShell 7 variants where syntax differs.
+Their command tabs remember your selection across pages.
 Introductory commands focus on the task, not a production hardening template.
-Module 02's forced-stop, retry and bounded memory-failure experiments are
-optional; the main route is observe, stop/start, replace and diagnose.
+Module 02 uses the original application for shell, process lifetime, stop/start
+and replacement experiments. Signal-handling code is in advanced; resource
+limits, retry policies and memory failures belong to module 09.
+Module 03's required path is local tagging and archive restoration with the
+already-downloaded image. Publication to a temporary local registry is optional.
 
 The first application's Docker path has been tested on Windows amd64 using
 Docker Desktop with native PowerShell 7 and Ubuntu WSL Bash: launch,
@@ -69,11 +73,14 @@ instances, and scoped cleanup. The latest Bash run used the Windows Docker
 client with host bind-source paths translated for that client.
 Native Linux, macOS and arm64 still need platform-specific validation.
 
-The simplified operations launch has also been checked in native PowerShell:
-one read-only course mount, restart with writable state retained, message
-replacement, invalid-setting logs and shutdown. Its optional memory-failure
-and retry fixtures passed too. The simplified archive and loopback registry
-round trips preserved image identity on that same amd64 Desktop engine.
+The unchanged application has also been checked with real interactive
+PowerShell/ConPTY sessions: exiting an added shell left HTTP working,
+stopping the main process ended another open shell, and the note survived
+start/restart but not replacement. The revised module-03 archive round trip
+preserved image identity and platform and served the expected message/health
+using both PowerShell and WSL Bash. The optional registry's push/digest-pull
+round trip preserved identity, and its temporary storage and anonymous-volume
+cleanup were checked.
 Earlier checks also covered platform-digest selection and the deep-dive
 fixtures. Bash tests used the Windows Docker client from WSL because native
 WSL integration was unavailable; integrated WSL paths remain a separate setup check.

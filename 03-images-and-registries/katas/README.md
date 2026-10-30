@@ -1,86 +1,71 @@
-# An artifact for another environment
+# A local image handover
 
-The next team has Docker, but doesn't trust a handover that says "use the
-latest Python tag". They need to recover the artifact you tested, identify
-its platform and launch the message service with it. Prepare evidence they
-can verify, not just a successful screenshot from your laptop.
+A colleague wants to try your status page and has a compatible Linux
+Docker environment. They've asked you for a file they can load, along
+with enough instructions to get the service running. Prepare that
+handover so they can follow it from a fresh terminal, including what
+you tested and which results they should expect.
 
-Use the chapter-01 handover archive and chapter-04 loopback registry workflow.
-You need only the main Docker setup, Bash, curl and local disk. No external
-registry account or advanced deep dive is required.
+Choose a use for the page and a message that fits its audience, then
+prepare the archive using the existing Python image, an unused tag of
+your own and a new archive path. Keep the exercise local and use the
+application unchanged, working from `01-why-containers/first-app` when
+you launch it. You have everything you need from the core chapters.
 
-## 1. Recover a missing reference
+## The handover must work locally first
 
-Reserve a fresh local tag `ark-runtime:kata` after checking that it is unused.
-Tag the identified runtime image, save that tag to a new archive of your own,
-record its image ID and platform, then remove **only that extra tag**.
+Plan your own sequence using the chapters as a reference. Your result must
+satisfy these conditions:
 
-Recover it using the archive without resolving the original moving tag again.
-Verify that the recovered local image ID and platform match your notes. Shared
-cached layers may still exist: say honestly what this test did and didn't
-establish.
+- The new tag points to the same full local image ID as your chosen Python image.
+- An archive restores that tag after you remove only the extra reference.
+- The restored image's full ID and platform match what you recorded.
+- A container named `ark-artifact-service`, on a free loopback port of your
+  choice, uses the restored image without pulling and returns your message
+  and a successful `/health`.
+- Its `.Image` value matches the image ID in your notes.
 
-Don't delete the original Python image, force-remove image IDs or prune the
-host to simulate a missing tag. An isolated second engine is the right place
-for an optional genuinely cold-cache test.
+Before saving, predict where `app.py`, the chosen message and a note
+previously written inside a container will be after restoration. Use
+the image as it stands and include your reasoning in the handover,
+so your colleague understands which inputs the launch command supplies.
 
-## 2. A registry reference the team can use
+## Leave enough information for another person
 
-Follow the registry lab's resource checks and safe loopback binding. If its
-container/volume already exist from your own unfinished attempt, inspect their
-state before reusing them; never take over someone else's resources.
+Write the procedure for your chosen shell, including the archive's filename,
+tag, full image ID, tested platform and the source file to place alongside
+it. Describe how to launch the service and check the result, and link the
+[paired launch reference](../04-transfer-an-image-locally.md#use-the-restored-image-for-our-service)
+for someone using the other shell. If their CPU architecture differs,
+explain what they should check before launching; you can leave setting
+up emulation outside this exercise.
 
-Publish the recovered image as `127.0.0.1:15000/ark/runtime:kata`. Record the
-digest for that push and the object/platform it represents. Remove only the
-extra registry tag locally, pull by the recorded digest, then launch the
-service with that reference and a unique name `ark-artifact-service`.
-
-Choose a free loopback host port, preserve read-only
-source mounts, and set a new message. Verify `/`, `/health` and the running
-container's `.Image` value against your handover notes.
-
-## 3. A different architecture
-
-The team now asks whether the archive also works on another CPU architecture.
-Inspect the upstream index and identify the relevant platform descriptor.
-Explain why the platform-specific archive you created isn't automatically the
-right artifact, even if the registry uses the same human-readable tag.
-
-No emulated execution is required. If you have an already-supported second
-engine, repeat the appropriate platform selection there and record its actual
-identity instead of predicting identical IDs across platforms.
+Include the environment where you performed the test. On your own engine,
+Docker may have reused cached layers, so describe the result as a local
+restoration check and leave testing on another machine as a separate step.
+Then ask someone to follow the notes, or try them yourself from a fresh
+terminal to see whether you've left out a step.
 
 <details>
-<summary>I have three different SHA-256 values</summary>
+<summary>The tag has a different name, but the ID didn't change</summary>
 
-Name the objects before comparing them. The local image ID is typically the
-configuration digest; a pushed platform manifest has its own digest; an
-upstream index can have another. Matching strings are meaningful only when
-you know what each string identifies.
+Compare how you created the new tag with how you created a container.
+Tagging adds a reference to existing image content, so both names should
+lead back to the same full ID.
 
 </details>
 
 <details>
-<summary>The image loads, but the service source is missing</summary>
+<summary>The archive loads, but the service can't find app.py</summary>
 
-That's a packaging boundary, not a corrupt archive. This is still the supplied
-Python runtime image. The source and launch settings must accompany it until
-module 04 puts the code in our own image.
+Follow the mount's source path back to your host and check that `app.py`
+is there. The archive supplies the Python image, while the launch command
+still needs to make that host file available inside the container.
 
 </details>
 
-## Check and reset
-
-Your notes should let another reader distinguish content identity, platform
-compatibility and application behavior. Include what would change for a real
-authenticated TLS registry; the lab has not tested that production setup.
-
-Stop and remove only `ark-artifact-service` and the registry container you
-created. Remove the lab registry volume only when you intend to delete its
-uploads. Remove only your extra tags and exact archive file, then its empty
-directory. The original source, upstream image cache and unrelated resources
-stay untouched.
-
-Swap handovers with a colleague, or come back in a fresh terminal and follow
-only your notes. What missing assumption would prevent the next person from
-reproducing the service?
+When you've finished checking the handover, clean up the resources you
+created: stop and remove `ark-artifact-service`, remove your extra tag,
+then delete your exact archive file and its empty directory if you no
+longer need them. Leave the original Python reference, source files and
+other containers in place so the rest of your work remains available.

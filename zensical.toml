@@ -30,12 +30,12 @@ nav = [
     ] },
     { "03: Images and registries" = [
       { "Overview" = "03-images-and-registries/README.md" },
-      { "Identify and transfer an image" = "03-images-and-registries/01-identify-and-transfer-an-image.md" },
-      { "Image content and layers" = "03-images-and-registries/02-image-content-and-layers.md" },
-      { "Digests and manifests" = "03-images-and-registries/03-digests-manifests-and-multi-arch-images.md" },
-      { "Run a local registry" = "03-images-and-registries/04-run-a-local-registry.md" },
-      { "Registry contracts and authentication" = "03-images-and-registries/05-registry-contract-and-authentication.md" },
-      { "Platforms and compatibility" = "03-images-and-registries/06-platforms-and-compatibility.md" },
+      { "Find the image behind the container" = "03-images-and-registries/01-find-the-image-behind-the-container.md" },
+      { "One image, several names" = "03-images-and-registries/02-one-image-several-names.md" },
+      { "What an image contains" = "03-images-and-registries/03-what-an-image-contains.md" },
+      { "Transfer an image locally" = "03-images-and-registries/04-transfer-an-image-locally.md" },
+      { "Choose the reference to hand over" = "03-images-and-registries/05-choose-the-reference-to-hand-over.md" },
+      { "Optional: run a local registry" = "03-images-and-registries/optional/run-a-local-registry.md" },
       { "Kata: artifact handover" = "03-images-and-registries/katas/README.md" },
     ] },
     { "04: Building images (in preparation)" = "04-building-images/README.md" },
@@ -47,6 +47,14 @@ nav = [
   ] },
   { "Under the hood (optional)" = [
     { "About these deep dives" = "advanced/README.md" },
+    { "Images and distribution" = [
+      { "Overview" = "advanced/images-and-distribution/README.md" },
+      { "Versioning and tagging strategies" = "advanced/images-and-distribution/versioning-and-tagging-strategies.md" },
+      { "Image content and writable layers" = "advanced/images-and-distribution/image-content-and-writable-layers.md" },
+      { "Digests, manifests and multi-arch images" = "advanced/images-and-distribution/digests-manifests-and-multi-arch-images.md" },
+      { "Registry contracts and authentication" = "advanced/images-and-distribution/registry-contracts-and-authentication.md" },
+      { "Platforms and execution compatibility" = "advanced/images-and-distribution/platforms-and-execution-compatibility.md" },
+    ] },
     { "Linux primitives" = [
       { "Overview" = "advanced/linux-primitives/README.md" },
       { "A container is just a process" = "advanced/linux-primitives/01-a-container-is-just-a-process.md" },

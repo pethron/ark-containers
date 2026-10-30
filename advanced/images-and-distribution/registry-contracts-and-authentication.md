@@ -94,8 +94,8 @@ platform and keep authentication material separate from the image. That's
 already much more useful than "pull latest and hope".
 
 For deeper protocol boundaries, see the optional
-[OCI image and distribution explanation](../advanced/runtime-architecture/04-oci-image-and-distribution-specs.md).
-Next, [platforms and execution compatibility](06-platforms-and-compatibility.md).
+[OCI image and distribution explanation](../runtime-architecture/04-oci-image-and-distribution-specs.md).
+Next, [platforms and execution compatibility](platforms-and-execution-compatibility.md).
 
 ## References
 

@@ -106,7 +106,7 @@ configuration-related objects, but they do different jobs.
 Next, [CRI and the wider ecosystem](05-cri-and-the-wider-ecosystem.md).
 
 If you opened this explanation from the core course, return to
-[tags, digests and manifests](../../03-images-and-registries/03-digests-manifests-and-multi-arch-images.md)
+[tags, digests and manifests](../images-and-distribution/digests-manifests-and-multi-arch-images.md)
 and label the identities in your handover. Continuing through the rest of this
 deep dive is optional.
 
