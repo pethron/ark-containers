@@ -21,12 +21,14 @@ using the supplied code keeps application programming out of the task.
 You need Docker running Linux containers, Linux Bash or PowerShell 7, and
 an internet connection for the Python base image and packages; Linux Engine
 may require `sudo` for Docker. Nothing from the module's chapters needs to be
-running. Check with `docker ps -a` that the container name `ark-build-handover`
-and a loopback port of your choice are free, and pick image tags you haven't
-used, such as `ark-build:baseline` and `ark-build:improved`.
+running. Check `docker ps -a` for a container already named
+`ark-build-handover`. Docker reports a bind error if your chosen loopback
+port can't be published; if that happens, use another host port in the launch
+command and update the URL. Pick image tags you haven't used, such as
+`ark-build:baseline` and `ark-build:improved`.
 
 Work on a copy of `template-service`, so the supplied originals stay intact.
-From the course checkout root, this creates one beside the original; choose
+From the [course checkout root](../../before-you-start.md#get-the-course-files), this creates one beside the original; choose
 another name if `my-template-service` already exists:
 
 === "Linux (Bash)"
@@ -128,15 +130,15 @@ restores them. `docker image inspect --format '{{.Id}}' <image:tag>` and
 record before saving and compare after loading. `docker image rm <image:tag>`
 refuses to remove a tag while a container still uses the image, and
 `docker run --pull never` fails instead of downloading a missing image.
-The [handover in chapter 01](../01-package-the-service-in-an-image.md#try-the-handover-yourself)
-walks through the same sequence for the message service.
+The [archive handover in module 03](../../03-images-and-registries/04-transfer-an-image-locally.md)
+walks through the same sequence for the course image.
 
 </details>
 
 Explain why the tested archive is a stronger delivery promise than asking the
 receiver to rebuild a moving recipe. Include its runtime configuration and
 a loopback-only launch command for your chosen shell, with a link to the
-[paired launch reference](../01-package-the-service-in-an-image.md#run-it-without-the-source-file)
+[paired launch reference](../01-package-the-service-in-an-image.md#run-your-build)
 for the other shell.
 
 <details>
@@ -180,8 +182,6 @@ directory if you no longer need them. Keep your recipes, measurements and
 the supplied source files; don't prune shared images, builder caches or
 another exercise's resources.
 
-At the next study session, change one build input and predict the first
-step that will need to rerun before checking the build output. Then take the
-image forward to [storage](../../05-storage/README.md), where replacing a
-container must preserve intentional data without turning the image into
-a mutable record of everything the process has ever done.
+Before you leave, choose one build input and predict the first step that would
+need to rerun after it changes. Check that prediction against the build output:
+the cache report shows which earlier work Docker could reuse.

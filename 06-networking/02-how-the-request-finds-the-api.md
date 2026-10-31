@@ -1,9 +1,9 @@
 ---
-title: "How the request finds the API"
+title: "How containers find each other"
 track: architecture
 ---
 
-# How the request finds the API
+# How containers find each other
 
 A small frontend, `ark-web`, calls a small API, `ark-api`, by container name
 and gets an answer. Networks deliver requests to addresses, so somewhere the
@@ -60,6 +60,8 @@ a door from your computer: Docker forwards traffic arriving on
 containers run inside a Linux virtual machine, and Desktop forwards the
 traffic into it for you. The API has no door of its own, and doesn't need
 one, because the frontend calls it from inside the office.
+
+![Your request enters ark-web through 127.0.0.1:8080; inside ark-net, ark-web asks Docker's name server for ark-api, then sends GET /health to port 8000 of ark-api, which has no published port](images/request-path.svg)
 
 **When to use this picture:** when a connection fails, ask three questions
 in order. Does the name resolve to an address? Is a program listening on the

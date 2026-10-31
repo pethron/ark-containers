@@ -5,13 +5,13 @@ track: architecture
 
 # Registry contracts and authentication
 
-Our local registry returned `{}` and accepted an upload. Convenient, but not a
-production deployment. Anyone who can reach that unauthenticated lab endpoint
-can interact with it; binding it to loopback reduced exposure, not the need
-for a real access-control design elsewhere.
+An archive hands your colleague a file. Publishing the same application to
+Docker Hub adds a shared destination, an account and repository permissions.
+The artifact still needs the platform and launch checks from our handover,
+but now a client also has to retrieve it through a service.
 
-Let's separate the content-transfer contract from the operational choices
-around it.
+Let's follow that content-transfer contract and separate it from the
+operational choices around the registry.
 
 ## Resolve a name, fetch referenced content
 
@@ -64,14 +64,18 @@ A `401` challenge can be a normal part of login/token negotiation, not proof
 that the registry is offline. Similarly, a denied push isn't fixed by giving
 the application container extra Linux capabilities.
 
-Our loopback registry didn't exercise authentication or TLS. Don't cite its
-successful upload as validation of a production identity flow.
+The optional publication exercise checks the account and repository selected
+for that handover. It doesn't validate an organization's identity policy,
+credential lifecycle or registry availability.
 
 ## A registry is storage with an operational lifecycle
 
-The lab's volume held the uploaded manifests and blobs. Losing that volume
-can remove artifacts even if one engine still has a cache. Plan durable
-storage, access policy, backups, retention and recovery for a real registry.
+The registry stores uploaded manifests and blobs independently of your
+engine's cache. A cached image can still run after an artifact disappears
+from its repository, while a fresh receiver can no longer retrieve it.
+For a registry you operate, plan durable storage, access policy, backups,
+retention and recovery; with a hosted registry, understand the provider's
+policy rather than treating local cache as a backup.
 
 Tags also need a policy. Some registries support immutable tags, scanning,
 signatures, replication or lifecycle rules; those are deployment features,
@@ -86,8 +90,9 @@ make disk usage look better.
 
 A digest makes a strong content-identity claim. It doesn't establish who built
 the content, what source produced it or whether its dependencies are safe.
-Signing, provenance, SBOMs and vulnerability assessment add different evidence,
-covered in the security module.
+Signing, provenance, SBOMs and vulnerability assessment add different evidence.
+They remain outside the current course; digest inspection alone is not a
+complete supply-chain assessment.
 
 For now, your handover should identify a retrievable artifact, name the intended
 platform and keep authentication material separate from the image. That's

@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1034" height="230" viewBox="0 0 1034 230" role="img" aria-labelledby="title description">
+<title id="title">The database, API, cache and proxy are running</title>
+<desc id="description">$ docker compose -p arkcw-capture-7857cd15 -f compose.yaml -f compose.cache.yaml ps --format &apos;{{.Service}}: {{.State}} ({{.Health}}) {{.Ports}}&apos;
+api: running (healthy) 8000/tcp
+cache: running (healthy) 6379/tcp
+db: running (healthy) 5432/tcp
+proxy: running (healthy) 127.0.0.1:8080-&gt;80/tcp</desc>
+<rect width="1034" height="230" rx="12" fill="#0c1220"/>
+<path d="M0 44H1034" stroke="#334155"/>
+<text x="24" y="28" fill="#cbd5e1" font-family="Consolas,monospace" font-size="15">The database, API, cache and proxy are running</text>
+<text x="24" y="70" fill="#5eead4" font-family="Consolas,monospace" font-size="14" xml:space="preserve">$ docker compose -p arkcw-capture-7857cd15 -f compose.yaml -f compose.cache.yaml ps --format &apos;{{.Service}}: {{.State</text>
+<text x="24" y="92" fill="#5eead4" font-family="Consolas,monospace" font-size="14" xml:space="preserve">}} ({{.Health}}) {{.Ports}}&apos;</text>
+<text x="24" y="114" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">api: running (healthy) 8000/tcp</text>
+<text x="24" y="136" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">cache: running (healthy) 6379/tcp</text>
+<text x="24" y="158" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">db: running (healthy) 5432/tcp</text>
+<text x="24" y="180" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">proxy: running (healthy) 127.0.0.1:8080-&gt;80/tcp</text>
+<text x="24" y="215" fill="#94a3b8" font-family="Consolas,monospace" font-size="12">2026-10-31 | Docker 29.6.1 | IDs and times may differ</text>
+</svg>

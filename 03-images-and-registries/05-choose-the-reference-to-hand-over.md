@@ -1,14 +1,14 @@
 ---
-title: "Choose the reference to hand over"
+title: "Tags, digests and platforms in a handover"
 track: architecture
 ---
 
-# Choose the reference to hand over
+# Tags, digests and platforms in a handover
 
 Your colleague can now receive an archive that you've loaded and used to
 run the service. What would you write in the accompanying message? They
 will need to know which image you tested, whether it suits their computer
-and how to supply the application, so let's use the results of our
+and which settings to use when they start it, so let's use the results of our
 experiment to answer those questions.
 
 ## Names help people, identity helps comparisons
@@ -38,9 +38,11 @@ uses an arm64 processor, they'll need a compatible build or an environment
 with suitable emulation before they can run it.
 
 Publishers can make several platform builds available under one tag, letting
-Docker select the appropriate build during a pull. Our archive contains
-the image we saved locally, so the receiving environment needs to support
-that build, including its operating system requirements. For this handover,
+Docker select the appropriate build during a pull. The course image is
+published that way, for `linux/amd64` and `linux/arm64`, and your engine pulled
+the build that matches it. Our archive contains the image we saved locally, so
+the receiving environment needs to support that build, including its operating
+system requirements. For this handover,
 record the platform you've actually tested and leave testing on a different
 machine as an explicit next step.
 
@@ -50,51 +52,53 @@ Passing an archive works well for this exercise, but you can imagine the
 extra work if every colleague needs a copy each time an image changes.
 A **registry** provides a shared place to store and distribute images:
 you publish content with `push`, and others retrieve it with `pull`.
-Docker Hub is one of them: it's where Docker downloaded the Python image
-we've been using.
+GitHub's container registry is one of them: it's where Docker downloaded our
+course image the first time you ran the service.
 
-The destination is part of the image reference. Written in full, our Python
-reference is `docker.io/library/python:3.12-alpine`, which includes Docker
-Hub's registry address and the `library` namespace. The short form uses
-those defaults, while a reference for another registry includes that
-registry's address.
+The destination is part of the image reference, which is why ours begins with
+`ghcr.io`. When a reference has no registry address, Docker uses Docker Hub,
+the default registry. The official Python image our service is built on is
+usually written `python:3.12-alpine`; in full it's
+`docker.io/library/python:3.12-alpine`, which includes Docker Hub's address
+and the `library` namespace reserved for official images. Our local
+`ark-message:handover` has no address either, so if you ever tried to push it,
+Docker would assume Docker Hub too.
 
 Access depends on the repository's policy: a public repository may allow
 anonymous pulls, while a private one can require authentication.
 `docker login` gives the client credentials to present, and the registry
 checks whether that account has permission for the requested repository
-and action. You can try publication in the
-[optional local registry lab](optional/run-a-local-registry.md), with no
-external account required; the archive remains enough for the core exercise.
+and action. Once you have built your own application image, the optional
+[Docker Hub runbook](../04-building-images/optional/publish-to-docker-hub.md)
+lets you publish it in your own namespace. That route needs an account and
+permission to upload; the archive remains enough for this exercise.
 
 You now have the pieces for your colleague's handover: the archive, tag,
-full local ID, tested platform, `app.py` and the launch command. Include
-the chosen message setting in that command, since both it and the source
-file were supplied when we created the container. Try putting those
+full local ID, tested platform and the launch command. Include the chosen
+message setting in that command, since it was supplied when we created the
+container rather than stored in the image. Try putting those
 pieces together yourself in the [local handover kata](katas/README.md),
-then we'll simplify the package by
-[building our own image](../04-building-images/README.md).
+then we'll find out how an image like ours is made by
+[building one ourselves](../04-building-images/README.md).
 
-Keep the archive and extra tag if you want to try the optional publication
-lab first. When you're finished, remove only `ark-runtime:handover`, your
-exact archive file and its empty directory, leaving the original Python
-image and other exercises in place. From
-`03-images-and-registries/first-app`, where the archive exercise created
-them:
+When you're finished, remove only `ark-message:handover`, your
+exact archive file and its empty directory, leaving the course image and
+other exercises in place. From the directory where the archive exercise
+created them:
 
 === "Linux (Bash)"
 
     ```bash
-    docker image rm ark-runtime:handover
-    rm ark-image-handover/runtime.tar
+    docker image rm ark-message:handover
+    rm ark-image-handover/message.tar
     rmdir ark-image-handover
     ```
 
 === "Windows (PowerShell)"
 
     ```powershell
-    docker image rm ark-runtime:handover
-    Remove-Item .\ark-image-handover\runtime.tar
+    docker image rm ark-message:handover
+    Remove-Item .\ark-image-handover\message.tar
     Remove-Item .\ark-image-handover
     ```
 

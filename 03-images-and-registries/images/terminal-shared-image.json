@@ -1,0 +1,17 @@
+{
+  "title": "Two references, one local image ID",
+  "capturedAt": "2026-10-31T23:48:23.880Z",
+  "dockerVersion": "29.6.1",
+  "entries": [
+    {
+      "command": "docker image inspect --format '{{.Id}}' ghcr.io/pethron/ark-message:1",
+      "output": "sha256:0cde1a5d35654741e6e430d77fddf6397946a2c3758268d506195ecec43d3126",
+      "exitCode": 0
+    },
+    {
+      "command": "docker image inspect --format '{{.Id}}' ark-message:handover",
+      "output": "sha256:0cde1a5d35654741e6e430d77fddf6397946a2c3758268d506195ecec43d3126",
+      "exitCode": 0
+    }
+  ]
+}

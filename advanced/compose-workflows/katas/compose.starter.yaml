@@ -1,0 +1,27 @@
+services:
+  proxy:
+    build:
+      context: .
+      dockerfile: proxy/Dockerfile
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8081}:80"
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    environment:
+      DB_HOST: db
+      DB_NAME: reading
+      DB_USER: reading
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+  db:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_DB: reading
+      POSTGRES_USER: reading
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+secrets:
+  db_password:
+    file: ./secrets/db-password.txt

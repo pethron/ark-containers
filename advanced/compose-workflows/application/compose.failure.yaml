@@ -1,0 +1,6 @@
+services:
+  db:
+    healthcheck:
+      test: ["CMD", "false"]
+      retries: 3
+      interval: 2s

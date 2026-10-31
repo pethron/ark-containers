@@ -1,0 +1,18 @@
+{
+  "title": "The service process and its log",
+  "capturedAt": "2026-10-31T23:48:00.264Z",
+  "dockerVersion": "29.6.1",
+  "entries": [
+    {
+      "command": "docker ps --filter name=ark-message --format 'table {{.ID}}\\t{{.Image}}\\t{{.Status}}\\t{{.Names}}'",
+      "output": "CONTAINER ID   IMAGE                           STATUS                  NAMES\n3db8e7024a2e   ghcr.io/pethron/ark-message:1   Up Less than a second   ark-message",
+      "exitCode": 0
+    },
+    {
+      "command": "docker logs ark-message",
+      "output": "ARK message service listening on port 8000\n\n172.17.0.1 - - [31/Oct/2026 23:48:00] \"GET / HTTP/1.1\" 200 -\n172.17.0.1 - - [31/Oct/2026 23:48:00] \"GET /health HTTP/1.1\" 200 -",
+      "exitCode": 0
+    }
+  ],
+  "note": "The process listing selects the columns relevant here. HTTP was checked before capturing the log."
+}

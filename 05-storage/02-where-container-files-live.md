@@ -1,9 +1,9 @@
 ---
-title: "Where a container's files live"
+title: "Where container files live"
 track: architecture
 ---
 
-# Where a container's files live
+# Where container files live
 
 When the notes service writes `/data/notes.txt` into its container, the file
 lasts until the container is replaced; when a volume is mounted at `/data`,
@@ -93,9 +93,11 @@ It belongs to one container, so it survives stop and start and disappears
 with `docker rm`.
 
 **Mounts** are placed over specific paths, hiding whatever the image had
-there. A bind mount shows a file or directory from your computer, such as
-source code you're editing; a volume shows storage that Docker manages. The process
-writes through the mount, so those files never enter the writable layer.
+there. A **bind mount** presents a file or directory from your computer,
+as when you supplied `app.py` in module 01; a **volume** presents storage
+that Docker manages. The process writes through either mount, so those files
+never enter the writable layer. The next chapter compares their lifetimes
+and helps you choose between them.
 You can see the mount Docker set up for `ark-notes`:
 
 ```text
@@ -109,6 +111,8 @@ On Docker Desktop, that path lives inside the Linux virtual machine that runs
 your containers, not on your Windows or macOS disk. Treat it as the engine's
 private storage and work with volumes through Docker and containers instead
 of editing files there; chapter 04 shows how to copy data in and out.
+
+![Inside the ark-notes container, a writable layer sits over read-only image layers, while the /data mount point leads to the ark-notes-data volume outside the container](images/container-files.svg)
 
 If you'd like to see how the engine builds the layered view and what
 copy-on-write costs for large files, the optional

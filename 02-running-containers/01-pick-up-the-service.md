@@ -1,9 +1,9 @@
 ---
-title: "Pick up the service"
+title: "Checking a running service"
 track: runbook
 ---
 
-# Pick up the service
+# Checking a running service
 
 Getting a service to answer once is a good start, but the work doesn't end
 when the page loads. Someone will eventually want a different message, ask
@@ -16,25 +16,10 @@ you find the container, read what the application reported, and check the
 response a user actually receives? We'll use those checks throughout this
 module, rather than introduce a new tool for every question.
 
-The supplied [message service](first-app/README.md) is in
-`02-running-containers/first-app`. You need a working Docker setup running
-Linux containers, the course files and a browser or `curl`.
-Use PowerShell 7 on Windows and prefix Docker commands with `sudo` if your
-Linux Engine setup requires it.
-
-Start in the module's example directory:
-
-=== "Linux (Bash)"
-
-    ```bash
-    cd 02-running-containers/first-app
-    ```
-
-=== "Windows (PowerShell)"
-
-    ```powershell
-    Set-Location .\02-running-containers\first-app
-    ```
+We'll keep using the course's message service image from module 01. You need a
+working Docker setup running Linux containers and a browser or `curl`; this
+module doesn't use the course files. On Linux Engine, prefix Docker commands
+with `sudo` if your setup requires it.
 
 Check `docker ps -a` before starting: the name `ark-ops` and local port 8080
 must be free. If that name belongs to an earlier exercise, inspect it before
@@ -42,32 +27,30 @@ deciding whether to remove it.
 
 ## Start from a known result
 
-We'll start the service exactly as a colleague would, without adding another
-Python program or changing its behavior:
+We'll start the service exactly as a colleague would, with the same image and a
+message for the next shift. Only the line-continuation character differs
+between the two shells:
 
 === "Linux (Bash)"
 
     ```bash
     docker run -d --name ark-ops \
-      --mount "type=bind,source=$(pwd)/app.py,target=/app/app.py,readonly" \
       -e MESSAGE="Ready for the next shift" \
       -p 127.0.0.1:8080:8000 \
-      python:3.12-alpine python /app/app.py
+      ghcr.io/pethron/ark-message:1
     ```
 
 === "Windows (PowerShell)"
 
     ```powershell
     docker run -d --name ark-ops `
-      --mount "type=bind,source=$($PWD.Path)\app.py,target=/app/app.py,readonly" `
       -e MESSAGE="Ready for the next shift" `
       -p 127.0.0.1:8080:8000 `
-      python:3.12-alpine python /app/app.py
+      ghcr.io/pethron/ark-message:1
     ```
 
-The host file appears at `/app/app.py` inside the container as a read-only
-mount. The image supplies Python, while the message and port configure this
-instance.
+The image supplies Python, the application and the command that starts it,
+while the message and port configure this instance.
 
 ## Check it before changing it
 

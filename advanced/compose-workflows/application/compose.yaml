@@ -1,0 +1,67 @@
+services:
+  proxy:
+    build:
+      context: .
+      dockerfile: proxy/Dockerfile
+    ports:
+      - "127.0.0.1:${WEB_PORT:-8080}:80"
+    networks: [front]
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    environment:
+      DB_HOST: db
+      DB_NAME: ${DB_NAME:-reading}
+      DB_USER: ${DB_USER:-reading}
+      DB_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    dns_opt: ["timeout:1", "attempts:1"]
+    networks: [front, back]
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/ready', timeout=8)"]
+      interval: 3s
+      timeout: 10s
+      retries: 15
+  db:
+    image: postgres:17.6-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-reading}
+      POSTGRES_USER: ${DB_USER:-reading}
+      POSTGRES_PASSWORD_FILE: /run/secrets/db_password
+    secrets: [db_password]
+    volumes:
+      - records:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    networks: [back]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 2s
+      timeout: 2s
+      retries: 30
+  tests:
+    profiles: [test]
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    command: ["python", "-m", "unittest", "discover", "-s", "tests", "-v"]
+    network_mode: none
+networks:
+  front:
+  back:
+volumes:
+  records:
+secrets:
+  db_password:
+    file: ./secrets/db-password.txt

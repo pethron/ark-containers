@@ -11,8 +11,8 @@ can change between builds. Let's list those inputs and decide what
 reproducible should mean for this handover.
 
 Use Linux Bash or PowerShell 7 with Linux containers and an internet
-connection. Linux Engine may require `sudo` for Docker. From the course
-checkout root:
+connection. Linux Engine may require `sudo` for Docker. From the
+[course checkout root](../../before-you-start.md#get-the-course-files):
 
 === "Linux (Bash)"
 

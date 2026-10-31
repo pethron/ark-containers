@@ -8,7 +8,7 @@ from pathlib import Path
 from types import FrameType
 
 _application = runpy.run_path(
-    str(Path(__file__).resolve().parents[3] / "01-why-containers" / "first-app" / "app.py")
+    str(Path(__file__).resolve().parents[3] / "04-building-images" / "message-service" / "app.py")
 )
 Handler: type[BaseHTTPRequestHandler] = _application["Handler"]
 

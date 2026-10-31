@@ -1,9 +1,9 @@
 ---
-title: "Diagnose a broken connection"
+title: "Troubleshooting container connections"
 track: runbook
 ---
 
-# Diagnose a broken connection
+# Troubleshooting container connections
 
 Sooner or later the frontend will answer with an error instead of the API's
 data. The tempting move is to restart everything and hope. Let's do better:

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="340" viewBox="0 0 700 340" role="img" aria-labelledby="title description">
+<title id="title">Restart and replacement: actual container IDs</title>
+<desc id="description">[Before restart]
+$ docker inspect --format &apos;{{.Id}}&apos; ark-ops
+ca0d019b33a1a259a010451f17657827b8dd4ea28e5629ecba842b270e15be9a
+
+[After restart]
+$ docker inspect --format &apos;{{.Id}}&apos; ark-ops
+ca0d019b33a1a259a010451f17657827b8dd4ea28e5629ecba842b270e15be9a
+
+[After stop, remove and replacement]
+$ docker inspect --format &apos;{{.Id}}&apos; ark-ops
+70e23db063b1fa283e9e986d797977dc55df5ad267ce8413614702f5954749b2</desc>
+<rect width="700" height="340" rx="12" fill="#0c1220"/>
+<path d="M0 44H700" stroke="#334155"/>
+<text x="24" y="28" fill="#cbd5e1" font-family="Consolas,monospace" font-size="15">Restart and replacement: actual container IDs</text>
+<text x="24" y="70" fill="#94a3b8" font-family="Consolas,monospace" font-size="14" xml:space="preserve">Before restart</text>
+<text x="24" y="92" fill="#5eead4" font-family="Consolas,monospace" font-size="14" xml:space="preserve">$ docker inspect --format &apos;{{.Id}}&apos; ark-ops</text>
+<text x="24" y="114" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">ca0d019b33a1a259a010451f17657827b8dd4ea28e5629ecba842b270e15be9a</text>
+<text x="24" y="136" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve"> </text>
+<text x="24" y="158" fill="#94a3b8" font-family="Consolas,monospace" font-size="14" xml:space="preserve">After restart</text>
+<text x="24" y="180" fill="#5eead4" font-family="Consolas,monospace" font-size="14" xml:space="preserve">$ docker inspect --format &apos;{{.Id}}&apos; ark-ops</text>
+<text x="24" y="202" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">ca0d019b33a1a259a010451f17657827b8dd4ea28e5629ecba842b270e15be9a</text>
+<text x="24" y="224" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve"> </text>
+<text x="24" y="246" fill="#94a3b8" font-family="Consolas,monospace" font-size="14" xml:space="preserve">After stop, remove and replacement</text>
+<text x="24" y="268" fill="#5eead4" font-family="Consolas,monospace" font-size="14" xml:space="preserve">$ docker inspect --format &apos;{{.Id}}&apos; ark-ops</text>
+<text x="24" y="290" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">70e23db063b1fa283e9e986d797977dc55df5ad267ce8413614702f5954749b2</text>
+<text x="24" y="325" fill="#94a3b8" font-family="Consolas,monospace" font-size="12">2026-10-31 | Docker 29.6.1 | IDs and times may differ</text>
+</svg>

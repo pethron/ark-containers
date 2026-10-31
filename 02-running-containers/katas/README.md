@@ -11,33 +11,30 @@ its replacement. Plan the sequence before executing anything.
 ## Before you start
 
 You need a working Docker setup running Linux containers, using Bash on Linux
-or PowerShell 7 on Windows. The kata uses this module's
-[message service](../first-app/README.md); open a terminal in
-`02-running-containers/first-app`, the directory containing `app.py`.
+or PowerShell 7 on Windows. The kata uses the course's message service image,
+`ghcr.io/pethron/ark-message:1`; the course files aren't needed.
 
 ??? note "Reference: the module's launch command"
 
     This is how the walkthrough started `ark-ops`. Your procedure needs its own
-    name, port and messages.
+    name and messages.
 
     === "Linux (Bash)"
 
         ```bash
         docker run -d --name ark-ops \
-          --mount "type=bind,source=$(pwd)/app.py,target=/app/app.py,readonly" \
           -e MESSAGE="Ready for the next shift" \
           -p 127.0.0.1:8080:8000 \
-          python:3.12-alpine python /app/app.py
+          ghcr.io/pethron/ark-message:1
         ```
 
     === "Windows (PowerShell)"
 
         ```powershell
         docker run -d --name ark-ops `
-          --mount "type=bind,source=$($PWD.Path)\app.py,target=/app/app.py,readonly" `
           -e MESSAGE="Ready for the next shift" `
           -p 127.0.0.1:8080:8000 `
-          python:3.12-alpine python /app/app.py
+          ghcr.io/pethron/ark-message:1
         ```
 
 ## The change request
@@ -50,12 +47,12 @@ Your procedure must satisfy these conditions:
 
 - The original service returns your first message and a successful `/health`.
 - You open an interactive shell alongside the server, identify the main
-  process and create `/tmp/change-note` outside the read-only application mount.
+  process and create `/tmp/change-note`.
   Leaving that shell doesn't stop HTTP; stopping the container from a second
   host terminal while a new shell is open ends that session too.
 - The note is still readable after starting the same container again.
 - A replacement on the same host port returns your second message. The old
-  note is absent, while the host's source files are unchanged.
+  note is absent, while the image is unchanged.
 - You can stop the replacement, verify that it is `Exited`, read its request
   logs, start it again and get the second message back. Don't require a
   shutdown-complete log: this application doesn't produce one.
@@ -75,9 +72,9 @@ to repair.
 ## Leave a usable procedure
 
 Include the launch command, the order of the change, checks with expected
-results and the named cleanup. Use your chosen
-shell for the procedure and link the module's
-[example README](../first-app/README.md) for someone using the other shell.
+results and the named cleanup. Use your chosen shell for the procedure; if you
+split a command over several lines, note the continuation character someone
+using the other shell needs.
 
 Also explain what you'd change if the note were valuable application data.
 You don't need to implement that storage solution yet. The important part
@@ -103,8 +100,8 @@ Restarting an old instance doesn't apply a newly edited `-e MESSAGE` option.
 <summary>Hint: the new container won't start</summary>
 
 Read the error before changing anything. Is the old container still holding
-the name or port, or is the source file missing from your current directory? Docker's launch
-error and the application's logs answer different questions.
+the name or port, or does the image name have a typo? Docker's launch error and
+the application's logs answer different questions.
 
 </details>
 

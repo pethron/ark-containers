@@ -1,30 +1,30 @@
 ---
-title: "Package the service in an image"
+title: "Building and running your first image"
 track: runbook
 ---
 
-# Package the service in an image
+# Building and running your first image
 
-Our message service has always started from two inputs: the
-`python:3.12-alpine` image, which supplies Python, and an `app.py` on your
-computer, brought into the container through a mount. That's why the archive
-handover at the end of module 03 still asked your colleague to keep `app.py`
-beside the launch command. In this chapter we'll put the code inside the
-image, so the receiving machine needs only the image and a few launch settings.
+Since module 01, the message service has started from one image,
+`ghcr.io/pethron/ark-message:1`, and you've seen that it carries everything the
+service needs: Python, `app.py`, the command that starts it and an ordinary
+user to run it. Somebody had to put those pieces together. In this chapter
+you'll do it yourself, from the same recipe the course uses to publish that
+image, and check that your build gives you a service that behaves the same.
 
-We'll start from a supplied recipe for that image, called a **Dockerfile**,
-build it and run the service without a mount. The recipe also makes one change
-you haven't seen yet: the application stops running as root. Once the service
-answers, we'll check which user runs it and what that user can do with its
-own code. Writing a Dockerfile of your own comes later in this module, after
-we've looked at how the build uses these instructions.
+That recipe is called a **Dockerfile**. We'll read it, build it and run the
+result, then look at the lines that decide which user runs the service and what
+that user can do with its own code. Writing a Dockerfile of your own comes
+later in this module, after we've looked at how the build uses these
+instructions.
 
 ## Read the recipe first
 
-You need Docker running Linux containers, as set up in module 01, and
-a network connection, because the build looks up the Python image on Docker
-Hub. On Linux Engine, prefix Docker commands with `sudo` if your setup requires
-it. From the root of your course checkout, move into the supplied example:
+You need Docker running Linux containers, as set up in
+[Before you start](../before-you-start.md), the course files and a network
+connection, because the build looks up the Python image on Docker Hub. On
+Linux Engine, prefix Docker commands with `sudo` if your setup requires it.
+From the [root of your course checkout](../before-you-start.md#get-the-course-files), move into the supplied example:
 
 === "Linux (Bash)"
 
@@ -39,12 +39,12 @@ it. From the root of your course checkout, move into the supplied example:
     ```
 
 Run the commands in this chapter from that directory. Besides a short README,
-it contains `app.py`, an identical copy of the message service from module 01,
-and the `Dockerfile`. Keeping the copy here lets this module change its files
-without touching any other module. The chapter uses the container names
-`ark-built` and `ark-restored`, local port 8080 (one at a time), and a new
-`ark-message-handover` directory beside `message-service`; check with
-`docker ps -a` that the names and ports are free.
+it contains `app.py`, the message service's code, and the `Dockerfile`; a few
+other files belong to later chapters. The chapter uses the container name
+`ark-built` and local port 8080. Check `docker ps -a` for a container already
+using that name. If port 8080 is unavailable, Docker reports a bind error when
+you start the service; change the host-side `-p` value to a free loopback port
+and update the URL.
 
 Open `Dockerfile` in your editor. It's short enough to read in full:
 
@@ -62,51 +62,28 @@ CMD ["python", "/app/app.py"]
 ```
 
 Each line starts with an instruction, and Docker follows them in order to
-produce a new image. You can already read most of this recipe by comparing
-it with the command that has started the service since module 01, run from
-the directory containing `app.py`:
+produce a new image. If you've looked at `docker image history` for the course
+image, these lines will feel familiar: each instruction left one of the entries
+at the top of that list.
 
-=== "Linux (Bash)"
-
-    ```bash
-    docker run -d --name ark-message \
-      --mount "type=bind,source=$(pwd)/app.py,target=/app/app.py,readonly" \
-      -p 127.0.0.1:8080:8000 \
-      python:3.12-alpine python /app/app.py
-    ```
-
-=== "Windows (PowerShell)"
-
-    ```powershell
-    docker run -d --name ark-message `
-      --mount "type=bind,source=$($PWD.Path)\app.py,target=/app/app.py,readonly" `
-      -p 127.0.0.1:8080:8000 `
-      python:3.12-alpine python /app/app.py
-    ```
-
-There's no need to run it now. The `--mount` makes your `app.py` appear at
-`/app/app.py` inside the container, and the words after the image name tell
-Python to run that file.
-
-`FROM python:3.12-alpine` picks the starting point, the same image that has
-supplied Python for every launch so far. Everything below it adds to that
-image, so ours will contain Python and its supporting files as before.
-`WORKDIR /app` creates the `/app` directory and makes it the working directory
-for the instructions that follow and for the service. `COPY` then takes `app.py`
-from this directory on your computer and places it at `/app/app.py` inside the
-image, the path where the mount used to make it appear.
+`FROM python:3.12-alpine` picks the starting point, the official Python image
+on Docker Hub. Everything below it adds to that image, so ours will contain
+Python and its supporting files. `WORKDIR /app` creates the `/app` directory
+and makes it the working directory for the instructions that follow and for
+the service. `COPY` then takes `app.py` from this directory on your computer
+and places it at `/app/app.py` inside the image.
 
 The last line records a default command. An image carries defaults such as
-a command or a user, as we saw in module 03, and the words after the image
-name in `docker run` override the default command. Until now we've
-written `python /app/app.py` there ourselves; `CMD` stores the same command in
-the image, so a container started without one runs our service.
+a command or a user, and the words after the image name in `docker run`
+override the default command. `CMD` stores `python /app/app.py` in the image,
+which is why a container started with nothing after the image name runs our
+service.
 
 That leaves `RUN adduser -D ark`, `USER ark` and the `--chmod=644` on the copy.
 Together they decide who runs the service and what it can do with its code.
 We'll unpack them once the service is running and we can check the result.
-Before building, take a moment to predict: which parts of the launch command
-above should we no longer need?
+Before building, take a moment to predict: will your image have the same ID as
+the one you downloaded from the course registry?
 
 ## Build the image
 
@@ -158,10 +135,10 @@ was looking for.
 
 </details>
 
-## Run it without the source file
+## Run your build
 
-Check `docker ps -a` before launching: the name `ark-built` and local port 8080
-must be free. Then start a container from the new image:
+Check `docker ps -a` for a container already named `ark-built`, then start a
+container from the new image:
 
 === "Linux (Bash)"
 
@@ -181,12 +158,11 @@ must be free. Then start a container from the new image:
       ark-message:first-build
     ```
 
-Compare it with your answer to the prediction. The `--mount` option has gone,
-and nothing follows the image name, so Docker uses the image's `CMD`.
-The message and the port are still in the command because they describe
-this particular instance: you could start a second container from the same
-image with another message on another port. The command no longer refers to
-any file on your computer, so it would work from any directory.
+The command has the same shape as the one you've used since module 01, with
+our local name in place of the course image. Nothing follows the image name,
+so Docker uses the image's `CMD`. The message and the port are still in the
+command because they describe this particular instance: you could start a
+second container from the same image with another message on another port.
 
 Open `http://127.0.0.1:8080/`. You should see the message
 `Packaged with its code`, and `/health` should return `{"status": "ok"}`.
@@ -194,28 +170,20 @@ If the page fails right after the launch, give the service a moment and retry;
 if it keeps failing, `docker ps -a` shows whether the container is still
 running and `docker logs ark-built` shows what the service printed.
 
-Let's also confirm where the code came from. Ask Docker which mounts this
-container has:
+## Who runs the service?
 
-```text
-docker inspect --format '{{json .Mounts}}' ark-built
-```
-
-The answer is an empty list, `[]`. Python found `/app/app.py` in the files the
-container received from our image, which is what we wanted: anyone with this
-image can run the service without a copy of the source.
-
-## Who runs the service now?
-
-Since module 01, the service has run as **root**, the administrator account
-on Linux systems and the default user of the Python image. Root can read,
+When you looked inside the running service in module 02, `ps` showed it
+running as `ark`. Without the recipe's help, it would run as **root**, the
+administrator account on Linux systems and the default user of the Python
+image. Root can read,
 change or delete any file in the container, and Linux lets it perform
 privileged operations that ordinary accounts can't. Our service needs very
 little of that: it reads one file, listens on port 8000 and writes nothing.
 If a bug or an attacker ever took control of the process, it would be better
-for them to inherit an account with exactly those limited rights. Containers
-add their own boundaries around root, and module 08 looks at how those
-protections combine; giving the service its own account is the first step.
+for them to inherit an account with exactly those limited rights. The
+container still shares its host's Linux kernel, and `root` has broad
+privileges inside the container. Running the service as a dedicated account
+reduces those privileges.
 
 That's the job of two lines in our recipe. `RUN adduser -D ark` runs a command
 during the build, inside the image being created: Alpine's `adduser` adds an
@@ -246,8 +214,8 @@ ps
 
 `whoami` prints `ark`, because the shell started by `docker exec` also uses
 the image's default user. In the `ps` listing, the `USER` column shows `ark`
-for PID 1, `python /app/app.py`. With the plain Python image, the same column
-showed `root` for the server; this time the account comes from our image.
+for PID 1, `python /app/app.py`. Without `USER ark`, the same column would
+show `root`, the Python image's default.
 
 ## What ark can do with its code
 
@@ -313,159 +281,41 @@ remove the exited container before starting its replacement.
 
 </details>
 
-## What changed in the handover
+## Your build and the course image
 
-Here's how the packaged service compares with the launch from module 01:
+Time to check your prediction from the start of the chapter, by comparing
+your image with the one you've been downloading. If the course image isn't on this engine yet, `docker pull
+ghcr.io/pethron/ark-message:1` fetches it. Then list the two images' IDs and
+the steps that produced them:
 
-| | Module 01 launch | Packaged image |
-|---|---|---|
-| Python and its supporting files | From `python:3.12-alpine` | From our image, built on `python:3.12-alpine` |
-| `app.py` | Mounted from your computer, read-only | Copied into the image, readable by `ark` |
-| Command | Typed after the image name | Recorded with `CMD` |
-| User | The image default, root | `ark`, recorded with `USER` |
-| Message and port | Launch settings | Launch settings |
+```text
+docker image ls ark-message
+docker image ls ghcr.io/pethron/ark-message
+docker image history ark-message:first-build
+docker image history ghcr.io/pethron/ark-message:1
+```
 
-Your colleague now needs the image and the launch settings, and no source
-file. That's the claim to test next.
+The two histories list the same instructions in the same order, from `RUN
+adduser -D ark` up to the `CMD`, on top of the Python layers. The IDs, though,
+are different. An image's ID is calculated from its content and configuration,
+and the configuration records details such as when each step ran, so two
+builds of the same recipe on different machines and days end up with
+different IDs. Your build may also have started from a newer
+`python:3.12-alpine` than the one the course image used, if its publisher has
+moved the tag in the meantime.
 
-## Try the handover yourself
+So which one should you give a colleague? Give them the image you've tested,
+identified by its ID. If they rebuilt it from the recipe, they'd get yet
+another ID and possibly a newer Python underneath, which is exactly the drift
+a handover is meant to avoid. The recipe stays useful to whoever makes the next
+version, and the published image saves everyone else from building it at all.
 
-Let's prove that claim the way your colleague would receive the service:
-as an archive file. `docker image save` writes an image's layers,
-configuration and tag into a single `.tar` file, and `docker image load`
-reads that file back into an engine. We'll do both on your computer,
-remove the tag in between, and start the restored image from a directory
-that contains no `app.py`.
-
-There's one detail to plan for. `ark-message:first-build` is the only name
-our new image has, and Docker refuses to remove that name while a container
-still uses the image. Stop and remove `ark-built` first:
+When you've finished comparing, stop and remove the container:
 
 ```text
 docker stop ark-built
 docker rm ark-built
 ```
-
-Next, create an empty handover directory beside `message-service` and move
-into it. If `ark-message-handover` already exists, stop and inspect its
-contents before continuing, so you don't overwrite an earlier archive:
-
-=== "Linux (Bash)"
-
-    ```bash
-    mkdir ../ark-message-handover
-    cd ../ark-message-handover
-    ```
-
-=== "Windows (PowerShell)"
-
-    ```powershell
-    New-Item -ItemType Directory -Path ..\ark-message-handover
-    Set-Location ..\ark-message-handover
-    ```
-
-To check the restoration later, we need something to compare with. Record
-the image's full ID, then save the image into `message.tar`:
-
-```text
-docker image inspect --format '{{.Id}}' ark-message:first-build
-docker image save --output message.tar ark-message:first-build
-```
-
-Mind that Docker also has a `docker export` command, which writes a container's
-filesystem. Use `image save` here, because loading needs the image metadata,
-including its `USER` and `CMD`, along with its layers.
-
-Before removing the tag, check that the archive exists, because it will be
-the only copy of the image until you load it again:
-
-=== "Linux (Bash)"
-
-    ```bash
-    ls -l message.tar
-    ```
-
-=== "Windows (PowerShell)"
-
-    ```powershell
-    Get-Item .\message.tar
-    ```
-
-Now remove the tag and check that no `ark-message:first-build` row remains.
-Since no other name points to the image, Docker also deletes the layers our
-recipe added, while the Python base image stays available:
-
-```text
-docker image rm ark-message:first-build
-docker image ls ark-message
-```
-
-Load the archive and repeat the inspection. The ID should match the one you
-recorded, which tells us the archive restored the same image and its tag:
-
-```text
-docker image load --input message.tar
-docker image inspect --format '{{.Id}}' ark-message:first-build
-```
-
-Start the restored image from this directory, with a message of your choice.
-`--pull never` makes Docker fail rather than download anything, so the
-container must use the image we just loaded:
-
-=== "Linux (Bash)"
-
-    ```bash
-    docker run -d --name ark-restored --pull never \
-      -e MESSAGE="Restored from the archive" \
-      -p 127.0.0.1:8080:8000 \
-      ark-message:first-build
-    ```
-
-=== "Windows (PowerShell)"
-
-    ```powershell
-    docker run -d --name ark-restored --pull never `
-      -e MESSAGE="Restored from the archive" `
-      -p 127.0.0.1:8080:8000 `
-      ark-message:first-build
-    ```
-
-Your check passes when:
-
-- `http://127.0.0.1:8080/` returns your message and `/health` returns
-  `{"status": "ok"}`, retrying briefly if the service is still starting.
-- `docker inspect --format '{{json .Mounts}}' ark-restored` prints `[]`.
-- `docker exec ark-restored ps` shows `ark` in the `USER` column for
-  `python /app/app.py`.
-
-The handover directory holds only `message.tar`, yet the service answers,
-because everything it needs travelled inside the image. Beware, though: this
-test ran on the same engine that built the image, where Docker kept the Python
-base layers, so trying the archive on another computer remains a separate check.
-
-When you've finished, stop and remove the restored container, go back to
-`message-service`, and delete only the archive and its directory:
-
-```text
-docker stop ark-restored
-docker rm ark-restored
-```
-
-=== "Linux (Bash)"
-
-    ```bash
-    cd ../message-service
-    rm ../ark-message-handover/message.tar
-    rmdir ../ark-message-handover
-    ```
-
-=== "Windows (PowerShell)"
-
-    ```powershell
-    Set-Location ..\message-service
-    Remove-Item ..\ark-message-handover\message.tar
-    Remove-Item ..\ark-message-handover
-    ```
 
 ## Before the next build
 
@@ -475,13 +325,13 @@ message in `message-service/app.py` now and start a new container from
 Write down your prediction and what you think you would need to do; we'll
 test it as we look at how Docker uses the build context and reuses earlier work.
 
-The next chapter builds the images it needs, so you can clean up now. If you
-skipped the handover, stop and remove `ark-built` with the two commands at
-the start of the previous section. Then remove the image:
+The next chapter builds the images it needs, so you can clean up now. If
+`ark-built` is still there, stop and remove it with the two commands at the
+end of the previous section. Then remove the image:
 
 ```text
 docker image rm ark-message:first-build
 ```
 
 That removes our tag and the layers no other image uses, while the Python
-base image stays available for the next builds.
+base image and the course image stay available.

@@ -1,0 +1,4 @@
+services:
+  db:
+    volumes:
+      - ./db/00-delay.sql:/docker-entrypoint-initdb.d/00-delay.sql:ro

@@ -1,23 +1,28 @@
+---
+title: "A local image handover"
+track: kata
+---
+
 # A local image handover
 
-A colleague wants to try your status page and has a compatible Linux
-Docker environment. They've asked you for a file they can load, along
+A colleague wants to try your status page on a machine with a compatible
+Linux Docker environment but no internet access. They've asked you for a file
+they can load, along
 with enough instructions to get the service running. Prepare that
 handover so they can follow it from a fresh terminal, including what
 you tested and which results they should expect.
 
 Choose a use for the page and a message that fits its audience, then
-prepare the archive using the existing Python image, an unused tag of
-your own and a new archive path. Keep the exercise local and use the
+prepare the archive using the course image, an unused tag of your own and a
+new archive path. Keep the exercise local and use the
 application unchanged. You have everything you need from the core chapters.
 
 ## Your starting point
 
-Work from a fresh terminal opened in
-`03-images-and-registries/first-app`, the module's copy of the
-[message service](../first-app/README.md), and launch the service from
-there. Check that `python:3.12-alpine` appears in `docker image ls python`;
-if it doesn't, download it with `docker pull python:3.12-alpine`. Before
+Work from a fresh terminal opened in a directory where you can create files.
+Check that tag `1` appears in `docker image ls ghcr.io/pethron/ark-message`;
+if it doesn't, download it with `docker pull ghcr.io/pethron/ark-message:1`.
+Before
 choosing your tag and archive path, check `docker image ls`,
 `docker ps -a` and the directory listing so that you don't overwrite
 someone else's work. The container name `ark-artifact-service` and local port 8080 must be free.
@@ -27,7 +32,7 @@ someone else's work. The container name `ark-artifact-service` and local port 80
 Plan your own sequence using the chapters as a reference. Your result must
 satisfy these conditions:
 
-- The new tag points to the same full local image ID as your chosen Python image.
+- The new tag points to the same full local image ID as the course image.
 - An archive restores that tag after you remove only the extra reference.
 - The restored image's full ID and platform match what you recorded.
 - A container named `ark-artifact-service`, published on `127.0.0.1:8080`,
@@ -38,15 +43,15 @@ satisfy these conditions:
 Before saving, predict where `app.py`, the chosen message and a note
 previously written inside a container will be after restoration. Use
 the image as it stands and include your reasoning in the handover,
-so your colleague understands which inputs the launch command supplies.
+so your colleague understands which inputs the image carries and which the
+launch command supplies.
 
 ## Leave enough information for another person
 
 Write the procedure for your chosen shell, including the archive's filename,
-tag, full image ID, tested platform and the source file to place alongside
-it. Describe how to launch the service and check the result, and link the
-[paired launch reference](../04-transfer-an-image-locally.md#use-the-restored-image-for-our-service)
-for someone using the other shell. If their CPU architecture differs,
+tag, full image ID and tested platform. Describe how to launch the service and
+check the result; a launch command written on one line works in both Bash and
+PowerShell. If their CPU architecture differs,
 explain what they should check before launching; you can leave setting
 up emulation outside this exercise.
 
@@ -66,16 +71,15 @@ lead back to the same full ID.
 </details>
 
 <details>
-<summary>The archive loads, but the service can't find app.py</summary>
+<summary>The archive loads, but Docker says the image is missing</summary>
 
-Follow the mount's source path back to your host and check that `app.py`
-is there. The archive supplies the Python image, while the launch command
-still needs to make that host file available inside the container.
+With `--pull never`, Docker won't fall back to a registry, so the reference in
+your launch command must match the tag the archive restored, character for
+character. Compare it with `docker image ls` before suspecting the archive.
 
 </details>
 
 When you've finished checking the handover, clean up the resources you
 created: stop and remove `ark-artifact-service`, remove your extra tag,
 then delete your exact archive file and its empty directory if you no
-longer need them. Leave the original Python reference, source files and
-other containers in place so the rest of your work remains available.
+longer need them. Leave the course image and other containers in place so the rest of your work remains available.

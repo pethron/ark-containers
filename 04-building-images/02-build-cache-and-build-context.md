@@ -1,9 +1,9 @@
 ---
-title: "Build cache and build context"
+title: "Build context and build cache"
 track: architecture
 ---
 
-# Build cache and build context
+# Build context and build cache
 
 Suppose you edit `app.py` after building the message service's image. Would
 a new container see the change? Before trying it, recall where Python finds

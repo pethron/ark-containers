@@ -9,49 +9,37 @@ core course or its final project.** The numbered modules already explain the
 concepts needed to operate the application and justify your decisions; here
 we go further into implementation and kernel behavior.
 
-## Choose a question
+Each deep dive starts from something you've already observed. Two services
+see different processes and ports while sharing one kernel, and the Linux
+primitives explain how. A Docker request creates an object and then starts a
+process, and the runtime architecture follows the components that do each
+part. One image answers to several names and comes back intact from an
+archive, which leads into images and distribution. A runtime that needs a
+compiled package but not its compiler opens the questions of image builds,
+and two services listening on the same port, one finding the other by name,
+lead into container networking. Every one of them returns to the application
+with an observation you can check.
 
-| Deep dive | Start from an observation | Return to the application |
-|-----------|---------------------------|---------------------------|
-| [Linux primitives](linux-primitives/README.md) | Two services have different process and port views but share a kernel | Inspect their actual boundaries, budgets and permissions |
-| [Runtime architecture](runtime-architecture/README.md) | A Docker request creates an object, then starts a process | Distinguish client, runtime-start and application failures |
-| [Images and distribution](images-and-distribution/README.md) | One image has several names, and a local archive restores it | Choose a versioning strategy and understand distributed content identity |
-| [Image builds](image-builds/README.md) | The runtime needs a compiled package, but not its compiler | Choose a stage boundary and control build caches and inputs |
-| [Container networking](container-networking/README.md) | Two services both listen on port 8000, and one finds the other by name | Explain the bridge, published ports and when another network type fits |
+You can open a deep dive whenever its question interests you, as long as
+you've run the first application. The Linux primitives make useful background
+for the runtime architecture, but you can also follow a linked explanation as
+needed, and nothing here has to be finished before you continue the core
+course.
 
-Start with the [first application](../01-why-containers/03-your-first-application.md)
-before either deep dive. The Linux primitives chapters provide useful background
-for runtime architecture; you can also follow a linked explanation as needed.
-There's no requirement to finish both before returning to the core course.
+Most exercises are Docker inspection labs that use Linux containers on the
+same Desktop or native Engine setup as the core course. Inspecting host
 
-## Follow a question from the core
-
-- For resource failure diagnosis in module 09 (in preparation),
-  read [cgroups v2](linux-primitives/03-cgroups-v2.md) for enforcement details,
-  then compare a chosen budget with the service's actual settings.
-- After [image identity](../03-images-and-registries/05-choose-the-reference-to-hand-over.md),
-  read [OCI image contracts](runtime-architecture/04-oci-image-and-distribution-specs.md)
-  for the content graph, then identify the objects in your handover.
-- After [observing the service](../02-running-containers/01-pick-up-the-service.md),
-  follow [the Engine request path](runtime-architecture/01-the-docker-engine.md)
-  if you want to understand which component owns each step.
-
-These are invitations to investigate, not extra assignments needed to pass the
-core exercises.
-
-## Choose the environment, too
-
-The Docker inspection labs use Linux containers on the same Desktop or native
-Engine setup as the first application. Host-process inspection requires the
-actual Linux engine host, not an unrelated WSL distribution.
-
-The manual sandbox and direct-containerd comparison are further optional
-experiments. They require a disposable Linux VM and additional privileges or
-tooling, named before their commands. Don't modify Docker Desktop's internal
-VM or a machine with someone else's managed workloads.
+For a fuller application task rather than a kernel experiment, the optional
+[Compose application workflow](compose-workflows/README.md) uses the build,
+storage, networking and Compose skills from modules 04–07. Its PostgreSQL,
+Redis and Nginx stack starts from its own files; you can take that path
+without completing these internals chapters first. Inspecting host
+processes requires the actual Linux engine host, not an unrelated WSL
+distribution. The manual sandbox and the direct containerd comparison go
+further: they need a disposable Linux VM and additional privileges or tooling,
+named before their commands. Don't modify Docker Desktop's internal VM or a
+machine with someone else's managed workloads.
 
 After investigating, return to your service and check one prediction against
-its behavior. The aim isn't a second pile of definitions: it's a more precise
-explanation of the work you've already done.
-
-[Start the core course](../01-why-containers/README.md).
+its behavior. A deep dive has done its job when you can explain the work
+you've already done more precisely than before.

@@ -1,0 +1,26 @@
+{
+  "title": "One server process, two PID numbers",
+  "capturedAt": "2026-10-31T23:48:01.754Z",
+  "dockerVersion": "29.6.1",
+  "entries": [
+    {
+      "command": "docker exec ark-ops ps",
+      "output": "PID   USER     TIME  COMMAND\n    1 ark       0:00 python /app/app.py\n    8 ark       0:00 ps",
+      "exitCode": 0,
+      "label": "Inside the container"
+    },
+    {
+      "command": "docker top ark-ops -o pid,args",
+      "output": "PID                 COMMAND\n4056                python /app/app.py",
+      "exitCode": 0,
+      "label": "From the host"
+    },
+    {
+      "command": "docker inspect --format '{{.State.Pid}}' ark-ops",
+      "output": "4056",
+      "exitCode": 0,
+      "label": "The host PID Docker recorded"
+    }
+  ],
+  "note": "Captured while the server was running. Inside the container the server is PID 1; docker top and docker inspect report its PID on the host side. Your host PID will differ."
+}

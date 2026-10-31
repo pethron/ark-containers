@@ -94,6 +94,8 @@ Containers on the same network don't use any of this. `ark-web` reaches
 `ark-api:8000` straight across the bridge, which is why the API needs no
 published port.
 
+![On the Docker host, a forwarding rule sends traffic for 127.0.0.1:8080 to ark-web's address on the ark-net bridge; each container's eth0 is one end of a veth pair plugged into that bridge](images/bridge-ports.svg)
+
 ## Why the default bridge didn't resolve names
 
 Docker creates three networks when it starts. List them:

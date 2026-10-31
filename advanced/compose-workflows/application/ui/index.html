@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team reading list</title>
+<style>
+body { font: 1.1rem system-ui; max-width: 45rem; margin: 3rem auto; padding: 1rem; }
+button, input { font: inherit; margin: .3rem; }
+li { margin: .7rem 0; }
+#status { min-height: 2rem; }
+</style>
+<h1>Team reading list</h1>
+<p>Keep a shared list of books for your team. Records live in Postgres.</p>
+<form id="add"><label>Title <input id="title" required maxlength="200"></label><button>Add book</button></form>
+<button id="refresh">Refresh list</button>
+<p id="status" role="status"></p>
+<ul id="books"></ul>
+<script>
+async function request(path, method = "GET", body) {
+  const response = await fetch("/api" + path, {
+    method, headers: { "Content-Type": "application/json" },
+    body: body ? JSON.stringify(body) : undefined
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || "Request failed");
+  return data;
+}
+async function refresh() {
+  try {
+    const data = await request("/books");
+    const list = document.querySelector("#books");
+    list.replaceChildren();
+    for (const book of data.books) {
+      const item = document.createElement("li");
+      const text = document.createElement("span");
+      text.textContent = book.title;
+      const edit = document.createElement("button");
+      edit.textContent = "Edit";
+      edit.onclick = () => act(async () => {
+        const title = prompt("New title", book.title);
+        if (title !== null) await request("/books/" + book.id, "PUT", { title });
+      });
+      const remove = document.createElement("button");
+      remove.textContent = "Remove";
+      remove.onclick = () => act(() => request("/books/" + book.id, "DELETE"));
+      item.append(text, edit, remove);
+      list.append(item);
+    }
+    document.querySelector("#status").textContent = data.books.length + " saved book(s)";
+  } catch (error) {
+    document.querySelector("#status").textContent = error.message;
+  }
+}
+async function act(operation) {
+  try { await operation(); await refresh(); }
+  catch (error) { document.querySelector("#status").textContent = error.message; }
+}
+document.querySelector("#add").onsubmit = event => {
+  event.preventDefault();
+  act(async () => {
+    await request("/books", "POST", { title: document.querySelector("#title").value });
+    document.querySelector("#title").value = "";
+  });
+};
+document.querySelector("#refresh").onclick = refresh;
+refresh();
+</script>
+</html>

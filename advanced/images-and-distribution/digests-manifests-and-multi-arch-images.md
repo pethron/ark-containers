@@ -117,6 +117,6 @@ and its diagram show how indexes, manifests, configurations and layers fit
 together. You can use these distinctions in your delivery notes without
 learning the runtime specification first.
 
-If you'd like to follow the artifact through a registry you control, optionally
-[run a local registry](../../03-images-and-registries/optional/run-a-local-registry.md)
-and retrieve it from there.
+If you'd like to follow your own application's artifact through a registry,
+the optional [Docker Hub runbook](../../04-building-images/optional/publish-to-docker-hub.md)
+publishes a tested build and retrieves it by the reported digest.

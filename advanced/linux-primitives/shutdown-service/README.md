@@ -7,7 +7,7 @@ one the application deliberately ignores. It is not required for the core
 lifecycle exercises.
 
 [operations.py](operations.py) loads the original HTTP handler from
-[app.py](../../../01-why-containers/first-app/app.py), then runs the server in
+[app.py](../../../04-building-images/message-service/app.py), then runs the server in
 a thread while the main thread waits for a signal. A handled request wakes
 the main thread, which shuts down the server and writes a final log entry.
 This is teaching code, not a production server or a guarantee of transaction

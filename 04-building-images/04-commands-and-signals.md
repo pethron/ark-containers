@@ -1,9 +1,9 @@
 ---
-title: "Commands, entrypoints and stop signals"
+title: "CMD, ENTRYPOINT and stop signals"
 track: architecture
 ---
 
-# Commands, entrypoints and stop signals
+# CMD, ENTRYPOINT and stop signals
 
 The message service's recipe starts the service without a command after the
 image name. Suppose your colleague wants to check the Python version instead,
@@ -139,6 +139,8 @@ The direct service should log `received signal 15; closing listener`, where
 15 identifies TERM on this Linux platform. The indirect one won't log that
 message: this wrapper doesn't forward TERM to its child, so Python never
 hears about the stop and Docker forces the container to end after two seconds.
+
+![docker stop sends TERM to PID 1 in both containers: Python as PID 1 logs the signal and exits, while the shell as PID 1 doesn't forward it and its Python child is forced to end](images/stop-signal.svg)
 
 ## When a shell is part of the job
 

@@ -65,10 +65,10 @@ An existing namespace is a reason to inspect or choose another name, not to
 delete everything in it. All remaining commands explicitly select this socket
 and namespace; default settings are easy to forget.
 
-From the course checkout root:
+From the [course checkout root](../../before-you-start.md#get-the-course-files):
 
 ```bash
-cd 01-why-containers/first-app
+cd 04-building-images/message-service
 sudo nerdctl --address /run/containerd/containerd.sock --namespace ark-client-lab \
   run -d --name ark-direct-message --net none \
   --user 65534:65534 --cap-drop ALL \

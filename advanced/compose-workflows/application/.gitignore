@@ -1,0 +1,6 @@
+secrets/*.txt
+!secrets/*.example
+backups/*
+!backups/.gitkeep
+__pycache__/
+*.pyc

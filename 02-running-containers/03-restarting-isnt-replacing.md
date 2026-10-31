@@ -1,9 +1,9 @@
 ---
-title: "Restarting isn't replacing"
+title: "Restarting vs replacing a container"
 track: runbook
 ---
 
-# Restarting isn't replacing
+# Restarting vs replacing a container
 
 When the server stopped and started again in the shell experiment, both the
 original message and a note written inside the container remained. That's
@@ -37,20 +37,18 @@ the message:
 
     ```bash
     docker run -d --name ark-ops \
-      --mount "type=bind,source=$(pwd)/app.py,target=/app/app.py,readonly" \
       -e MESSAGE="Configured replacement" \
       -p 127.0.0.1:8080:8000 \
-      python:3.12-alpine python /app/app.py
+      ghcr.io/pethron/ark-message:1
     ```
 
 === "Windows (PowerShell)"
 
     ```powershell
     docker run -d --name ark-ops `
-      --mount "type=bind,source=$($PWD.Path)\app.py,target=/app/app.py,readonly" `
       -e MESSAGE="Configured replacement" `
       -p 127.0.0.1:8080:8000 `
-      python:3.12-alpine python /app/app.py
+      ghcr.io/pethron/ark-message:1
     ```
 
 Once you've checked the new message
@@ -62,13 +60,16 @@ docker exec ark-ops cat /tmp/ark-note
 
 This time `cat` should report `No such file or directory`: the new container
 has the old name, but it doesn't inherit the old container's writable files.
-Your course files and the Python image remain available, which is why the
-replacement can run, while the temporary note belonged to the removed instance.
+The image remains available, which is why the replacement can run, while the temporary note belonged to the removed instance.
+
+![docker restart keeps the same ark-ops container with its message and note; removing it and running a new one brings a new message and no note](images/restart-vs-replace.svg)
 
 **Restart keeps the container; replacement creates another one.** If that
 note had been important application data, recreating the service would have
 thrown away something we needed. We would need to keep that data outside
 the container's lifecycle, which is the problem we'll solve in module 05.
+
+![Actual inspections show one ark-ops ID before and after restart, then a different ID after replacement](images/terminal-container-identity.svg)
 
 ## Leave a change you can repeat
 

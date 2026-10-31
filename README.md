@@ -4,41 +4,10 @@ A course on Linux containers, using **Docker** throughout the main learning path
 We'll also explain the components underneath it, including containerd; using
 containerd directly is reserved for optional advanced labs.
 
-## Website preview
-
-The [public preview](https://pethron.github.io/ark-containers/) currently contains
-the first module. It is work in progress, not the completed course.
-
-Module 01 has completed its first editorial review. Modules 02–07 and the
-optional Under the hood deep dives remain drafts, with their labs and katas.
-The current course scope ends at module 07; modules 08–09 remain in preparation.
-The local build includes all of them. The live preview changes only after an
-explicit manual publication.
-
-The site uses Zensical and GitHub Pages from this repository only. Existing
-chapter Markdown is staged automatically during the build; do not edit the
-generated `.site-docs/` or `site/` directories.
-
-To read the course locally, install [uv](https://docs.astral.sh/uv/) and run
-this from the course root, in Bash or PowerShell:
-
-```bash
-uv run scripts/build_site.py --serve
-```
-
-Then open `http://127.0.0.1:8000/`. Press Ctrl+C to stop the server; after
-editing a chapter, run the command again to rebuild. Use `--port 8001` if
-port 8000 is busy, or omit `--serve` to build without serving.
-
-The build inserts and verifies
-`noindex, nofollow` on every generated HTML page, including the error page.
-This asks compliant crawlers not to index the preview; it is not privacy or
-authentication. Use this build script rather than deploying raw Zensical output.
-
-Publication is manual: run **Publish course preview** from GitHub Actions after
-pushing reviewed changes. Pushes alone do not deploy. GitHub Pages must use
-**GitHub Actions** as its source. Before a production launch, remove the preview
-indexing policy intentionally and verify the resulting HTML.
+You can read the chapters here on GitHub, or in the
+[public preview](https://pethron.github.io/ark-containers/) of the website.
+Both are work in progress: module 01 has completed its first editorial review,
+modules 02–07 and the optional advanced material are drafts.
 
 ## How the course is built: ARK
 
@@ -72,21 +41,40 @@ chapter to the next.
 
 The core includes the theory needed to explain observations and justify
 decisions, not just commands to copy. You don't need the optional deep dives
-to complete the course or its final project. Module 01 is reviewed; modules
-02–07 and the optional deep dives are drafts. Core
-modules 08–09 are still in preparation.
+to complete the course or its final project.
 
-| # | Module |
-|---|--------|
-| 01 | [Why containers](01-why-containers/) |
-| 02 | [Running containers](02-running-containers/) |
-| 03 | [Images and registries](03-images-and-registries/) |
-| 04 | [Building images](04-building-images/) |
-| 05 | [Storage](05-storage/) |
-| 06 | [Networking](06-networking/) |
-| 07 | [Compose](07-compose/) |
-| 08 | [Security](08-security/) |
-| 09 | [Production and troubleshooting](09-production-and-troubleshooting/) |
+The [syllabus](web/syllabus.md) lists the prerequisites and what you'll be
+able to do at the end of each module. Every module closes with an ungraded
+*Check your understanding* page, and the [final project](capstone/README.md)
+asks you to deploy, diagnose and change an application you haven't seen,
+assessed with a published [rubric](capstone/rubric.md). The
+[glossary](web/glossary.md) and the [references](web/references.md), with
+the software versions the exercises were checked with, cover the whole course.
+
+| # | Module | Status |
+|---|--------|--------|
+| 01 | [Why containers](01-why-containers/) | Reviewed |
+| 02 | [Running containers](02-running-containers/) | Draft |
+| 03 | [Images and registries](03-images-and-registries/) | Draft |
+| 04 | [Building images](04-building-images/) | Draft |
+| 05 | [Storage](05-storage/) | Draft |
+| 06 | [Networking](06-networking/) | Draft |
+| 07 | [Compose](07-compose/) | Draft |
+
+## Optional Compose application workflow
+
+[Compose application workflows](advanced/compose-workflows/README.md) starts
+a supplied reading-list application with PostgreSQL and Nginx, adds Redis as
+a disposable cache, and follows configuration, readiness, logical backup and
+restore, Compose Watch development and an isolated handover. Use the skills
+from modules 04–07; the fixtures and resources are independent of those
+modules and the existing capstone.
+
+After module 04, the optional [Docker Hub runbook](04-building-images/optional/publish-to-docker-hub.md)
+publishes an application image in your own namespace. It requires an account
+and upload permission; all required core exercises and the advanced Compose
+workflow remain account-free. CI/CD pipelines and Kubernetes teaching are
+outside the current scope.
 
 ## Under the hood: optional advanced deep dives
 
@@ -131,12 +119,100 @@ When you pause, leave in place what the next chapter needs and follow the
 cleanup at the end of the module. You can move to another module without
 carrying containers, images or data from this one.
 
+## Read the site locally and publish it
+
+The site uses Docusaurus and GitHub Pages from this repository only. The build
+stages the chapter Markdown and the pages in `web/`, including the
+[preview status](web/preview-status.md) with the platforms and labs tested so
+far. Don't edit the generated `.site-docs/`, `static/` or `build/` directories.
+
+To read the course locally, install Node.js 20 or later and run
+this from the course root, in Bash or PowerShell:
+
+```bash
+npm ci
+npm start
+```
+
+Open the address printed by Docusaurus. Press Ctrl+C to stop the server;
+restart after editing a source chapter so it is staged again. To check the
+static GitHub Pages output locally instead:
+
+```bash
+npm run build
+npm run serve
+```
+
+The preview server listens on `http://127.0.0.1:4173/ark-containers/`.
+The build includes modules 01–07, the capstone and the optional advanced
+material. Source chapters retain the existing Bash/PowerShell markup; a
+tested staging adapter supplies Docusaurus tabs without making React a
+requirement for writing course prose.
+
+The build inserts and verifies
+`noindex, nofollow` on every generated HTML page, including the error page.
+This asks compliant crawlers not to index the preview; it is not privacy or
+authentication. Use `npm run build` rather than bypassing the staging and
+publication checks.
+
+To check that the exercise files still work, run the lab checks from the
+course root. They run each fixture's unit tests and, with Docker available,
+start every module's service in uniquely named containers that are removed
+afterwards; `--no-docker` runs only the unit tests. The **Check labs**
+workflow runs the same script on Linux for every push and pull request.
+
+```bash
+python scripts/check_labs.py
+```
+
+The advanced application workflow has a separate check runner:
+
+```bash
+python scripts/check_compose_workflows.py
+```
+
+### Refresh the terminal images
+
+Selected terminal cards come from actual Docker commands. The script saves the
+capture data as JSON and renders an SVG beside it, with the full captured text
+in the image description. Run this only after reviewing the labs:
+
+```bash
+node scripts/capture_terminal.mjs --verify-only
+node scripts/capture_terminal.mjs
+```
+
+The capture script uses loopback port 8080 and the named core lab resources;
+it refuses existing container names and image tags rather than replacing
+someone else's work. If Docker storage was cleaned after the labs, run
+`docker pull python:3.12-alpine` first. Build-cache edits happen in a temporary fixture copy.
+Setup and unrelated build steps are omitted explicitly from the selected
+images, and identifiers and timings are never replaced with invented values.
+It performs no Docker Hub login or upload. To rerender an existing capture
+without running Docker:
+
+```bash
+node scripts/render_terminal.mjs 01-why-containers/images/terminal-first-service.json
+```
+
+Publication is manual: run **Publish course preview** from GitHub Actions after
+pushing reviewed changes. Pushes alone do not deploy, so the live preview
+changes only after an explicit publication. GitHub Pages must use
+**GitHub Actions** as its source. Before a production launch, remove the preview
+indexing policy intentionally and verify the resulting HTML.
+
 ## Credits
 
 The teaching approach is inspired by
 [fast.ai's teaching philosophy](https://www.fast.ai/posts/2016-10-08-teaching-philosophy.html)
 and its discussion of David Perkins's *Making Learning Whole*: start with a
 manageable whole task, investigate its parts, and return to meaningful work.
+
+University of Helsinki's
+[DevOps with Docker, Fall 2026](https://courses.mooc.fi/org/uh-cs/courses/devops-with-docker-fall-2026)
+informed the optional application workflow and documentation-reading tasks.
+Our fixtures and explanations are original; the [references](web/references.md)
+identify the source and its license.
 
 ## License
 

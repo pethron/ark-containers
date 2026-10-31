@@ -15,14 +15,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: astral-sh/setup-uv@v10.3.3
+      - uses: actions/setup-node@v6
         with:
-          version: "0.13.6"
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Test source adapter
+        run: npm test
       - name: Build preview and verify noindex
-        run: uv run --python 3.12 scripts/build_site.py
+        run: npm run build
       - uses: actions/upload-pages-artifact@v5
         with:
-          path: site
+          path: build
 
   deploy:
     needs: build

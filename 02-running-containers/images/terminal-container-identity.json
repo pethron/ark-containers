@@ -1,0 +1,26 @@
+{
+  "title": "Restart and replacement: actual container IDs",
+  "capturedAt": "2026-10-31T23:48:23.171Z",
+  "dockerVersion": "29.6.1",
+  "entries": [
+    {
+      "command": "docker inspect --format '{{.Id}}' ark-ops",
+      "output": "ca0d019b33a1a259a010451f17657827b8dd4ea28e5629ecba842b270e15be9a",
+      "exitCode": 0,
+      "label": "Before restart"
+    },
+    {
+      "command": "docker inspect --format '{{.Id}}' ark-ops",
+      "output": "ca0d019b33a1a259a010451f17657827b8dd4ea28e5629ecba842b270e15be9a",
+      "exitCode": 0,
+      "label": "After restart"
+    },
+    {
+      "command": "docker inspect --format '{{.Id}}' ark-ops",
+      "output": "70e23db063b1fa283e9e986d797977dc55df5ad267ce8413614702f5954749b2",
+      "exitCode": 0,
+      "label": "After stop, remove and replacement"
+    }
+  ],
+  "note": "These are three observations around the restart and replacement steps in the chapter. Setup, HTTP checks and lifecycle commands are omitted from the image; labels identify each observation."
+}

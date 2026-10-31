@@ -1,17 +1,16 @@
 ---
-title: "What Compose manages for you"
+title: "Projects, networks and volumes in Compose"
 track: architecture
 ---
 
-# What Compose manages for you
+# Projects, networks and volumes in Compose
 
-In chapter 01, one command started two containers on their own network, and
-another removed them. Behind those commands, Compose runs the same Docker
-operations you could type by hand: build an image, create a network, start
-containers.
-What it adds is a memory of what belongs to your application. Let's look at
-the objects it created and at how it decides what to do when you run `up`
-again.
+The previous chapter left two containers running on their own network after
+`docker compose up` created them. Compose also gives us a `down` command to
+remove the project's containers and network when we're done. Under both
+commands are the same Docker operations you could type by hand; what Compose
+adds is a memory of which objects belong to this application. Let's look at
+those objects and at how Compose decides what to do when you run `up` again.
 
 ## Everything belongs to a project
 
@@ -62,11 +61,11 @@ This time nothing is built or created. Compose reports both containers as
 **`up` describes the state you want:** Compose compares what the file asks
 for with what's running, and only changes the difference.
 
-Let's give it a difference. Check that local port 8081 is free, then open
-`compose.yaml` and change the frontend's port
-from `127.0.0.1:8080:8000` to `127.0.0.1:8081:8000`, save, and run
-`docker compose up -d` once more. Before you do, predict which containers
-Compose will touch.
+Let's give it a difference. Open `compose.yaml` and change the frontend's
+port from `127.0.0.1:8080:8000` to `127.0.0.1:8081:8000`. If Docker reports
+that port 8081 is in use, choose another loopback host port in `compose.yaml`
+and use it in the URL too; keep the container port at 8000. Before saving, predict which
+containers Compose will touch, then run `docker compose up -d` once more.
 
 ```text
  Container ark-api-1 Running
@@ -83,6 +82,10 @@ setting, which is exactly what you would have to do by hand with
 settings didn't change, so it kept running. Check the page on the new port,
 `http://127.0.0.1:8081/`, then put `8080` back in the file and run
 `docker compose up -d` again.
+
+**When to use Compose:** for an application with more than one container or
+more than a couple of settings, keep the setup in a file. A single quick
+experiment is still easy with `docker run`.
 
 ## What `down` removes, and what it keeps
 
@@ -110,9 +113,7 @@ every time the service is recreated, including after `down` and `up`. Only
 everything else. Use it when you really want a fresh start, and never as a
 reflex: it deletes the data the volume exists to protect.
 
-**When to use Compose:** whenever an application has more than one container
-or more than a couple of options, write the file. A single quick experiment
-is still fine with `docker run`.
+![docker compose down removes the two containers and the ark_default network; the named volume survives until down -v, and the built images survive both](images/compose-down.svg)
 
 Stop the stack with `docker compose down` when you're done. It leaves
 nothing running, only the images. Then add the notes service yourself in

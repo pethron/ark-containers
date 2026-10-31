@@ -13,8 +13,8 @@ then see how a package cache helps when an installation really has to run
 again.
 
 Use Linux Bash or PowerShell 7 with Linux containers and an internet
-connection. Linux Engine may require `sudo` for Docker. From the course
-checkout root:
+connection. Linux Engine may require `sudo` for Docker. From the
+[course checkout root](../../before-you-start.md#get-the-course-files):
 
 === "Linux (Bash)"
 

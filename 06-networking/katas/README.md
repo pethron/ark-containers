@@ -20,7 +20,7 @@ You need Docker running Linux containers and curl; on Windows, call it as
 `curl.exe`. The kata uses its own names, so it can run alongside the
 chapters' containers or without them. Check that the names `ark-kata-net`,
 `ark-kata-api` and `ark-kata-web` and local ports `8080` and `8081` are free.
-From the root of your course checkout, build the supplied image and start
+From the [root of your course checkout](../../before-you-start.md#get-the-course-files), build the supplied image and start
 the broken stack:
 
 === "Linux (Bash)"

@@ -1,51 +1,18 @@
 # 03: Images and registries
 
-Your message service is running, and a colleague would like to try it too.
-What should you send them? So far, we've brought together an image that
-supplies Python and a file on your computer that supplies the application.
-Let's follow the image through a local handover so we can explain what
-it gives our colleague and what they need alongside it.
+So far the service has started from a single name, `ghcr.io/pethron/ark-message:1`,
+and Docker downloaded the image behind it the first time you used it. Now a
+colleague wants to run the service on a lab computer that can't reach the
+internet. If you could bring them only one file, what would it have to contain?
+Try to answer before reading on, because that question drives the whole module.
 
-We'll start from the Python image that runs our message service, inspect it,
-give it a handover name and save it to an archive. After loading that archive
-back into Docker, we'll run the familiar service and compare the results.
+We'll follow the image behind the running container, look at the names it can
+carry and what it actually contains, then hand it over locally through an
+archive. When the archive comes back into Docker, we'll check that it's the
+same image and that it suits the receiving machine, and only then run the
+familiar service from it.
 
-## What you will learn
-
-- Find the image used by a container
-- Read repository names and tags and find the publisher's versioning conventions
-- Explain how image files, defaults and layers provide a container's starting point
-- Save and load an image locally, checking identity and platform
-- Explain when a registry is useful for distributing images
-
-## Chapters
-
-| # | Chapter | Track |
-|---|---------|-------|
-| 01 | [Find the image behind the container](01-find-the-image-behind-the-container.md) | R |
-| 02 | [One image, several names](02-one-image-several-names.md) | R |
-| 03 | [What an image contains](03-what-an-image-contains.md) | A |
-| 04 | [Transfer an image locally](04-transfer-an-image-locally.md) | R |
-| 05 | [Choose the reference to hand over](05-choose-the-reference-to-hand-over.md) | A |
-
-Finish with [a local image handover](katas/README.md), where you choose
-the tag and message and prepare a procedure someone else can follow.
-Your notes will include the image identity, the platform and the checks
-you performed, giving the receiver a starting point for their own test.
-
-## Optional paths
-
-You can [publish to a temporary local registry](optional/run-a-local-registry.md)
-without a cloud account. The separate
-[image and distribution deep dives](../advanced/images-and-distribution/README.md)
-cover versioning strategies, layer mechanics, manifests, authentication
-and platform details. Choose whichever question interests you and return
-to the core path when you're ready.
-
-## Before moving on
-
-Use your experiment to explain how the original and handover tags relate,
-where the old container's note lived and how `app.py` becomes available to
-the service.
-
-Next: [Building images](../04-building-images/README.md).
+Along the way we'll talk about registries: what they add to a handover, and
+when copying an archive is perfectly fine. You won't need a cloud account or
+the course files; the course image and a directory where you can create a file
+are enough.

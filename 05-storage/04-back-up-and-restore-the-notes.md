@@ -1,9 +1,9 @@
 ---
-title: "Back up and restore the notes"
+title: "Backing up and restoring a volume"
 track: runbook
 ---
 
-# Back up and restore the notes
+# Backing up and restoring a volume
 
 The notes now survive every replacement, which covers the changes you make
 on purpose. They won't survive a `docker volume rm` typed in the wrong
@@ -18,9 +18,9 @@ the restore through the service itself.
 
 ## Start with the notes you kept
 
-The previous chapters left the note in `ark-notes-data`, with no service
-container running. Start the supplied image with that same volume, then add a
-second note so the restore can check both:
+The previous chapters left two notes in `ark-notes-data`, with no service
+container running. Start the supplied image with that same volume, then add
+one more note so the restore can check all three:
 
 === "Linux (Bash)"
 
@@ -39,7 +39,7 @@ second note so the restore can check both:
     ```
 
 If curl can't connect, the service is still starting: wait a second and
-retry. The answer should report `"notes": 2`. The service runs as
+retry. The answer should report `"notes": 3`. The service runs as
 `ark`, an ordinary account that the image's `Dockerfile` creates and that
 owns `/data`. When Docker mounted the new, empty volume there, it copied the
 image's `/data` into it, owner included, which is why `ark` can write notes
@@ -56,6 +56,8 @@ files into a single archive and unpacking them again. For the helper, we'll use
 engine after the build and includes `tar`.
 Its default user is root, so it can read the notes regardless of which account
 owns them and recreate those owners when restoring.
+
+![A helper container packs ark-notes-data into notes-backup.tar in your backup folder; a second helper unpacks it into ark-notes-restored, which a service on port 8081 reads and writes](images/backup-restore.svg)
 
 We'll stop the service before copying. While the service runs, a note could
 arrive halfway through the copy, and stopping it guarantees the archive matches
@@ -183,8 +185,10 @@ reverse of the backup, and `-x` extracts. Running as root, `tar` gives every
 file the owner recorded in the archive, so `ark` owns the notes again inside
 the new volume.
 
-Now the real test. Start a second service with the restored volume, checking
-first that the name `ark-notes-restored` and port 8081 are free:
+Now the real test. Start a second service with the restored volume. Check
+`docker ps -a` for a container already named `ark-notes-restored`; if Docker
+reports port 8081 is in use, change the host-side port in `-p` and use it in
+the URL:
 
 ```text
 docker run -d --name ark-notes-restored -p 127.0.0.1:8081:8000 --mount type=volume,source=ark-notes-restored,target=/data ark-notes:v1

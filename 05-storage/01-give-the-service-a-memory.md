@@ -1,9 +1,9 @@
 ---
-title: "Give the service a memory"
+title: "Persisting data with volumes"
 track: runbook
 ---
 
-# Give the service a memory
+# Persisting data with volumes
 
 Up to now, our service has had nothing to remember. It answered with a
 message and a health check, and we could throw its container away and start
@@ -27,8 +27,8 @@ The chapter uses the image `ark-notes:v1`, a container named `ark-notes`,
 a volume named `ark-notes-data` and local port `8080`. If the container or
 the volume exist from an earlier run of this module, remove them first with
 `docker rm -f ark-notes` and `docker volume rm ark-notes-data`: the volume
-must start empty for one of the experiments below. From the root of your
-course checkout, move into the supplied example:
+must start empty for one of the experiments below. From the [root of your
+course checkout](../before-you-start.md#get-the-course-files), move into the supplied example:
 
 === "Linux (Bash)"
 

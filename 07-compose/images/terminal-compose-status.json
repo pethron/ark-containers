@@ -1,0 +1,13 @@
+{
+  "title": "Compose starts the two-service application",
+  "capturedAt": "2026-10-31T23:48:39.071Z",
+  "dockerVersion": "29.6.1",
+  "entries": [
+    {
+      "command": "docker compose ps --format 'table {{.Name}}\\t{{.Service}}\\t{{.State}}\\t{{.Ports}}'",
+      "output": "NAME        SERVICE   STATE     PORTS\nark-api-1   api       running   \nark-web-1   web       running   127.0.0.1:8080->8000/tcp",
+      "exitCode": 0
+    }
+  ],
+  "note": "The real Compose listing selects the service, state and published-port columns; HTTP was checked as well."
+}

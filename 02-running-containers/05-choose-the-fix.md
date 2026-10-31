@@ -1,9 +1,9 @@
 ---
-title: "Choose the fix"
+title: "Choosing the right lifecycle command"
 track: architecture
 ---
 
-# Choose the fix
+# Choosing the right lifecycle command
 
 Imagine the next person finds `ark-ops` stopped and follows a note that simply
 says "restart it". That might resume a service you deliberately stopped, or
@@ -44,8 +44,8 @@ You now have a model for planning a change, not just commands to repeat. Use
 it in the [service-change kata](katas/README.md), where you'll choose the
 sequence yourself and leave the reasoning for someone else to follow.
 If you started `ark-ops` for this chapter, or kept one from an earlier one,
-stop and remove only that container; its source files and runtime image
-remain available for the next exercise:
+stop and remove only that container; its image remains available for the
+next exercise:
 
 ```text
 docker stop ark-ops

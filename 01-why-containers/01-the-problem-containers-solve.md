@@ -81,4 +81,4 @@ The last one is that **with containers, you don't have to care about the environ
 
 So, to sum up: your application is your code plus its environment, and environments tend to drift apart from machine to machine. Containers solve this by putting the application and its environment in the same box, a box with a standard format that can run anywhere. Under the hood, **a container is just a packaged and isolated process that shares the kernel with the host**.
 
-Next, [set up one Docker environment](02-installing-docker.md), then [run your first application](03-your-first-application.md). You don't need to understand every part of the configuration before trying it; we'll use the result to give those details a purpose.
+Next, we'll [run the service in a container](03-your-first-application.md). If Docker isn't installed yet or the course files aren't on your machine, go through [Before you start](../before-you-start.md) first. You don't need to understand every part of the configuration before trying it; we'll use the result to give those details a purpose.

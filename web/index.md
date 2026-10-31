@@ -1,123 +1,92 @@
 # Docker and Linux Containers Course
 
-**Preview: work in progress.** Module 01 has completed its first editorial review.
-Core modules 02–07 and the optional Under the hood deep dives are drafts.
-The current course scope ends at module 07; modules 08–09 remain in preparation.
-This public preview requests that search
-engines do not index its pages; it is not private or access-controlled.
+Sooner or later, a service that works on your machine has to run somewhere
+else: on a colleague's laptop, on a test server, in a pipeline that builds it
+at every change. Each of those places has its own operating system, its own
+version of Python and its own idea of which port is free, and the "it works
+for me" that held on your machine stops holding there. Containers are the
+answer the industry settled on, and today almost every deployment, from a
+small team's server to a larger application deployment, assumes you can package a
+service as an image and run it as a container.
 
-ARK starts with a working application, then helps you understand its mechanisms
-and apply what you have learned to a different requirement. Docker is our first
-tool throughout the main course. We'll also look at Linux isolation and Docker's
-internal components; direct containerd use belongs to optional advanced labs.
+Knowing a handful of Docker commands gets you surprisingly far, until
+something goes wrong. A container that exits immediately, a port that answers
+nothing, data that disappears after an update: these are everyday problems,
+and solving them requires understanding what a container is and what it
+shares with the machine underneath. That's the goal of this course. We'll use
+Docker to do the work, and at each step we'll explain enough of what happened
+to let you choose the next action yourself.
 
-## Start learning
+**Preview: work in progress.** Module 01 has completed its first editorial
+review; modules 02–07 and the optional advanced material are drafts.
+The [preview status](preview-status.md) page lists what has been tested so far.
 
-[Open the first module](01-why-containers/README.md){ .md-button .md-button--primary }
+## What you'll do
 
-You need basic terminal skills, one working Docker setup, and a browser or curl.
-The [installation chapter](01-why-containers/02-installing-docker.md)
-provides Windows, macOS and Linux routes. Local Python and a paid cloud account
-are not prerequisites.
-
-## Core course
-
-The numbered modules are the suggested reading order. You'll run and operate a
-service, deliver it as an image, preserve its data, connect it to other
-services and describe the whole stack with Compose. Each step includes the
-theory needed to explain what happened and choose the next action.
-
-Set up Docker in module 01, then start each module at its first practical
-chapter and follow the chapters in order. The exercises carry their state
-forward within the module, and each module brings its own files.
+The course follows a small service from the moment it first runs in a
+container to a complete stack. You'll start it and reach it from the browser,
+then keep it running and replace it with a new version. You'll package it as
+an image and hand it to a colleague, write the recipe that builds it, keep its
+data safe across replacements, connect it to a second service and finally
+describe the whole stack in a single file. The core finishes with an unfamiliar
+application to package, diagnose and change.
 
 | Module | Topic | Status |
 |--------|-------|--------|
-| 01 | [Why containers](01-why-containers/README.md) | Reviewed |
-| 02 | [Running containers](02-running-containers/README.md) | Draft available |
-| 03 | [Images and registries](03-images-and-registries/README.md) | Draft available |
-| 04 | [Building images](04-building-images/README.md) | Draft available |
-| 05 | [Storage](05-storage/README.md) | Draft available |
-| 06 | [Networking](06-networking/README.md) | Draft available |
-| 07 | [Compose](07-compose/README.md) | Draft available |
-| 08 | [Security](08-security/README.md) | In preparation |
-| 09 | [Production and troubleshooting](09-production-and-troubleshooting/README.md) | In preparation |
+| 01 | Why containers | Reviewed |
+| 02 | Running containers | Draft available |
+| 03 | Images and registries | Draft available |
+| 04 | Building images | Draft available |
+| 05 | Storage | Draft available |
+| 06 | Networking | Draft available |
+| 07 | Compose | Draft available |
 
-## Under the hood
+## How the course works
 
-These [advanced deep dives](advanced/README.md) are **optional, not requirements
-for completing the core course or its final project**:
+Each module starts from scratch with its own files and its own working
+service, so you can open module 05 without keeping anything from module 04.
+Within a module, the chapters continue one another: the container you start in
+one chapter is still running in the next, so follow them in order and keep
+the terminal open in the module's folder. In the first module, where every
+command is new, green **Checkpoint** boxes mark the state you should have
+reached before moving on.
 
-- [Linux primitives](advanced/linux-primitives/README.md)
-- [Runtime architecture](advanced/runtime-architecture/README.md)
-- [Images and distribution](advanced/images-and-distribution/README.md)
-- [Image builds](advanced/image-builds/README.md)
-- [Container networking](advanced/container-networking/README.md)
+Most chapters are practical: you run a command, observe what happens and only
+then look at why. At the end of each module, a kata gives you a similar
+problem without step-by-step instructions, so you can check that you can solve
+it on your own, and a short *Check your understanding* page asks you to
+predict, diagnose and decide before showing the explanation. When you pause,
+keep what the next chapter needs and clean up when you finish the module.
 
-They start from the application you already know, investigate its mechanisms,
-and return to it with observations to check. You can open a relevant deep dive
-when you're curious; you don't need to read them between numbered modules.
-Their Docker inspection exercises work with the main setup. The manual sandbox
-and direct-containerd comparison have separate Linux VM prerequisites, stated
-before their commands.
+When the seven modules are done, the [final project](capstone/README.md)
+gives you a small application you haven't seen before: you package it, run
+it, keep its data, diagnose an incident introduced on purpose and handle a
+changed requirement. A published [rubric](capstone/rubric.md) explains how
+it's assessed. The [syllabus](syllabus.md) lists what you'll be able to do at
+the end of each module, and the [glossary](glossary.md) collects the terms
+the course defines along the way.
 
-## Preview scope
+The **Under the hood** section collects optional deep dives into Linux
+namespaces and cgroups, the runtime components behind `docker run`, image
+distribution, advanced builds and container networking. You don't need them
+to complete the course; open one when a question from the exercises makes you
+curious.
 
-Modules 01–07 offer Bash and native PowerShell 7 variants where syntax differs.
-Their command tabs remember your selection across pages.
-Introductory commands focus on the task, not a production hardening template.
-Module 02 uses the original application for shell, process lifetime, stop/start
-and replacement experiments. Signal-handling code is in advanced; resource
-limits, retry policies and memory failures belong to module 09.
-Module 03's required path is local tagging and archive restoration with the
-already-downloaded image. Publication to a temporary local registry is optional.
-Module 04 packages that same application without a source mount and shows
-how to keep dependency installation cached after an application edit.
-Module 05 adds notes to the service and keeps them in a volume through
-replacement, compares bind mounts and tmpfs, and restores a backup into
-a new volume.
-Module 06 connects a frontend and API on a network you create, publishes
-only the frontend, and tells name failures from port failures by the
-frontend's answer.
-Module 07 moves that stack into a Compose file, and shows what Compose
-recreates on a change and which volumes survive `down`.
+If you want a fuller application workflow, **Compose application workflows**
+adds a database, a disposable cache and a reverse proxy to an original
+reading-list service. You'll run the stack before investigating readiness,
+backup and restore, cache behavior, source synchronization and dependency
+rebuilds. It follows the skills from modules 04–07, starts with its own files
+and resources, and doesn't change the final project's assessment.
 
-The first application's Docker path has been tested on Windows amd64 using
-Docker Desktop with native PowerShell 7 and Ubuntu WSL Bash: launch,
-configuration changes, a deliberate port failure, recovery, simultaneous
-instances, and scoped cleanup. The latest Bash run used the Windows Docker
-client with host bind-source paths translated for that client.
-Native Linux, macOS and arm64 still need platform-specific validation.
+## Before you start
 
-The unchanged application has also been checked with real interactive
-PowerShell/ConPTY sessions: exiting an added shell left HTTP working,
-stopping the main process ended another open shell, and the note survived
-start/restart but not replacement. The revised module-03 archive round trip
-preserved image identity and platform and served the expected message/health
-using both PowerShell and WSL Bash. The optional registry's push/digest-pull
-round trip preserved identity, and its temporary storage and anonymous-volume
-cleanup were checked.
-Earlier checks also covered platform-digest selection and the deep-dive
-fixtures. Bash tests used the Windows Docker client from WSL because native
-WSL integration was unavailable; integrated WSL paths remain a separate setup check.
-No daemon restart, global prune or unrelated container cleanup was required.
+You need basic terminal skills, one working Docker setup, the course files and
+a browser or curl. You don't need Python installed locally or a cloud account
+for the modules or the advanced Compose workflow. Where Bash and PowerShell 7
+differ, the commands come in tabs that remember your choice across pages.
+[Before you start](before-you-start.md) installs Docker on Windows, macOS or
+Linux, downloads the course files and lists the few extra tools that only
+later parts of the course need.
 
-Module 04's labs passed on Docker Desktop Linux amd64 with native PowerShell 7
-and Git Bash using the Windows Docker client.
-
-On the same Docker Desktop setup, the deep dives' Docker exercises have also
-been checked: namespace comparison and selective sharing, cgroup v2 limits,
-process credentials and policy indicators, create/start/stop events, and the
-distinction between client, runtime-start and application errors. The optional
-manual sandbox and standalone-containerd lab still need execution in their
-dedicated Linux VM environments.
-
-The planned course covers operations, images and builds, storage, networking,
-Compose, Linux primitives, runtime architecture, security and troubleshooting.
-
-Download or clone the [course repository](https://github.com/pethron/ark-containers)
-for the complete example files. The chapters on this site are rendered from
-the same Markdown files, not a second edition maintained by hand.
-
-When you pause, keep what the next chapter needs; clean up at the end of the
-module. Moving to another module doesn't require containers or data from this one.
+[Set up your machine](before-you-start.md){ .md-button .md-button--primary }

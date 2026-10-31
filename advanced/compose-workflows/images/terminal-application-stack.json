@@ -1,0 +1,13 @@
+{
+  "title": "The database, API, cache and proxy are running",
+  "capturedAt": "2026-10-31T23:49:03.537Z",
+  "dockerVersion": "29.6.1",
+  "entries": [
+    {
+      "command": "docker compose -p arkcw-capture-7857cd15 -f compose.yaml -f compose.cache.yaml ps --format '{{.Service}}: {{.State}} ({{.Health}}) {{.Ports}}'",
+      "output": "api: running (healthy) 8000/tcp\ncache: running (healthy) 6379/tcp\ndb: running (healthy) 5432/tcp\nproxy: running (healthy) 127.0.0.1:8080->80/tcp",
+      "exitCode": 0
+    }
+  ],
+  "note": "Captured from a temporary copy of the supplied application after adding the cache. The unique project name is chosen for the capture. The listing formats real service, state, health and port fields; API readiness and the book-list response were checked separately. Only the proxy publishes a host port."
+}

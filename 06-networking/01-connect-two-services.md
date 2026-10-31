@@ -1,9 +1,9 @@
 ---
-title: "Connect two services"
+title: "Connecting containers on a network"
 track: runbook
 ---
 
-# Connect two services
+# Connecting containers on a network
 
 So far each of our services has worked alone. Real applications rarely do: a
 web page asks an API for data, the API asks a database, and so on. In this
@@ -16,7 +16,7 @@ the containers that need it.
 The module uses its supplied `network-service` fixture. You need Docker
 running Linux containers, as set up in module 01, and either a browser or curl.
 On Windows, call curl as `curl.exe`. On Linux Engine, prefix Docker commands
-with `sudo` if your setup requires it. From the root of your course checkout,
+with `sudo` if your setup requires it. From the [root of your course checkout](../before-you-start.md#get-the-course-files),
 move into the example:
 
 === "Linux (Bash)"
@@ -41,8 +41,10 @@ docker build -t ark-network:v1 .
 ```
 
 The chapter creates the containers `ark-api` and `ark-web` and the network
-`ark-net`, and publishes local port `8080`. Check `docker ps -a` and
-`docker network ls` first: those names and that port must be free.
+`ark-net`, and publishes local port `8080`. Check `docker ps -a` for
+containers already using those names and `docker network ls` for an existing
+`ark-net`. If Docker reports that port 8080 is already in use, choose a free
+loopback host port and update the launch command and URL.
 
 ## Let the frontend call the API
 

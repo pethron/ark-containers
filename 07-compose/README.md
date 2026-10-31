@@ -1,41 +1,26 @@
 # 07: Compose
 
-Two services that work together, a web frontend and the API it calls, take a
-careful sequence of commands to start by hand: build an image, create a
-network, start each container with the right name, options and port. Here we
-write that setup down in a `compose.yaml` file, start the whole application
-with one command, and see what Compose creates, changes and removes on our
-behalf.
+Think about how the frontend and the API started in the networking exercises:
+build an image, create a network, then start each container with the right
+name, options and port. How many of those details could you reproduce from
+memory next week? That's the problem this module solves.
 
-## What you will learn
+Here we write that setup down in a `compose.yaml` file and start the whole
+application with one command. The file becomes the description someone else
+can read, review and run, instead of a sequence of commands kept in a
+terminal history.
 
-- Translate a sequence of `docker` commands into a Compose file and run the
-  stack with `docker compose up` and `down`
-- Explain how Compose names a project's objects, connects services by name
-  and recreates only what changed
-- Predict what `down` removes and why named volumes survive it
+We'll read the supplied file, start the stack, and then see what Compose
+creates, changes and removes on our behalf: how it names a project's objects,
+connects the services by name and recreates only what changed. We'll also
+look closely at what `docker compose down` removes, because the answer
+decides whether your data survives.
 
-## Chapters
+The example is a local exercise. It doesn't configure health checks or
+secrets, so treat it as a clear starting point for describing a stack and not
+as a deployment template.
 
-| # | Chapter | Track |
-|---|---------|-------|
-| 01 | [Describe the stack in a file](01-describe-the-stack-in-a-file.md) | R |
-| 02 | [What Compose manages for you](02-what-compose-manages-for-you.md) | A |
-
-The [supplied Compose file](stack/compose.yaml) builds the frontend and the
-API from the [network service](stack/network-service/README.md) next to it.
-We'll read the file, start the stack, then see what Compose changes when you
-edit one of its settings.
-
-Finish with [add the notes service](katas/README.md): extend the file with
-the supplied [notes service](stack/notes-service/README.md) and keep its
-notes across `down` and `up`.
-
-## Scope
-
-The module covers the Compose file and the commands you need to run and
-inspect a stack. The supplied example is a local exercise; it doesn't
-configure health checks or secrets.
-
-Explain what `docker compose up -d` does when nothing in
-the file has changed, and which command would delete your notes.
+The optional [application workflow](../advanced/compose-workflows/README.md)
+uses those Compose skills with a database, cache and reverse proxy, including
+readiness checks and development changes. Keep this module's small stack for
+the exercises here; that workflow begins with its own supplied application.

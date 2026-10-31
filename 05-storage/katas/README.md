@@ -19,7 +19,7 @@ You need Docker running Linux containers and curl; on Windows, call it as
 requires it. The kata uses the image `ark-notes:v1` from this module's notes
 service, which runs as the `ark` user and keeps its notes in
 `/data/notes.txt`, or in the file named by `NOTES_FILE`. From the root of
-your course checkout, build it:
+your [course checkout](../../before-you-start.md#get-the-course-files), build it:
 
 === "Linux (Bash)"
 

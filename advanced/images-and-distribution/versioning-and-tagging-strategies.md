@@ -108,7 +108,7 @@ and let a deployment select particular content.
 
 Choosing suitable software still requires reading its documentation and
 checking its provenance and platform support. For example, the
-`alpine` suffix in our familiar `python:3.12-alpine` reference describes
+`alpine` suffix in `python:3.12-alpine`, the image our service builds on, describes
 an Alpine-based variant alongside the Python release series. The
 publisher's tag documentation explains what that combination includes
 and which updates it follows, just as a release policy explains how

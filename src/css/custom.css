@@ -1,0 +1,35 @@
+:root {
+  --ifm-color-primary: #315eb3;
+  --ifm-color-primary-dark: #2c55a1;
+  --ifm-color-primary-darker: #2a5098;
+  --ifm-color-primary-darkest: #22427d;
+  --ifm-color-primary-light: #3d6bc3;
+  --ifm-color-primary-lighter: #4672c6;
+  --ifm-color-primary-lightest: #6189cf;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #9cbcff;
+}
+
+.markdown details {
+  margin-block: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+}
+
+.markdown summary {
+  cursor: pointer;
+  font-weight: var(--ifm-font-weight-semibold);
+}
+
+.menu__list-item.sidebar-group-heading {
+  margin-top: 0.75rem;
+  padding: 0 var(--ifm-menu-link-padding-horizontal);
+  color: var(--ifm-color-emphasis-600);
+  font-size: 0.75rem;
+  font-weight: var(--ifm-font-weight-semibold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}

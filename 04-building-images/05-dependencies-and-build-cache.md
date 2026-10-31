@@ -1,9 +1,9 @@
 ---
-title: "Add a dependency without rebuilding it every time"
+title: "Dependencies and layer caching"
 track: runbook
 ---
 
-# Add a dependency without rebuilding it every time
+# Dependencies and layer caching
 
 The original service uses Python's standard library, so its recipe has no
 packages to install. Many applications need a library, though, and Docker
@@ -104,6 +104,10 @@ timer for your shell:
 The elapsed times depend on the builder's cache and other activity on your
 machine, so treat them as observations rather than a universal speed claim.
 Which operations rerun is the evidence to compare.
+
+![Actual rebuild output shows pip installation completing in the baseline and CACHED in the dependency-first recipe](images/terminal-build-cache.svg)
+
+![After an edit to serve.py, the baseline recipe reruns its copy and pip install, while the supplied recipe reuses pip install and reruns only the final copy](images/dependency-cache.svg)
 
 Restore `serve.py` by removing your comment. A change to `requirements.txt`
 should invalidate the installation step in either recipe, because pip must

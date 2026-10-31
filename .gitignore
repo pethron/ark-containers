@@ -3,3 +3,7 @@ site/
 .cache/
 .venv/
 __pycache__/
+node_modules/
+.docusaurus/
+build/
+static/

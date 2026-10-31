@@ -1,9 +1,9 @@
 ---
-title: "Choose a volume, a bind mount or tmpfs"
+title: "Volumes, bind mounts and tmpfs"
 track: runbook
 ---
 
-# Choose a volume, a bind mount or tmpfs
+# Volumes, bind mounts and tmpfs
 
 The notes have found a good home in a volume, but they aren't the only
 files a service ever touches. While you develop it, you want the container

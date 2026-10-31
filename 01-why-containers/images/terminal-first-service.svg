@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="889.5" height="296" viewBox="0 0 889.5 296" role="img" aria-labelledby="title description">
+<title id="title">The service process and its log</title>
+<desc id="description">$ docker ps --filter name=ark-message --format &apos;table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Names}}&apos;
+CONTAINER ID   IMAGE                           STATUS                  NAMES
+3db8e7024a2e   ghcr.io/pethron/ark-message:1   Up Less than a second   ark-message
+
+$ docker logs ark-message
+ARK message service listening on port 8000
+
+172.17.0.1 - - [31/Oct/2026 23:48:00] &quot;GET / HTTP/1.1&quot; 200 -
+172.17.0.1 - - [31/Oct/2026 23:48:00] &quot;GET /health HTTP/1.1&quot; 200 -</desc>
+<rect width="889.5" height="296" rx="12" fill="#0c1220"/>
+<path d="M0 44H889.5" stroke="#334155"/>
+<text x="24" y="28" fill="#cbd5e1" font-family="Consolas,monospace" font-size="15">The service process and its log</text>
+<text x="24" y="70" fill="#5eead4" font-family="Consolas,monospace" font-size="14" xml:space="preserve">$ docker ps --filter name=ark-message --format &apos;table {{.ID}}\t{{.Image}}\t{{.Status}}\t{{.Names}}&apos;</text>
+<text x="24" y="92" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">CONTAINER ID   IMAGE                           STATUS                  NAMES</text>
+<text x="24" y="114" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">3db8e7024a2e   ghcr.io/pethron/ark-message:1   Up Less than a second   ark-message</text>
+<text x="24" y="136" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve"> </text>
+<text x="24" y="158" fill="#5eead4" font-family="Consolas,monospace" font-size="14" xml:space="preserve">$ docker logs ark-message</text>
+<text x="24" y="180" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">ARK message service listening on port 8000</text>
+<text x="24" y="202" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve"> </text>
+<text x="24" y="224" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">172.17.0.1 - - [31/Oct/2026 23:48:00] &quot;GET / HTTP/1.1&quot; 200 -</text>
+<text x="24" y="246" fill="#dbe4ee" font-family="Consolas,monospace" font-size="14" xml:space="preserve">172.17.0.1 - - [31/Oct/2026 23:48:00] &quot;GET /health HTTP/1.1&quot; 200 -</text>
+<text x="24" y="281" fill="#94a3b8" font-family="Consolas,monospace" font-size="12">2026-10-31 | Docker 29.6.1 | IDs and times may differ</text>
+</svg>

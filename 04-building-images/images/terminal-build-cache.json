@@ -1,0 +1,20 @@
+{
+  "title": "Dependency installation after a source edit",
+  "capturedAt": "2026-10-31T23:48:35.727Z",
+  "dockerVersion": "29.6.1",
+  "entries": [
+    {
+      "command": "docker build --progress=plain -f Dockerfile.baseline -t ark-template:baseline .",
+      "output": "#9 [5/5] RUN pip install --no-cache-dir --only-binary=:all: -r requirements.txt\n#9 3.606 Successfully installed Jinja2-3.1.6 MarkupSafe-3.0.4\n#9 DONE 3.9s",
+      "exitCode": 0,
+      "label": "Baseline after an application-only edit"
+    },
+    {
+      "command": "docker build --progress=plain -t ark-template:cached .",
+      "output": "#9 [5/6] RUN pip install --no-cache-dir --only-binary=:all: -r requirements.txt\n#9 CACHED",
+      "exitCode": 0,
+      "label": "Dependency-first recipe after the same edit"
+    }
+  ],
+  "note": "Only the real dependency-installation step is shown; other build steps are omitted. The edit was made in a temporary fixture copy, not in the supplied source. Timings are observations, not a speed target."
+}

@@ -1,9 +1,9 @@
 ---
-title: "Describe the stack in a file"
+title: "Defining a stack with Compose"
 track: runbook
 ---
 
-# Describe the stack in a file
+# Defining a stack with Compose
 
 Our application has two parts: a small API that answers on `/health`, and a
 web frontend that calls it and wraps the API's answer in its own response.
@@ -28,9 +28,11 @@ prefix the commands with `sudo` if your setup requires it.
 
 The chapter creates the Compose project `ark`: containers `ark-api-1` and
 `ark-web-1` and the network `ark_default`. It publishes local port `8080`.
-Check `docker ps -a` first: those names and that port must be free.
+Check `docker ps -a` for containers already using those names. If port 8080
+is unavailable, Compose reports a bind error when it starts the frontend;
+change the host-side port in `compose.yaml` and update the URL.
 
-From the root of your course checkout, move into the supplied directory:
+From the [root of your course checkout](../before-you-start.md#get-the-course-files), move into the supplied directory:
 
 === "Linux (Bash)"
 
@@ -157,7 +159,11 @@ docker compose ps
 ```
 
 You'll see `ark-api-1` and `ark-web-1`, with the published port next to the
-frontend only. Read the frontend's logs:
+frontend only.
+
+![Actual Compose listing shows the API and web service running, with a host port published only by web](images/terminal-compose-status.svg)
+
+Read the frontend's logs next:
 
 ```text
 docker compose logs web

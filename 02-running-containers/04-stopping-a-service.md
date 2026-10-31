@@ -1,9 +1,9 @@
 ---
-title: "Stopping a service"
+title: "Stopping a container and cleaning up"
 track: architecture
 ---
 
-# Stopping a service
+# Stopping a container and cleaning up
 
 In the shell experiment, stopping the server also ended the extra process
 you had opened alongside it. You may also have noticed that Docker took
@@ -47,10 +47,10 @@ explores the difference without making it a prerequisite here.
 
 ## Stop first, remove when ready
 
-This is why `docker rm -f` is not just a shorter spelling of stop followed
-by remove: it can forcibly kill running work without the initial waiting
-period. For normal changes, stop the container, check its state and logs,
-and only remove it when you no longer need that instance.
+`docker rm -f` skips the grace period from `docker stop`: it sends
+`SIGKILL` to a running container and removes it. For normal changes, stop
+the container, check its state and logs, and remove it only when you no
+longer need that instance.
 
 Start the same container again and verify its message and `/health` response:
 

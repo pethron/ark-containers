@@ -57,10 +57,10 @@ application just to make a diagnostic command convenient.
 ## Follow our service through create and start
 
 Use the Bash setup from module 01 and Linux containers. In a rootful native
-setup, prefix Docker commands with `sudo`. From the course checkout root:
+setup, prefix Docker commands with `sudo`. From the [course checkout root](../../before-you-start.md#get-the-course-files):
 
 ```bash
-cd 01-why-containers/first-app
+cd 04-building-images/message-service
 docker ps -a --filter name=ark-runtime-message
 ```
 

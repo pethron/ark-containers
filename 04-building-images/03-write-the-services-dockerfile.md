@@ -1,9 +1,9 @@
 ---
-title: "Write the service's Dockerfile"
+title: "Writing a Dockerfile"
 track: runbook
 ---
 
-# Write the service's Dockerfile
+# Writing a Dockerfile
 
 You've seen a supplied recipe build the message service into an image.
 Now prepare a build directory of your own. The goal is still the same HTTP

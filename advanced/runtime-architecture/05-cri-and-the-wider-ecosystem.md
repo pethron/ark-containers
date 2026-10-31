@@ -9,8 +9,9 @@ At this point, "runtime" has probably started appearing in far too many
 sentences. Docker is called a container runtime, containerd is called a runtime,
 and runc is called a runtime. Are they all doing the same thing?
 
-No. The word is overloaded. Instead of memorizing a ranking of tools, ask which
-interface a component serves and which responsibilities it owns.
+Each name covers a different set of responsibilities. Following the interface
+a component serves gives us a more useful map than ranking everything called
+a runtime.
 
 ## A map of responsibilities
 
@@ -20,44 +21,12 @@ interface a component serves and which responsibilities it owns.
 | Docker Engine | High-level container, image, network and volume management |
 | Containerd | Content, snapshot and execution management for its clients |
 | Shim and runc | Runtime integration, process supervision and low-level execution |
-| Kubelet | Node agent reconciling workloads requested by Kubernetes |
-| CRI | Kubernetes' interface to a container runtime service |
 | Podman | Another engine/tooling approach for managing OCI containers |
 | Nerdctl | A Docker-like CLI for containerd |
 | Ctr | A lower-level administrative/debugging client for containerd |
 
-This isn't a list of mandatory installations. The main course still needs
-Docker, not every row in the table.
-
-## Where CRI fits
-
-The **Container Runtime Interface** is the API kubelet uses to ask a runtime
-service for operations such as managing pod sandboxes, containers and images.
-Containerd can serve CRI through its CRI integration; CRI-O is another
-implementation designed for Kubernetes.
-
-CRI is not the OCI runtime specification. Kubelet doesn't prepare an OCI bundle
-and invoke runc directly for every request. It asks a runtime service to do
-higher-level work, and that service arranges the lower-level execution.
-
-The word *sandbox* here has a Kubernetes-specific role around pod execution.
-It shouldn't be confused with our deliberately incomplete manual chroot
-exercise, just because both use the same English word.
-
-## Why removing dockershim didn't remove Docker images
-
-Kubernetes historically had a built-in adapter called dockershim for Docker
-Engine. That adapter was removed in Kubernetes 1.24. It did not mean images
-built with Docker stopped being usable on Kubernetes nodes.
-
-Image compatibility and node runtime integration are different contracts.
-You can build a compatible application image with Docker and run it using a
-CRI-enabled containerd service. Docker Engine integration, where needed, can
-use a separate adapter such as cri-dockerd rather than the removed built-in
-component.
-
-This is a good test of the previous chapter: which contract moved the image,
-and which contract asked a node to execute it?
+These are alternatives or components to understand, not a list to install.
+The main course continues to use the Docker setup you already have.
 
 ## Where Podman differs
 
@@ -93,10 +62,10 @@ component diagram necessarily means an easier learning path.
 
 ## Choose the next useful observation
 
-Suppose Kubernetes cannot start a pod because its CRI endpoint is unavailable.
-Running `docker ps` against some other engine on the node won't establish that
-the CRI service works. Likewise, `ctr images ls` against an arbitrary namespace
-doesn't prove that Docker lost an image.
+Suppose your Docker CLI is pointed at a different context from the one where
+you started the service. Its empty `docker ps` result describes that endpoint,
+not every engine on the machine. Similarly, `ctr images ls` against an
+arbitrary containerd namespace doesn't prove that Docker lost an image.
 
 First identify the manager, endpoint and object scope. Then inspect that
 manager's evidence. This habit transfers much further than memorizing which
@@ -106,9 +75,20 @@ Try the [runtime diagnosis kata](katas/README.md) to apply that map. The next
 chapter is an optional direct-client comparison; you can skip it and continue
 to [Running containers](../../02-running-containers/README.md).
 
+## Beyond the local engine
+
+You may also encounter **CRI**, the Container Runtime Interface used by
+Kubernetes' node agent to request container and image operations from a runtime
+service. Containerd can provide that integration. OCI defines image and
+low-level execution contracts; CRI defines another client's service interface.
+Keeping those contracts separate explains how an image built with Docker can
+be used by another compatible runtime.
+
+That is the ecosystem context we need here. Cluster setup, pod operations and
+Kubernetes troubleshooting remain outside this course.
+
 ## Further reading
 
 - [Kubernetes CRI](https://kubernetes.io/docs/concepts/architecture/cri/)
-- [Dockershim removal FAQ](https://kubernetes.io/blog/2022/02/17/dockershim-faq/)
 - [Podman introduction](https://docs.podman.io/en/latest/)
 - [Nerdctl](https://github.com/containerd/nerdctl)

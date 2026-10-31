@@ -17,7 +17,7 @@ or registry publication is required here.
 ## Inspect before choosing a build
 
 Use Linux Bash or PowerShell 7 with Docker running Linux containers. Linux
-Engine may require `sudo`. From the course checkout root:
+Engine may require `sudo`. From the [course checkout root](../../before-you-start.md#get-the-course-files):
 
 === "Linux (Bash)"
 
