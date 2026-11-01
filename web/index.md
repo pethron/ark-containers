@@ -17,8 +17,9 @@ shares with the machine underneath. That's the goal of this course. We'll use
 Docker to do the work, and at each step we'll explain enough of what happened
 to let you choose the next action yourself.
 
-**Preview: work in progress.** Module 01 has completed its first editorial
-review; modules 02–07 and the optional advanced material are drafts.
+**Preview: work in progress.** Module 01's existing chapters have completed
+their first editorial review; the fast tracks, modules 02–07 and the optional
+advanced material are drafts.
 The [preview status](preview-status.md) page lists what has been tested so far.
 
 ## What you'll do
@@ -31,7 +32,7 @@ data safe across replacements, connect it to a second service and finally
 describe the whole stack in a single file. The core finishes with an unfamiliar
 application to package, diagnose and change.
 
-| Module | Topic | Status |
+| Module | Topic | Guided chapters |
 |--------|-------|--------|
 | 01 | Why containers | Reviewed |
 | 02 | Running containers | Draft available |
@@ -51,6 +52,13 @@ the terminal open in the module's folder. In the first module, where every
 command is new, green **Checkpoint** boxes mark the state you should have
 reached before moving on.
 
+For a quicker first pass, open **Fast track** just after a module's overview.
+It brings the essential commands and checks together on one page, then offers
+cleanup limited to what you created. When you want the explanations and
+independent practice, start that module's guided chapters from the beginning
+and try its kata. The fast track alone doesn't establish all the module's
+outcomes.
+
 Most chapters are practical: you run a command, observe what happens and only
 then look at why. At the end of each module, a kata gives you a similar
 problem without step-by-step instructions, so you can check that you can solve
@@ -66,18 +74,16 @@ it's assessed. The [syllabus](syllabus.md) lists what you'll be able to do at
 the end of each module, and the [glossary](glossary.md) collects the terms
 the course defines along the way.
 
-The **Under the hood** section collects optional deep dives into Linux
-namespaces and cgroups, the runtime components behind `docker run`, image
-distribution, advanced builds and container networking. You don't need them
-to complete the course; open one when a question from the exercises makes you
-curious.
+The **Under the hood** groups collect optional deep dives into Linux
+namespaces and cgroups, image distribution, builds and container networking.
+You don't need them to complete the course; open one when a question from the
+exercises makes you curious.
 
-If you want a fuller application workflow, **Compose application workflows**
-adds a database, a disposable cache and a reverse proxy to an original
-reading-list service. You'll run the stack before investigating readiness,
-backup and restore, cache behavior, source synchronization and dependency
-rebuilds. It follows the skills from modules 04–07, starts with its own files
-and resources, and doesn't change the final project's assessment.
+Module 07 ends with a fuller application: a database, a disposable cache and
+a reverse proxy around an original reading-list service. You'll run the stack
+before investigating readiness, backup and restore, cache behavior, source
+synchronization and dependency rebuilds. It starts with its own files and
+resources, and doesn't change the final project's assessment.
 
 ## Before you start
 

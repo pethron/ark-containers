@@ -5,7 +5,7 @@ track: architecture
 
 # Digests, manifests and multi-arch images
 
-You and a colleague both say you're using `python:3.12-alpine`, then discover
+You and a colleague both say you're using `ghcr.io/pethron/ark-message:1`, then discover
 that your Intel laptop and their arm64 machine may have selected different
 image content. The shared tag gives you a familiar name, but a production
 rollback needs stronger evidence that you are talking about the same artifact.
@@ -22,7 +22,7 @@ manifests, each with its own identity.
 
 | Identifier | What it tells you |
 |------------|-------------------|
-| Tag, such as `3.12-alpine` | A repository name that can resolve to different content over time |
+| Tag, such as `1` | A repository name that can resolve to different content over time |
 | Index or manifest-list digest | Identity of a document selecting or grouping other manifests |
 | Platform-manifest digest | Identity of one manifest and its referenced configuration/layers |
 | Configuration digest / local image ID | Identity of image configuration, not necessarily its registry manifest |
@@ -39,13 +39,13 @@ document you actually received before deciding which format it uses.
 ## Follow platform selection
 
 Now let's see how those identities guide a real platform selection. This
-optional exercise needs registry access and an already-local Python image.
+optional exercise needs registry access and the already-local course image.
 The commands inspect local metadata and contact the registry, but they do not
 create a running container:
 
 ```text
-docker image inspect docker.io/library/python:3.12-alpine --format 'platform={{.Os}}/{{.Architecture}} image-id={{.Id}}'
-docker manifest inspect docker.io/library/python:3.12-alpine
+docker image inspect ghcr.io/pethron/ark-message:1 --format 'platform={{.Os}}/{{.Architecture}} image-id={{.Id}}'
+docker manifest inspect ghcr.io/pethron/ark-message:1
 ```
 
 An index normally includes descriptors for the platforms it supports. Find
@@ -77,8 +77,8 @@ below, replace the digest placeholder with the matching value from your
 inspection. The placeholder itself is not executable course data.
 
 ```text
-docker pull --platform "$platform" "docker.io/library/python@$platform_digest"
-docker run --rm --platform "$platform" "docker.io/library/python@$platform_digest" python --version
+docker pull --platform "$platform" "ghcr.io/pethron/ark-message@$platform_digest"
+docker run --rm --platform "$platform" "ghcr.io/pethron/ark-message@$platform_digest" python --version
 ```
 
 If the descriptor is wrong or unsupported, keep the error and correct your

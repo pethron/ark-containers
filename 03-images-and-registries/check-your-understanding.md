@@ -30,7 +30,7 @@ command. The note was written to one container's writable filesystem, so it
 stays with that container and a fresh one starts without it. That's why the
 handover still needs the full launch command alongside the archive. Where each
 piece comes from is laid out in
-[Image layers](03-what-an-image-contains.md#the-containers-files-are-a-different-lifetime).
+[Layers and the root filesystem](03-what-an-image-contains.md#the-containers-files-are-a-different-lifetime).
 
 </details>
 
@@ -88,7 +88,7 @@ container only shows the final view, which is why it looked clean. The safe
 course is to keep secrets out of every step from the start and to treat this
 password as exposed if the image has already travelled. The consequence is
 discussed in
-[Image layers](03-what-an-image-contains.md#files-arrive-in-layers).
+[Layers and the root filesystem](03-what-an-image-contains.md#files-arrive-in-layers).
 
 </details>
 
@@ -110,7 +110,7 @@ they'll need a compatible build or an environment with suitable emulation
 before launching. It's also honest to say that you tested the archive on your
 own engine, leaving their machine as a separate check. Both points are
 developed in
-[Tags, digests and platforms in a handover](05-choose-the-reference-to-hand-over.md#check-the-receiving-platform).
+[Manifests, digests and platforms](05-choose-the-reference-to-hand-over.md#check-the-receiving-platform).
 
 </details>
 
@@ -132,13 +132,13 @@ since a private repository asks for authentication through `docker login`.
 An archive remains a perfectly good choice for a single handover, an offline
 machine or a quick exchange where nobody wants to manage a registry. The
 trade-off is discussed in
-[Tags, digests and platforms in a handover](05-choose-the-reference-to-hand-over.md#where-a-registry-fits).
+[Manifests, digests and platforms](05-choose-the-reference-to-hand-over.md#where-a-registry-fits).
 
 </details>
 
-## 6. Which object did you compare? (optional)
+## 6. Which object did you compare?
 
-After the optional manifest investigation, a colleague compares the image ID
+After inspecting the registry index, a colleague compares the image ID
 printed by `docker image inspect` with
 a digest from `docker manifest inspect` for the course image. They differ,
 so the colleague concludes that the download was corrupted. What question
@@ -153,7 +153,7 @@ digests need not match. The local ID also depends on the engine's image store.
 First identify the objects and the selected platform, then compare like with
 like. A successful application response answers another question again:
 whether that artifact works with the launch settings you supplied.
-The optional [manifest explanation](../advanced/images-and-distribution/digests-manifests-and-multi-arch-images.md)
+The [manifest explanation](05-choose-the-reference-to-hand-over.md#follow-the-registrys-index)
 follows those objects; the archive exercise needs only the local comparison
 already made in this module.
 
@@ -177,6 +177,23 @@ port where nothing is waiting. Each container has its own port 8000, which is
 how two copies of the service could run side by side in module 01 with
 different host ports. The idea comes from
 [When a running container doesn't answer](../01-why-containers/05-running-but-unreachable.md#a-second-copy-for-your-colleague).
+
+</details>
+
+## 8. A public image asks for a token
+
+Your first request for a public image receives a `401` response with a
+`WWW-Authenticate` header. Does that alone prove the repository is private
+or the registry is down?
+
+<details>
+<summary>Answer</summary>
+
+No. The response can be a challenge telling the client where to obtain a
+token and which repository action to request. The client can then obtain an
+anonymous token for an allowed public pull. A denial after that exchange
+requires further investigation. See
+[See an anonymous challenge](06-how-a-registry-serves-an-image.md#see-an-anonymous-challenge).
 
 </details>
 

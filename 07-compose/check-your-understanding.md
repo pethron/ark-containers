@@ -62,13 +62,13 @@ API keep running?
 <details>
 <summary>Answer</summary>
 
-The edit touched the `web` service, for example its published port or its
-`BACKEND_URL`, and left `api` exactly as it was. `up` compares what the file
-asks for with what's running: settings such as ports and environment are fixed
-when a container starts, so Compose replaced `ark-web-1` to apply the new
-ones, while `ark-api-1` already matched the file and stayed `Running`. Had the
-teammate changed nothing, both containers would have been reported as
-`Running`. See [Projects, networks and volumes in Compose](02-what-compose-manages-for-you.md#up-compares-then-acts).
+The frontend was recreated while the API stayed running. A changed web
+setting, such as its port or `BACKEND_URL`, is one possible explanation:
+Compose needs a replacement to apply settings fixed at creation. A changed
+image or a forced recreation can also produce this result, so the output
+alone doesn't establish which edit happened. Compare the file, image and
+command before concluding. See
+[Projects, networks and volumes in Compose](02-what-compose-manages-for-you.md#up-compares-then-acts).
 
 </details>
 
@@ -150,6 +150,23 @@ you'll want to repeat, that's a good moment to move it into a file. See
 [Defining a stack with Compose](01-describe-the-stack-in-a-file.md#look-at-the-stack)
 and the verdict at the end of
 [Projects, networks and volumes in Compose](02-what-compose-manages-for-you.md#what-down-removes-and-what-it-keeps).
+
+</details>
+
+## 7. A new container with the same project
+
+After changing one web setting, Compose recreates the frontend. Which labels
+help associate the replacement with the same project and service, and does a
+new configuration hash prove the application is healthy?
+
+<details>
+<summary>Answer</summary>
+
+The `com.docker.compose.project` and `com.docker.compose.service` labels
+identify its project and service, while the configuration hash helps Compose
+compare settings. The hash isn't an application health check: request the
+page and inspect logs when necessary. See
+[What Compose asks the engine](03-what-compose-asks-the-engine.md#watch-one-change).
 
 </details>
 

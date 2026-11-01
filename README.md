@@ -6,8 +6,9 @@ containerd directly is reserved for optional advanced labs.
 
 You can read the chapters here on GitHub, or in the
 [public preview](https://pethron.github.io/ark-containers/) of the website.
-Both are work in progress: module 01 has completed its first editorial review,
-modules 02–07 and the optional advanced material are drafts.
+Both are work in progress: module 01's existing chapters have completed their
+first editorial review; the fast tracks, modules 02–07 and the optional
+advanced material are drafts.
 
 ## How the course is built: ARK
 
@@ -16,7 +17,7 @@ The course is a sequence of modules, and each module is a sequence of chapters. 
 | | Track | For whom | What you get |
 |---|-------|----------|--------------|
 | **A** | **Architecture** (*Deep Dive*) | You want to understand what happens under the hood | Kernel namespaces, cgroups, OverlayFS, networking internals, OCI. No shortcuts. |
-| **R** | **Runbook** (*Fast Track*) | You already work with it, or you are in a hurry | Clean syntax, commented CLI flags, minimal ready-to-use configs. |
+| **R** | **Runbook** | You want to do the task step by step | Commands, working configurations and checks of their results. |
 | **K** | **Katas** (*Hands-On*) | You learn by doing | Exercises of increasing difficulty: broken setups to fix, apps to containerize. |
 
 These are complementary views, not an obligatory A → R → K sequence. The guided
@@ -34,10 +35,15 @@ but is not an admission requirement for the first useful result.
 Modules **01 → 07** form the current course: run a service, operate it,
 package it, keep its data, connect it and describe the stack with Compose.
 The numbering is the suggested module order, but you can choose a module by
-the question you want to answer. Set up Docker with module 01, then start the
-chosen module at its first practical chapter and follow the chapters in order.
-Each module brings its own files; the exercises carry their state from one
-chapter to the next.
+the question you want to answer. After [setting up Docker](web/before-you-start.md),
+use a module's fast track for a short operational pass, or start with its first
+practical chapter for the full guided path. Each module brings its own files;
+the guided chapters carry their state from one chapter to the next.
+
+The fast tracks summarize the essential commands and finish with scoped
+cleanup. They don't replace the explanations, independent practice or full
+outcomes of the modules. The cleanup removes the fast track's containers, so
+start a guided module from its first chapter rather than its later steps.
 
 The core includes the theory needed to explain observations and justify
 decisions, not just commands to copy. You don't need the optional deep dives
@@ -51,24 +57,25 @@ assessed with a published [rubric](capstone/rubric.md). The
 [glossary](web/glossary.md) and the [references](web/references.md), with
 the software versions the exercises were checked with, cover the whole course.
 
-| # | Module | Status |
-|---|--------|--------|
-| 01 | [Why containers](01-why-containers/) | Reviewed |
-| 02 | [Running containers](02-running-containers/) | Draft |
-| 03 | [Images and registries](03-images-and-registries/) | Draft |
-| 04 | [Building images](04-building-images/) | Draft |
-| 05 | [Storage](05-storage/) | Draft |
-| 06 | [Networking](06-networking/) | Draft |
-| 07 | [Compose](07-compose/) | Draft |
+| # | Module | Fast track | Guided chapters |
+|---|--------|------------|-----------------|
+| 01 | [Why containers](01-why-containers/) | [Start](01-why-containers/fast-track.md) | Reviewed |
+| 02 | [Running containers](02-running-containers/) | [Start](02-running-containers/fast-track.md) | Draft |
+| 03 | [Images and registries](03-images-and-registries/) | [Start](03-images-and-registries/fast-track.md) | Draft |
+| 04 | [Building images](04-building-images/) | [Start](04-building-images/fast-track.md) | Draft |
+| 05 | [Storage](05-storage/) | [Start](05-storage/fast-track.md) | Draft |
+| 06 | [Networking](06-networking/) | [Start](06-networking/fast-track.md) | Draft |
+| 07 | [Compose](07-compose/) | [Start](07-compose/fast-track.md) | Draft |
 
-## Optional Compose application workflow
+## Compose in practice
 
-[Compose application workflows](advanced/compose-workflows/README.md) starts
-a supplied reading-list application with PostgreSQL and Nginx, adds Redis as
-a disposable cache, and follows configuration, readiness, logical backup and
-restore, Compose Watch development and an isolated handover. Use the skills
-from modules 04–07; the fixtures and resources are independent of those
-modules and the existing capstone.
+Module 07 continues with [a reading-list application](advanced/compose-workflows/README.md)
+that starts with PostgreSQL and Nginx, adds Redis as a disposable cache, and
+follows configuration, readiness, logical backup and restore, Compose Watch
+development and an isolated handover. Its files live under
+`advanced/compose-workflows/` and its resources are independent of the small
+Compose stack and the existing capstone. The module's fast track runs this
+application.
 
 After module 04, the optional [Docker Hub runbook](04-building-images/optional/publish-to-docker-hub.md)
 publishes an application image in your own namespace. It requires an account
@@ -105,6 +112,7 @@ Numbered directories contain the core course. Optional deep dives live under
 ```
 NN-module/
 ├── README.md        objectives, chapter list with tracks, katas
+├── fast-track.md    short operational route through the module
 ├── 01-<chapter>.md  front matter: title, track (architecture | runbook)
 ├── 02-<chapter>.md
 └── katas/
@@ -165,7 +173,7 @@ workflow runs the same script on Linux for every push and pull request.
 python scripts/check_labs.py
 ```
 
-The advanced application workflow has a separate check runner:
+Module 07's reading-list application has a separate check runner:
 
 ```bash
 python scripts/check_compose_workflows.py
@@ -210,7 +218,7 @@ manageable whole task, investigate its parts, and return to meaningful work.
 
 University of Helsinki's
 [DevOps with Docker, Fall 2026](https://courses.mooc.fi/org/uh-cs/courses/devops-with-docker-fall-2026)
-informed the optional application workflow and documentation-reading tasks.
+informed module 07's reading-list application and documentation-reading tasks.
 Our fixtures and explanations are original; the [references](web/references.md)
 identify the source and its license.
 

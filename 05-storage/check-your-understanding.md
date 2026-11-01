@@ -145,14 +145,12 @@ wrong if the restored files ended up owned by a different user?
 <summary>Answer</summary>
 
 The archive records owners as numbers, and `1000/1000` is `ark` in our image.
-When `tar` extracts the files into the new volume, only root can give them an
-owner other than itself, so running as root lets `tar` recreate the recorded
-owners and hand the notes back to `ark`. Root can also read the notes during
-the backup whoever owns them. The service only ever writes into a directory it
-already owns, so it never needs those privileges. If the restored files
-belonged to someone else, such as root, the service would exit with
-`Permission denied` or fail to save new notes, which is why the chapter adds a
-note through the restored service as its final check. See
+The helper runs `tar` as root, which gives it the permission needed to restore
+those recorded owners in this volume. The service only writes into a directory
+it already owns, so it never needs that privilege. With the permissions in
+this exercise, files restored as root would stop `ark` from saving notes,
+which is why the chapter adds a note through the restored service as its final
+check. See
 [Restore into a new volume](04-back-up-and-restore-the-notes.md#restore-into-a-new-volume).
 
 </details>
@@ -178,6 +176,22 @@ replacement can mount again. The original experiment is in
 [Restarting vs replacing a container](../02-running-containers/03-restarting-isnt-replacing.md#replace-the-configuration),
 and the storage side is in
 [What survives what](02-where-container-files-live.md#what-survives-what).
+
+</details>
+
+## 8. A writable mount that the service cannot write
+
+Docker shows a volume mounted at `/data` with `"RW":true`, but the service
+still reports `Permission denied`. Which other evidence would you inspect?
+
+<details>
+<summary>Answer</summary>
+
+The mount permits writes in principle, while the process still needs access
+under the directory's ownership and permissions. Compare `id` inside the
+container with a numeric `ls -ldn` of the mounted path and its files. An
+existing volume can retain an owner different from the one prepared in the
+image. See [Why the owner mattered](05-how-a-mount-appears.md#why-the-owner-mattered).
 
 </details>
 

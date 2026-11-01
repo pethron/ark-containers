@@ -8,8 +8,8 @@ track: runbook
 So far each of our services has worked alone. Real applications rarely do: a
 web page asks an API for data, the API asks a database, and so on. In this
 chapter a small frontend calls a small API, and we'll make that call work.
-You'll reach the frontend from your browser, while the API stays private to
-the containers that need it.
+You'll reach the frontend from your browser while the API has no published
+host port.
 
 ## Build and start the services
 
@@ -34,22 +34,27 @@ move into the example:
 The directory holds two programs, `api.py` and `web.py`, and a `Dockerfile`
 that copies both into one image. Its default command starts the API; we'll
 start the frontend from the same image by giving `docker run` a different
-command. Build it:
+command.
+
+The chapter creates the image tag `ark-network:v1`, containers `ark-api` and
+`ark-web`, and the network `ark-net`, and publishes local port `8080`. Check
+`docker image ls ark-network`, `docker ps -a` and `docker network ls` first.
+If a tag or name belongs to another task, choose an unused one and use it
+throughout the module; don't overwrite someone else's image or remove their
+containers. If Docker reports that port 8080 is already in use, choose a free
+loopback host port and use it in the frontend's mappings and URLs throughout
+this module.
+
+Build the image:
 
 ```text
 docker build -t ark-network:v1 .
 ```
 
-The chapter creates the containers `ark-api` and `ark-web` and the network
-`ark-net`, and publishes local port `8080`. Check `docker ps -a` for
-containers already using those names and `docker network ls` for an existing
-`ark-net`. If Docker reports that port 8080 is already in use, choose a free
-loopback host port and update the launch command and URL.
-
 ## Let the frontend call the API
 
 Start the API. It listens on port `8000` inside its container, and we don't
-publish it, so your computer has no way to reach it directly:
+publish a host port for it:
 
 ```text
 docker run -d --name ark-api ark-network:v1
@@ -58,8 +63,12 @@ docker run -d --name ark-api ark-network:v1
 Now start the frontend. `BACKEND_URL` tells it where to find the API: the
 container name `ark-api`, port `8000` and the `/health` path. The command
 after the image name, `python /app/web.py`, replaces the image's default
-command. We publish the frontend on port `8080` of `127.0.0.1`, the loopback
-address, so only your own computer can reach it:
+command. We publish the frontend on port `8080` of `127.0.0.1`, the engine
+host's loopback address, limiting the intended entry point to that host.
+With a remote engine, the address belongs to the remote host. Docker releases
+older than 28 have an additional same-network exposure caveat for localhost
+publishing, described in the
+[port publishing documentation](https://docs.docker.com/engine/network/port-publishing/):
 
 === "Linux (Bash)"
 
@@ -155,9 +164,11 @@ docker port ark-api
 
 The frontend shows the mapping to `127.0.0.1:8080`, while the API prints
 nothing. The frontend still reaches the API, because their conversation
-happens on `ark-net` and never passes through your computer's ports. **Publish
-a port only for the services you need to reach from outside Docker.** Leaving
-the API unpublished means one less entry point to worry about.
+happens on `ark-net` and doesn't use a published host port. **Publish a port
+only when an intended client needs it.** An unpublished port is not a
+complete security boundary: peers on a shared network can reach it, and on
+native Linux the engine host can normally reach container addresses too.
 
-This chapter leaves `ark-api`, `ark-web` and `ark-net` running, and the next
-chapter looks at how the name became an address using exactly this stack.
+This chapter leaves `ark-api`, `ark-web` and `ark-net` running. Next we'll
+[diagnose two connection failures](03-diagnose-a-broken-connection.md) using
+this same stack.

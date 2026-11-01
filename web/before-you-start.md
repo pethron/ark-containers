@@ -5,11 +5,11 @@ track: runbook
 
 # Before you start
 
-Every chapter of the course works on files we supply: a small service to run,
-a Dockerfile to read, a stack to start. Before the first chapter, then, your
-machine needs two things: a Docker installation that runs Linux containers and
-a copy of the course repository. We set up both once, on this page. From then
-on, the chapters assume they're in place and only tell you which folder to open.
+The course uses supplied files for tasks such as building a service and
+starting a stack. Your machine needs a Docker installation that runs Linux
+containers and a copy of the course repository. We set up both once, on this
+page. From then on, the chapters assume they're in place and only tell you
+which folder to open.
 
 ## What you need
 
@@ -19,13 +19,16 @@ on, the chapters assume they're in place and only tell you which folder to open.
 | A terminal: Bash, or PowerShell 7 on Windows | Every module |
 | Git, or a way to download a ZIP | Getting the course files, used from module 04 |
 | A browser or `curl` | Talking to the services you run |
+| `tar` | Inspecting an image archive in module 03 |
 | Python 3.10 or later | Only the final project's tests and incident tool |
 | A Docker Hub account | Only the optional publishing page in module 04 |
-| A Linux machine or VM where you can use `sudo` | Only the hands-on labs in **Under the hood** |
+| Access to the Linux engine host, sometimes with `sudo` | Only optional host-side inspections |
 
 You don't need Python for the modules, because the images we run already
-contain it. The last three rows can wait until you reach those parts of the
-course.
+contain it. Most Linux and macOS installations and current Windows versions
+include `tar`; check with `tar --version` before module 03 and install it
+through your operating system's package manager if it is missing. The last
+three rows can wait until you reach those parts of the course.
 
 ## Choose your shell
 
@@ -39,6 +42,14 @@ if needed.
 On macOS, use the Bash commands with Docker Desktop, without `sudo`. WSL is an
 optional way to follow the Bash examples on Windows, not a required terminal.
 Later modules are still being adapted to these paired command tabs.
+
+The examples publish ports on the Docker host's `127.0.0.1` address. Docker
+Desktop makes those ports available on your computer; with a remote engine or
+a separate VM, check from the engine host or use an SSH tunnel. Bind mounts
+also use paths on the engine host. Docker Engine releases before 28.0.0 can
+allow other machines on the same local network to reach ports published to
+localhost; see Docker's [port-publishing guidance](https://docs.docker.com/engine/network/port-publishing/)
+if you use an older engine.
 
 ## Install Docker
 
@@ -199,6 +210,7 @@ first.
 | Client information, but no Server | Start Docker Desktop, or check `sudo systemctl status docker` on Linux |
 | Permission denied on the Docker socket | Use `sudo docker` on the Linux setup; don't make the socket world-writable |
 | The image download fails | Read the registry error: check connectivity, proxy settings or rate limits as appropriate |
+| A published port is already allocated | Choose a free host port and update the URL too. A failed `docker run` can leave a created container behind: check its name with `docker ps -a` before removing only that container |
 | The Linux service won't start | Read `sudo journalctl -u docker -n 80 --no-pager` |
 | `git` is not recognized | Install Git, or download the archive instead |
 | A chapter can't find a folder such as `04-building-images/message-service` | Return to the root of your course checkout before the chapter's first `cd` |

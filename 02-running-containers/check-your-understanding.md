@@ -159,6 +159,40 @@ useful work, such as a broken experiment you've already investigated. See
 
 </details>
 
+## 8. Which machine owns the PID?
+
+On Docker Desktop for Windows, `docker top` reports a PID that you can't find
+in Windows Task Manager. Where should you look for the process, and which
+part of Docker received the command that started it?
+
+<details>
+<summary>Answer</summary>
+
+The Docker client sent a request to the engine. The reported PID belongs to
+the Linux environment where that engine runs, which Docker Desktop manages;
+it is not a Windows process ID. On a native Linux Engine the corresponding
+host is the Linux machine running that engine. See
+[Find the engine](06-from-docker-run-to-a-process.md#find-the-engine).
+
+</details>
+
+## 9. Two kinds of boundary
+
+Two containers have different PID namespaces. Does that place a memory limit
+on either one? What evidence would you use to check a requested limit?
+
+<details>
+<summary>Answer</summary>
+
+The PID namespaces give processes separate views and numbering; they don't
+set memory budgets. Docker can request a cgroup memory limit when the
+container is created. Inspect its configuration and, when supported, the
+corresponding cgroup control; check engine warnings before concluding the
+limit is enforced. See
+[Read a resource boundary](07-namespaces-and-cgroups.md#read-a-resource-boundary).
+
+</details>
+
 If you can explain these to someone else, try the
 [service-change kata](katas/README.md), where you plan the whole sequence and
 write it down for the next person.

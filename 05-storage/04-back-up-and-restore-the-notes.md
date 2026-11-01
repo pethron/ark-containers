@@ -18,9 +18,9 @@ the restore through the service itself.
 
 ## Start with the notes you kept
 
-The previous chapters left two notes in `ark-notes-data`, with no service
+The previous chapters left your notes in `ark-notes-data`, with no service
 container running. Start the supplied image with that same volume, then add
-one more note so the restore can check all three:
+one more note so the restore has a new change to check:
 
 === "Linux (Bash)"
 
@@ -39,7 +39,8 @@ one more note so the restore can check all three:
     ```
 
 If curl can't connect, the service is still starting: wait a second and
-retry. The answer should report `"notes": 3`. The service runs as
+retry. The answer should report a note count one greater than before. The
+service runs as
 `ark`, an ordinary account that the image's `Dockerfile` creates and that
 owns `/data`. When Docker mounted the new, empty volume there, it copied the
 image's `/data` into it, owner included, which is why `ark` can write notes
@@ -84,7 +85,12 @@ files. Create a folder in your home directory and move into it:
     Set-Location "$HOME\ark-backups"
     ```
 
-Run the rest of this chapter from that folder. Before going on, open
+Run the rest of this chapter from that folder. Check that `notes-backup.tar`
+doesn't already exist there; if it does, choose another backup folder and
+use it throughout this chapter rather than overwriting a file. Check
+`docker volume ls` and `docker ps -a` too: `ark-notes-restored` must be a
+new volume and container name. If either is in use, choose a different name
+for this restore. Before going on, open
 `http://127.0.0.1:8080/notes` and write down the notes you see: they're what
 a successful restore must give back.
 
@@ -219,14 +225,19 @@ copies, so you can test a restore without risking the data in use.
 <details>
 <summary>The restored service exits or can't save notes</summary>
 
-Look at `docker logs ark-notes-restored`. `Permission denied` means the
-restored files don't belong to `ark`: check with
-`docker run --rm --mount type=volume,source=ark-notes-restored,target=/data ark-notes:v1 ls -ln /data`,
-which shows numeric owners. If they're `0`, the notes already belonged to
-root when you made the backup; the kata at the end of this module deals with
-that situation.
-An empty list usually means the archive was created from the wrong volume or
-an empty folder: list its contents again with `tar -tvf`.
+Look at `docker logs ark-notes-restored`. `Permission denied` points to the
+ownership or permissions of the restored directory and files. Inspect them
+with a short-lived root helper:
+
+```text
+docker run --rm --user 0 --mount type=volume,source=ark-notes-restored,target=/data ark-notes:v1 ls -ldn /data /data/notes.txt
+```
+
+Compare the numeric owners and permissions with the archive listing and
+the `ark` user, `1000:1000`. If the archive already recorded root as owner,
+the kata at the end of this module explores that situation. An empty list
+or missing `notes.txt` can mean the archive was created from the wrong
+volume or an empty folder: list its contents again with `tar -tvf`.
 
 </details>
 
@@ -256,16 +267,8 @@ docker rm ark-notes-restored
 docker volume rm ark-notes-restored
 ```
 
-When you've finished with the module, remove the service, its data and the
-image too, after checking that you no longer need the notes:
-
-```text
-docker stop ark-notes
-docker rm ark-notes
-docker volume rm ark-notes-data
-docker image rm ark-notes:v1
-```
-
-Keep or delete `notes-backup.tar` in your backup folder as you prefer.
-Before starting the kata, try explaining from memory why the restore needed
-root to run `tar`, while the service itself never did.
+Keep `ark-notes` running with `ark-notes-data`, and keep `notes-backup.tar`
+in your backup folder. We'll use the running service to examine
+[where its files live](02-where-container-files-live.md). Before moving on,
+try explaining from memory why the restore needed root to run `tar`, while
+the service itself never did.

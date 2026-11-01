@@ -11,11 +11,10 @@ those notes, whether we're deploying a new version or simply recreating it
 with different settings.
 
 We'll lose the notes first, on purpose, by replacing the container that wrote
-them. Then we'll keep them in a volume that outlives every container, and look
-at where a container's files actually live. That picture helps when choosing
-between volumes, bind mounts and tmpfs for different needs. We'll finish by
-backing up the notes and restoring them into a working service, since the
-restore is the part that proves the backup is worth keeping.
+them. Then we'll keep them in a volume, compare it with bind mounts and tmpfs,
+and restore a backup into a working service. With that result in hand, we'll
+look at the writable layer and the mount visible to the process, so we can
+explain where the notes went and why the service can write them.
 
 The notes service is supplied in this module's directory, including a hidden
 `.dockerignore`, so keep the directory complete when you clone the course.

@@ -126,7 +126,6 @@ configuration error before opening the HTTP port. Restarting that instance
 repeats the error because it keeps the same configuration. Read its log
 before removing it and launching a corrected replacement.
 
-The [process explanation](../01-a-container-is-just-a-process.md) and
-[runtime supervision](../../runtime-architecture/02-containerd-and-the-shim.md)
-provide the underlying context. Module 09 revisits the operational implications
-for recovery and work in progress.
+The [process explanation](../../../02-running-containers/06-from-docker-run-to-a-process.md)
+provides the underlying context. Module 09 revisits the operational
+implications for recovery and work in progress.

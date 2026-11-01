@@ -13,8 +13,9 @@ defaults that let someone else launch it.
 ## Set up a separate build directory
 
 The previous chapter leaves the terminal in `message-service`. Create a
-sibling directory for your own recipe, and inspect any existing attempt
-before copying files so that you don't overwrite your work:
+sibling directory for your own recipe. If `my-message-service` already
+exists, choose another unused directory and use that name throughout the
+exercise; the copy must not overwrite an existing attempt.
 
 === "Linux (Bash)"
 
@@ -93,7 +94,9 @@ Add a file named `.env` containing only `PUBLIC-LAB-MARKER` to this working
 directory, using your editor. It is a harmless stand-in, not a credential.
 Leave it excluded; we have no reason to send it to the builder.
 
-Build your image:
+Check `docker image ls ark-message` before using the `own` tag. If it belongs
+to another task, choose a different unused tag and use it throughout this
+chapter. Then build your image:
 
 ```text
 docker build --progress=plain -t ark-message:own .
@@ -147,8 +150,9 @@ container and check the response; a restart alone won't test the new image.
 If Python reports a missing file, compare the copied destination with the
 path in `CMD`.
 
-Keep your recipe and ignore file if you'd like to use them in the
-[module kata](katas/README.md). When stopping here:
+After your final check, remove the test container and its image tag so port
+8080 is free for the next exercise. Keep your recipe and ignore file if
+you'd like to use them in the [module kata](katas/README.md):
 
 ```text
 docker stop ark-own
@@ -157,7 +161,7 @@ docker image rm ark-message:own
 ```
 
 Delete only the dummy `.env` through your editor when you've finished using
-it. Keep your source work. Next we'll investigate what the recorded start
-command means for [arguments and stop signals](04-commands-and-signals.md).
+it. Keep your source work. Next we'll
+[add a dependency and observe the build cache](05-dependencies-and-build-cache.md).
 For other ignore patterns, consult the official
 [build context reference](https://docs.docker.com/build/concepts/context/#dockerignore-files).

@@ -137,8 +137,8 @@ membership and spelling separately is worth the extra command. See
 ## 6. An error that comes from the API
 
 This time `curl -i` shows a `404` status, and the frontend's answer mentions
-neither `name_resolution` nor `connection`. Which of the three questions from
-chapter 02 already has a "yes" for an answer, and where would you look next?
+neither `name_resolution` nor `connection`. Which diagnostic questions can
+you already answer "yes", and where would you look next?
 
 <details>
 <summary>Answer</summary>
@@ -167,6 +167,22 @@ way. Your computer has only one port `8080`, though, and a published port is a
 door from your computer into one specific container. Two copies therefore need
 two doors, such as `8080` and `8081`, even though both lead to a port `8000`
 on the other side. See [How containers find each other](02-how-the-request-finds-the-api.md#picture-the-trip).
+
+</details>
+
+## 8. An API without a published port
+
+The API has no `docker port` output. Can you conclude that nothing except
+the frontend can reach it?
+
+<details>
+<summary>Answer</summary>
+
+No. The API has no published host-port mapping, but containers sharing its
+network can reach its listening port. On native Linux, the engine host can
+normally reach the container address as well. Publishing decisions reduce
+entry points; they are not a complete access-control policy. See
+[Follow the published port](04-bridges-and-published-ports.md#follow-the-published-port).
 
 </details>
 

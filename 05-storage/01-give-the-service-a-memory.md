@@ -24,11 +24,16 @@ with curl, which Windows 10 and later include as `curl.exe`. On Linux Engine,
 prefix Docker commands with `sudo` if your setup requires it.
 
 The chapter uses the image `ark-notes:v1`, a container named `ark-notes`,
-a volume named `ark-notes-data` and local port `8080`. If the container or
-the volume exist from an earlier run of this module, remove them first with
-`docker rm -f ark-notes` and `docker volume rm ark-notes-data`: the volume
-must start empty for one of the experiments below. From the [root of your
-course checkout](../before-you-start.md#get-the-course-files), move into the supplied example:
+a volume named `ark-notes-data` and local port `8080`. Check `docker ps -a`,
+`docker volume ls` and `docker image ls ark-notes` before starting. The
+container name, image tag and volume name must be available, and the volume
+must start empty. If any belong to another task, choose unused names and use
+them consistently throughout this module; don't delete existing data to make
+the exercise work. If port 8080 is occupied, choose a free loopback host port
+for the main service and use it in the module's mappings and URLs. Check the
+second port separately when an exercise starts another service. From the
+[root of your course checkout](../before-you-start.md#get-the-course-files),
+move into the supplied example:
 
 === "Linux (Bash)"
 
@@ -214,7 +219,7 @@ can't write in the directory mounted at `/data`. Check that `target=/data`
 is spelled exactly like that, and that the volume name is one you haven't
 used for another experiment: an existing volume keeps whatever owner and
 files it already has. We'll diagnose this kind of failure properly in
-chapter 03.
+the chapter on choosing mounts.
 
 </details>
 
@@ -234,8 +239,8 @@ directory's contents into the volume, along with their owners and permissions.
 Our image had an empty `/data` owned by `ark`, so the new volume received that
 owner. The copy happens only while the volume is empty: once it contains
 notes, Docker leaves it alone and every later container sees the data as it
-is. Keep that rule in mind, because chapter 03 shows what happens when the
-image has nothing to copy.
+is. Keep that rule in mind, because the next chapter shows what happens when
+the image has nothing to copy.
 
 ## What changed in the handover
 
@@ -254,5 +259,4 @@ becomes something to keep, inspect and protect.
 | Effect of replacing the container | Nothing to lose | Notes stay in the volume |
 
 Leave `ark-notes` running on port 8080 with its notes in `ark-notes-data`.
-The next chapter inspects where its files live; keep the volume for the backup
-exercise at the end of the module.
+The next chapter compares mounts and keeps that volume for the backup.

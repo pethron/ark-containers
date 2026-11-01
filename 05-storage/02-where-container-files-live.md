@@ -66,12 +66,27 @@ there too:
     docker diff ark-notes
     ```
 
-This time the output is empty. The service wrote a note just like the other
-one, but the write went through the mount into the volume, so the container's
-own filesystem didn't change at all. That empty answer is a quick check you
-can use on any container: if a service is supposed to keep its data in a
-volume and `docker diff` lists data files, something is writing in the wrong
-place.
+You should not see the note under `/data` in this output. The service wrote
+through the mount into the volume, rather than into the container's writable
+layer. Other changes can still appear in `docker diff`, so compare the paths
+that matter: if the note appears there, investigate where the service is
+actually writing.
+
+To see a change to an image file as well, use the disposable
+`ark-notes-layer` instance. Its application file belongs to root, so this
+one command runs as user ID `0` inside that container and appends a harmless
+comment. It doesn't change the image or the service in `ark-notes`:
+
+```text
+docker exec --user 0 ark-notes-layer sh -c 'printf "\n# local demonstration\n" >> /app/app.py'
+docker diff ark-notes-layer
+```
+
+Look for `C /app/app.py` as well as the note. With an OverlayFS-backed
+engine, changing a file from a lower image layer first copies it into this
+container's writable layer; the following write changes that copy. Other
+storage implementations can differ internally, while the image itself
+remains unchanged.
 
 ## Layers, a writable layer and mounts
 
@@ -84,20 +99,19 @@ shares the same layers, and nothing a container does can change them.
 That's why each replacement starts from the same files.
 
 On top of them, Docker gives every container its own **writable layer**.
-When the process creates a file, the file goes there; when it modifies a file
-that came from the image, Docker first copies that file into the writable
-layer and lets the process change the copy. This approach is called
-**copy-on-write**, and it's how many containers can share one image while
-each sees its own changes. `docker diff` is a listing of exactly this layer.
-It belongs to one container, so it survives stop and start and disappears
-with `docker rm`.
+When the process creates a file outside a mount, the file goes there. With
+OverlayFS, modifying an image file first copies it into that layer, where
+the process changes its own copy. This **copy-on-write** approach lets
+containers share image content while keeping their changes separate; other
+storage implementations can differ internally. `docker diff` reports changes
+to the container's filesystem outside mounts. Those changes belong to one
+container, so they survive stop and start and disappear with `docker rm`.
 
 **Mounts** are placed over specific paths, hiding whatever the image had
 there. A **bind mount** presents a file or directory from your computer,
-as when you supplied `app.py` in module 01; a **volume** presents storage
+as when you mounted `notes-service` over `/app`; a **volume** presents storage
 that Docker manages. The process writes through either mount, so those files
-never enter the writable layer. The next chapter compares their lifetimes
-and helps you choose between them.
+don't enter the writable layer.
 You can see the mount Docker set up for `ark-notes`:
 
 ```text
@@ -105,12 +119,12 @@ docker inspect --format '{{json .Mounts}}' ark-notes
 ```
 
 The output names the volume, its destination `/data`, and `"RW":true` because
-the mount is writable. It also shows a `Source` path under
-`/var/lib/docker/volumes`. That's where the engine keeps the volume's files.
-On Docker Desktop, that path lives inside the Linux virtual machine that runs
-your containers, not on your Windows or macOS disk. Treat it as the engine's
-private storage and work with volumes through Docker and containers instead
-of editing files there; chapter 04 shows how to copy data in and out.
+the mount is writable. It also shows a `Source` path where the engine keeps
+the volume's files, often under `/var/lib/docker/volumes` on a default Linux
+installation. On Docker Desktop, that path is inside the Linux environment
+that runs your containers. Treat it as the engine's private storage and work
+with volumes through Docker and containers instead of editing files there;
+the backup exercise showed how to copy data in and out.
 
 ![Inside the ark-notes container, a writable layer sits over read-only image layers, while the /data mount point leads to the ark-notes-data volume outside the container](images/container-files.svg)
 
@@ -134,8 +148,9 @@ and the volume, using the two `docker diff` results above.
 | `docker volume rm` | Unchanged | Not affected | Deleted |
 
 Read the last two columns together and you have the rule for the service:
-**anything worth keeping must be written to a volume, because replacement is
-how containers change**. A container that keeps nothing important in its
+**data that must survive replacement needs storage outside the container**,
+such as our volume or a suitable bind mount. A container that keeps nothing
+important in its
 writable layer can be thrown away and recreated at any time, which is what
 people mean when they call a container *stateless*. The service is stateful,
 since it remembers notes, but its containers no longer have to be.
@@ -206,14 +221,5 @@ docker stop ark-notes-layer
 docker rm ark-notes-layer
 ```
 
-The next chapter starts its mount experiments on port 8080, so remove the
-service container while keeping the volume and its note for the backup
-exercise:
-
-```text
-docker stop ark-notes
-docker rm ark-notes
-```
-
-`ark-notes-data` remains untouched. Chapter 03 will compare the volume with
-the other mount types; the final chapter will use this note to test a backup.
+Keep `ark-notes` running with `ark-notes-data` for
+[the mount and ownership inspection](05-how-a-mount-appears.md).

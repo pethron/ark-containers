@@ -36,9 +36,9 @@ docker exec ark-web cat /etc/resolv.conf
 ```
 
 The `nameserver 127.0.0.11` line points to a small name server that Docker
-runs for containers on networks you create. Docker's default network, the
-one containers join when you don't choose a network, has no such name
-server, so two containers started there can't find each other by name.
+runs for containers on networks you create. Docker's default bridge, the
+network containers join when you don't choose one, doesn't automatically
+resolve container names. Its containers can still use DNS for other names.
 
 ## Picture the trip
 
@@ -65,8 +65,8 @@ one, because the frontend calls it from inside the office.
 
 **When to use this picture:** when a connection fails, ask three questions
 in order. Does the name resolve to an address? Is a program listening on the
-destination port? Does the application answer the request? The next chapter
-breaks the first two links on purpose, so you can see which answer changes.
+destination port? Does the application answer the request? Those are the
+links you just compared while diagnosing the two failures.
 
 If you're curious about what the switch is made of, or about network types
 other than the bridge, the optional
@@ -74,4 +74,5 @@ other than the bridge, the optional
 opens them up. Nothing in the rest of this module depends on it.
 
 This chapter changed nothing, so `ark-api`, `ark-web` and `ark-net` are still
-running. The next chapter breaks this same stack on purpose.
+running. Next we'll look at
+[the bridge and the published port](04-bridges-and-published-ports.md).

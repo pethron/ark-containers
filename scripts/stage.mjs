@@ -28,7 +28,7 @@ export function stage(course = root) {
   }
   let markdownFiles = 0;
   const excluded = [];
-  function copyTree(source, relative = '') {
+  function copyTree(source, relative = '', webTree = false) {
     for (const entry of fs.readdirSync(source, {withFileTypes: true})) {
       const outputPath = path.join(relative, entry.name);
       if ((!entry.isFile() && !entry.isDirectory()) || !isPublicEntry(entry.name, entry.isDirectory())) {
@@ -37,10 +37,11 @@ export function stage(course = root) {
       }
       const sourcePath = path.join(source, entry.name);
       if (entry.isDirectory()) {
-        copyTree(sourcePath, outputPath);
+        copyTree(sourcePath, outputPath, webTree);
       } else if (entry.name.endsWith('.md')) {
         const original = fs.readFileSync(sourcePath, 'utf8');
-        const adapted = convertMarkdown(original, outputPath.replaceAll('\\', '/'));
+        const webLinkDepth = webTree ? null : relative.split(path.sep).length;
+        const adapted = convertMarkdown(original, outputPath.replaceAll('\\', '/'), {webLinkDepth});
         if (JSON.stringify(fencedBlocks(original)) !== JSON.stringify(fencedBlocks(adapted))) {
           throw new Error(`Source command changed while staging ${outputPath}`);
         }
@@ -61,7 +62,7 @@ export function stage(course = root) {
   // Only these top-level paths are eligible; the repository root is never copied.
   const web = path.join(course, 'web');
   if (fs.lstatSync(web).isSymbolicLink()) throw new Error(`Refusing public web symlink: ${web}`);
-  copyTree(web);
+  copyTree(web, '', true);
   for (const section of publicSections) {
     const source = path.join(course, section);
     if (fs.lstatSync(source).isSymbolicLink()) throw new Error(`Refusing public section symlink: ${source}`);

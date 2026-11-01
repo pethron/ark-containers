@@ -40,14 +40,7 @@ processes while the container is running, but it cannot open a session in one
 that has stopped. If these checks don't explain a failure, keep the information
 you have rather than removing the instance and losing the chance to investigate.
 
-You now have a model for planning a change, not just commands to repeat. Use
-it in the [service-change kata](katas/README.md), where you'll choose the
-sequence yourself and leave the reasoning for someone else to follow.
-If you started `ark-ops` for this chapter, or kept one from an earlier one,
-stop and remove only that container; its image remains available for the
-next exercise:
-
-```text
-docker stop ark-ops
-docker rm ark-ops
-```
+You now have a model for planning a change, not just commands to repeat.
+Leave `ark-ops` running: we'll use it to follow a request from the
+[Docker client to the engine](06-from-docker-run-to-a-process.md), then
+return to those lifecycle choices in the service-change kata.

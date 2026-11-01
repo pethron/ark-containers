@@ -28,8 +28,12 @@ prefix the commands with `sudo` if your setup requires it.
 
 The chapter creates the Compose project `ark`: containers `ark-api-1` and
 `ark-web-1` and the network `ark_default`. It publishes local port `8080`.
-Check `docker ps -a` for containers already using those names. If port 8080
-is unavailable, Compose reports a bind error when it starts the frontend;
+Check `docker ps -a`, `docker network ls`, `docker compose ls -a` and
+`docker image ls` first. Compose will also build the tags `ark-api` and
+`ark-web`. If the project, container, network or image names belong to other
+work, choose a different project name in `compose.yaml` and use its names
+throughout the module; don't take over an existing project. If port 8080 is
+unavailable, Compose reports a bind error when it starts the frontend;
 change the host-side port in `compose.yaml` and update the URL.
 
 From the [root of your course checkout](../before-you-start.md#get-the-course-files), move into the supplied directory:
@@ -60,13 +64,12 @@ plain `docker` commands. There's no need to run them, but read them once:
 docker build -t ark-network:v1 .
 docker network create ark-net
 docker run -d --name ark-api --network ark-net ark-network:v1
-docker run -d --name ark-web --network ark-net -p 127.0.0.1:8080:8000 \
-  -e BACKEND_URL=http://ark-api:8000/health \
-  ark-network:v1 python /app/web.py
+docker run -d --name ark-web --network ark-net -p 127.0.0.1:8080:8000 -e BACKEND_URL=http://ark-api:8000/health ark-network:v1 python /app/web.py
 ```
 
-The API gets no published port, so only containers on `ark-net` can reach
-it. The frontend joins the same network, finds the API by its container
+The API gets no published host port; containers on `ark-net` can reach it,
+and on native Linux the engine host can normally reach its container address.
+The frontend joins the same network, finds the API by its container
 name through `BACKEND_URL`, and is published on your computer's loopback
 address.
 
@@ -104,7 +107,7 @@ Two things are missing, and that's on purpose. There's no network: Compose
 creates one for the project and attaches every service to it. And the
 frontend calls `http://api:8000`, using the service name `api`, because on
 that network each service can be reached by its name. The API still has no
-`ports`, so it stays private to the stack.
+`ports`, so Compose doesn't publish a host port for it.
 
 ## Start it
 

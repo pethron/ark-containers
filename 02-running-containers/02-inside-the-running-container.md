@@ -114,80 +114,10 @@ and both `docker top` and `docker inspect` report 4056 for it on the host side.
 In your terminal the host number will be different, and it changes again
 whenever the container restarts, because the server becomes a new process.
 
-![The python /app/app.py process sits inside the ark-ops container, which runs on the Linux host; inside the container it has PID 1, while on the host it has a larger PID such as 428](images/same-process-two-pids.svg)
-
-Where does that larger number live? On a Linux computer the host is your own
-machine, and its process list shows the server with that PID. On Docker
-Desktop, the host side is the Linux virtual machine that runs your containers,
-so you won't find this process in the Windows or macOS task manager: the
-number belongs to the virtual machine's process list, and `docker top` is the
-simplest way to read it from your terminal. On Windows the same is true of a
-WSL distribution such as Ubuntu: even when Docker Desktop uses WSL 2, your
-distribution runs beside Docker's virtual environment, so `ps` there won't
-list the server either.
-
-??? note "See the number in the host's full process list"
-
-    `docker top` shows only the container's processes. To find the server among
-    all the host's processes, start a throwaway container that shares the
-    host's PID namespace instead of getting its own:
-
-    ```text
-    docker run --rm --pid=host ghcr.io/pethron/ark-message:1 ps
-    ```
-
-    The list is long because it includes the processes of the host itself
-    (on Docker Desktop, of its virtual machine). Somewhere in it you'll find
-    `python /app/app.py` with the same number that `docker top` printed.
-    `--pid=host` removes one of the container's boundaries, which is why we use
-    it only for this short look and let `--rm` delete the container right away.
-
-The **kernel** is the core of the operating system: it runs processes,
-manages memory and controls access to files, network and devices. Linux can
-give a group of processes its own view of some of these resources through
-**namespaces**. When Docker starts a container, it creates a set of
-namespaces for the main process, and every process added later with
-`docker exec` joins the same set. That's why your shell and the server could
-see each other and nothing else. The common types each change one view:
-
-- **PID**: a separate process numbering that starts from 1 and shows only
-  the container's processes, as `ps` did;
-- **mount**: a separate list of mounts, the places where a filesystem or a
-  single file is attached to the directory tree, so the container's `/`
-  holds the image's files, `app.py` included;
-- **network**: separate interfaces, addresses and ports, so two containers
-  can both listen on port 8000;
-- **UTS**: a separate hostname, which is the short container ID that
-  `hostname` printed;
-- **IPC**: separate channels that processes use to exchange data directly,
-  such as shared memory.
-
-Linux has a few more types. A **user namespace**, for instance, can map
-the container's `root`, the all-powerful administrator account, to an
-ordinary user on the host. Docker supports it but doesn't enable it by
-default, so a container process running as `root` is the host's `root`, held
-back by other security settings. Our image avoids the question for the server:
-it starts as the ordinary user `ark`. The `USER` column of `ps` inside the
-container shows that name, while a plain `docker top` shows its numeric ID,
-`1000`, because the host has no user called `ark`.
-
-Namespaces change what the processes can see, while leaving untouched how
-much they can use: a process with a private process list can still fill the
-machine's memory. That's the job of **control groups**, or **cgroups**.
-The kernel places processes in a group, measures the CPU time, memory and
-number of processes the group uses and, when configured, enforces limits on
-them. Docker creates one cgroup per container and puts all its processes in
-it, including shells opened with `docker exec`. We gave `ark-ops` no resource
-options, so its cgroup only keeps the accounts: the server can use as much
-CPU and memory as the host makes available.
-
-Together, the two features explain what you've seen so far: the server
-behaves as if it had a machine of its own, while remaining an ordinary
-process of the host's kernel, the one `docker top` lists. If you'd like to
-compare namespace identifiers and read cgroup limits yourself, the optional
-[namespaces](../advanced/linux-primitives/02-namespaces.md) and
-[cgroups](../advanced/linux-primitives/03-cgroups-v2.md) deep dives take
-those observations further.
+The host here is the machine running the Docker engine. On Docker Desktop,
+that is its managed Linux environment, so the host PID belongs to that
+environment rather than the Windows or macOS process list. We'll use these
+two views again when we examine [the container's boundaries](07-namespaces-and-cgroups.md).
 
 ## Which process keeps the container alive?
 

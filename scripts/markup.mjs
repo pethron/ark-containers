@@ -30,8 +30,9 @@ function takeIndented(lines, start) {
 
 const escapeHtml = (text) => text.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
 
-function convertBlocks(lines) {
+function convertBlocks(lines, webLinkDepth) {
   const output = [];
+  const webPrefix = webLinkDepth === null ? null : '../'.repeat(webLinkDepth);
   let index = 0;
   let fence = null;
   let hasTabs = false;
@@ -53,7 +54,7 @@ function convertBlocks(lines) {
         if (!tabValues[label]) throw new Error(`Unexpected tab label: ${label}`);
         if (items.some((item) => item.label === label)) throw new Error(`Duplicate tab label: ${label}`);
         const block = takeIndented(lines, index + 1);
-        const converted = convertBlocks(block.contents);
+        const converted = convertBlocks(block.contents, webLinkDepth);
         items.push({label, text: converted.text});
         index = block.index;
       }
@@ -67,7 +68,7 @@ function convertBlocks(lines) {
     const admonition = line.match(/^(\?\?\?\+?|!!!)\s+(\w+)\s+"([^"]+)"\s*$/);
     if (admonition) {
       const block = takeIndented(lines, index + 1);
-      const converted = convertBlocks(block.contents);
+      const converted = convertBlocks(block.contents, webLinkDepth);
       hasTabs ||= converted.hasTabs;
       if (admonition[1].startsWith('???')) {
         output.push(`<details${admonition[1] === '???+' ? ' open' : ''}>\n<summary>${escapeHtml(admonition[3])}</summary>\n\n${converted.text}\n\n</details>`, '');
@@ -82,8 +83,14 @@ function convertBlocks(lines) {
       continue;
     }
     if (/^(===|\?\?\?|!!!)/.test(line)) throw new Error(`Unsupported source markup: ${line}`);
-    output.push(line.replace(/\{ \.md-button(?: \.md-button--primary)? \}/g, '')
-      .replaceAll('](Dockerfile)', '](Dockerfile.txt)'));
+    let text = line.replace(/\{ \.md-button(?: \.md-button--primary)? \}/g, '')
+      .replaceAll('](Dockerfile)', '](Dockerfile.txt)');
+    if (webPrefix !== null) {
+      text = text.split(/(`+[^`]*`+)/g).map((part) =>
+        part.startsWith('`') ? part : part.replaceAll(`](${webPrefix}web/`, `](${webPrefix}`),
+      ).join('');
+    }
+    output.push(text);
     index += 1;
   }
   if (fence) throw new Error('Unclosed fenced code block');
@@ -116,8 +123,11 @@ function addFrontMatter(text, metadata) {
   return `---\n${metadata}---\n\n${text}`;
 }
 
-export function convertMarkdown(source, relative) {
-  const converted = convertBlocks(source.replace(/\r\n/g, '\n').split('\n'));
+export function convertMarkdown(source, relative, {webLinkDepth = null} = {}) {
+  if (webLinkDepth !== null && (!Number.isInteger(webLinkDepth) || webLinkDepth < 1)) {
+    throw new TypeError('webLinkDepth must be a positive integer or null');
+  }
+  const converted = convertBlocks(source.replace(/\r\n/g, '\n').split('\n'), webLinkDepth);
   let result = converted.text;
   if (relative === '04-building-images/check-your-understanding.md') {
     const heading = '## 4. Passing --version to two images';

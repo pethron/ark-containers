@@ -13,8 +13,10 @@ your build with the image you've been using.
 
 With a working image in hand, we'll look at how the build uses your files and
 the work it has already done, then write the service's Dockerfile ourselves.
-We'll also see how the startup command and stop signals reach the application,
-and add a dependency without reinstalling it after every small edit.
+We'll add a dependency without reinstalling it after every small edit, then
+see how the startup command and stop signals reach the application. Finally,
+we'll follow the builder through stages, caches and platform-specific outputs
+using the same service.
 
 The module's services live in its own directories, and each includes a hidden
 `.dockerignore` file. Keep those directories complete when you clone or copy

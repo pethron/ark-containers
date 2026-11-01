@@ -26,10 +26,10 @@ module, run the same exercises and are assessed by the same criteria.
 You don't need Linux administration, a paid cloud account or local Python for
 the core modules. Ideas such as processes, users, permissions, ports and name
 resolution are explained when an exercise first needs them. Two parts of the
-course ask for more, and say so where they begin: the hands-on labs in
-**Under the hood** need a Linux machine or virtual machine where you can use
-`sudo`, and the final project needs Python 3.10 or later to run the starter's
-tests and its incident tool.
+course ask for more, and say so where they begin: optional host-side
+inspections need the actual Linux engine host and sometimes `sudo`, and the
+final project needs Python 3.10 or later to run the starter's tests and its
+incident tool. Most optional Docker inspections also work on Docker Desktop.
 
 ## What you'll be able to do
 
@@ -60,22 +60,26 @@ Each module states its task in its overview and practises it in its chapters.
 The table lists what you can do at the end of each module and where you show
 it without step-by-step help.
 
+Each module also offers a short fast track through its principal commands.
+The outcomes below include the explanations and independent work in the
+guided chapters and practice, not just completion of that fast track.
+
 | Module | At the end, you can... | Shown in |
 |--------|------------------------|----------|
 | 01 Why containers | Start, configure and reach a supplied service; diagnose a wrong port; run a second instance; explain the trade-offs between physical servers, virtual machines and containers | Kata: a service handover |
-| 02 Running containers | Look inside a running container; explain what keeps it alive; tell restarting from replacing; stop a service cleanly and choose the right fix for a configuration mistake | Kata: a repeatable service change |
-| 03 Images and registries | Find the image behind a container; tell names from content; explain layers; save, load and verify an image; choose the reference to hand over | Kata: artifact handover |
-| 04 Building images | Package a service with a Dockerfile; keep the build context deliberate; read the build cache; choose a startup command that receives stop signals | Kata: a build you can hand over |
-| 05 Storage | Give a service a volume; explain what survives stop, removal and replacement; choose between a volume, a bind mount and tmpfs; back up and restore data | Kata: notes from the old release |
-| 06 Networking | Connect two services by name on a network you create; publish only the entry point; diagnose name and port failures | Kata: reconnect the services |
-| 07 Compose | Describe a stack in `compose.yaml`; explain project names, service names and selective recreation; predict what `down` and `down -v` remove | Kata: add the notes service |
+| 02 Running containers | Inspect and replace a service; follow a client request to the engine and process; distinguish namespace views from resource budgets | Kata and check your understanding |
+| 03 Images and registries | Save, load and verify an image; connect layers, manifests and platforms to a registry pull; choose a reference to hand over | Kata and check your understanding |
+| 04 Building images | Package a service; reason about context, cache and startup; follow BuildKit stages and the result they put in the runtime image | Kata and check your understanding |
+| 05 Storage | Keep and restore notes; choose a mount; explain writable-layer, mount and ownership evidence | Kata and check your understanding |
+| 06 Networking | Connect and diagnose two services; explain name resolution, the bridge and published ports | Kata and check your understanding |
+| 07 Compose | Describe a stack; inspect project labels and recreation; predict what `up`, `down` and `down -v` change; operate an application with a database, secrets, backups, a cache overlay and Compose Watch | Both katas and check your understanding |
 
-## Optional application workflow
+### Compose in practice
 
-After the build, storage, networking and Compose skills in modules 04–07,
-[Compose application workflows](advanced/compose-workflows/README.md) asks you
-to operate a supplied reading-list application with PostgreSQL, Redis and
-Nginx. You can show that you can:
+The second part of module 07 asks you to operate a supplied reading-list
+application with PostgreSQL, Redis and Nginx,
+[starting from its overview](advanced/compose-workflows/README.md). You can
+show that you can:
 
 - Read an official image's documentation and turn its user, initialization,
   configuration and data-directory requirements into Compose settings.

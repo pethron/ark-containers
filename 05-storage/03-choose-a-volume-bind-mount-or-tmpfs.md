@@ -27,9 +27,17 @@ A **bind mount** makes a file or directory from your computer appear inside
 the container. It's the handiest way to try code changes without building a
 new image each time. We'll mount the whole
 `notes-service` directory over `/app`, read-only, so the container runs the
-copy of `app.py` in your editor. The previous chapter removed the service
-container but kept `ark-notes-data`; check that `ark-notes-dev` and local port
-8080 are free before this first experiment:
+copy of `app.py` in your editor. The previous chapter left `ark-notes`
+running with its data in `ark-notes-data`. Stop and remove that container,
+keeping the volume for the backup:
+
+```text
+docker stop ark-notes
+docker rm ark-notes
+```
+
+Check that `ark-notes-dev` and local port 8080 are free before this first
+experiment:
 
 === "Linux (Bash)"
 
@@ -77,20 +85,22 @@ docker rm ark-notes-dev
 > of your files, so whether `ark` may write there depends on your account
 > and your directory's permissions. Docker Desktop passes your Windows or
 > macOS folders through a file-sharing layer with rules of its own: on Windows,
-> for example, shared folders appear owned by root, yet any container user can
-> create files in them. Shared folders also inherit host habits such as
+> for example, displayed owners and effective access can differ from a native
+> Linux filesystem. Shared folders also inherit host habits such as
 > case-insensitive file names and, on Windows, CRLF line endings in files
 > edited there. A data directory that works on one laptop can therefore fail
-> on another. That's one more reason to keep service data in volumes, which
-> behave the same wherever the engine runs.
+> on another. Test the actual access rules wherever you deploy, including for
+> volumes that already contain data.
 
 ## tmpfs for files that should disappear
 
 Sometimes losing files is the goal: a test instance that must start clean
-every time, or temporary files you'd rather never write to disk. A **tmpfs**
+every time, or temporary files you don't need after a stop. A **tmpfs**
 mount keeps its files in the memory of the machine running the containers,
-and Docker discards them when the container stops. Let's put the notes there
-to see the difference. After removing the bind-mount container, check that
+and Docker discards them when the container stops. The host may still move
+memory pages to swap, so tmpfs alone doesn't guarantee that data never reaches
+disk. Let's put the notes there to see the lifetime difference. After removing
+the bind-mount container, check that
 `ark-notes-scratch` and port 8080 are free:
 
 ```text
@@ -188,7 +198,9 @@ code it runs, for the sake of a single directory. The fix
 belongs in the image, which should prepare the directory its service writes
 to. Open `Dockerfile.srv`: it's our recipe with `/srv/notes` in place of
 `/data` on the `RUN` line. `mkdir -p` also creates `/srv` if it's missing.
-Build it under its own tag:
+Check `docker image ls ark-notes` before building. If `ark-notes:srv` belongs
+to another task, choose an unused tag and use it throughout this experiment.
+Build it under that tag:
 
 ```text
 docker build -f Dockerfile.srv -t ark-notes:srv .
@@ -229,9 +241,9 @@ Here's how the three options compare for our service:
 | Owners and permissions | Set by the image or the data | Set by the host and its file sharing | Set at mount time with `tmpfs-mode` |
 | Good for | Data the service must keep | Code and config you edit on the host | Scratch files and clean test instances |
 
-When to use a volume: **for anything the service must keep**, like our notes.
-It survives replacement, behaves the same on every engine and can be backed up
-on its own. When to use a bind mount: for files that belong to you rather than
+When to use a volume: **for data the service must keep**, like our notes.
+It survives replacement and can be backed up on its own. When to use a bind
+mount: for files that belong to you rather than
 to the service, such as code under development or a configuration file you
 edit on the host, mounted read-only when the service shouldn't change them.
 When to use tmpfs: for files you want to lose, keeping an eye on their size

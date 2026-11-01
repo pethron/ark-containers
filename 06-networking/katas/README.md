@@ -17,9 +17,12 @@ frontend's answer and the containers' settings before you change anything.
 ## Set up the broken stack
 
 You need Docker running Linux containers and curl; on Windows, call it as
-`curl.exe`. The kata uses its own names, so it can run alongside the
-chapters' containers or without them. Check that the names `ark-kata-net`,
-`ark-kata-api` and `ark-kata-web` and local ports `8080` and `8081` are free.
+`curl.exe`. The kata uses its own names and can start after the walkthrough's
+cleanup, or on its own. Check that the names `ark-kata-net`, `ark-kata-api`
+and `ark-kata-web` and local ports `8080` and `8081` are free. If you kept the
+walkthrough running, its frontend already occupies port 8080: stop that
+stack or choose a different loopback host port for the kata and update its
+URLs.
 From the [root of your course checkout](../../before-you-start.md#get-the-course-files), build the supplied image and start
 the broken stack:
 
@@ -73,7 +76,7 @@ choice, update the frontend to match, and check that the page still works.
 <summary>Hint 1: start from the answer</summary>
 
 Look at the error in the frontend's answer, and compare it with the table at
-the end of [chapter 03](../03-diagnose-a-broken-connection.md):
+the end of [Troubleshooting container connections](../03-diagnose-a-broken-connection.md):
 `name_resolution` means the name didn't match a container on a shared
 network, while `connection` means the address was found but nothing answered
 on that port.

@@ -13,7 +13,9 @@ network types the core module left out.
 
 ## Start from the running stack
 
-Recreate the stack from module 06 if you removed it. From
+Recreate the stack from module 06 if you removed it. Check that the names
+`ark-net`, `ark-api` and `ark-web` and port 8080 are free; choose unused names
+and a different loopback host port if they belong to other work. From
 `06-networking/network-service`, with the `ark-network:v1` image built:
 
 === "Linux (Bash)"
@@ -77,9 +79,11 @@ is how two stacks on the same host stay separate.
 
 ## A published port is a forwarding rule
 
-The frontend's port `8000` lives in its namespace, and nothing on your
-computer can open it directly. Publishing with `-p 127.0.0.1:8080:8000` asks
-Docker to forward traffic. On Linux, Docker writes packet-filtering rules,
+The frontend's port `8000` lives in its namespace. On a native Linux engine
+host its container address is normally reachable directly, while Docker
+Desktop puts that address inside its managed Linux environment. Publishing
+with `-p 127.0.0.1:8080:8000` asks Docker to forward traffic from a host port.
+On Linux, Docker writes packet-filtering rules,
 with `iptables` or `nftables` depending on its configuration, that rewrite
 the destination of incoming packets to the container's address and port. In
 some cases it also runs a small helper process, `docker-proxy`, that relays

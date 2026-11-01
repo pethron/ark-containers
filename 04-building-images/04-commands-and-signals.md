@@ -13,8 +13,8 @@ to shutdown.
 
 ## One instruction runs now, two record a later start
 
-The previous chapter leaves the terminal in your own build directory. Return
-to the supplied `message-service` so we can use its original recipe again:
+The dependency chapter leaves the terminal in `template-service`. Return to
+the supplied `message-service` so we can use its original recipe again:
 
 === "Linux (Bash)"
 
@@ -28,8 +28,11 @@ to the supplied `message-service` so we can use its original recipe again:
     Set-Location ..\message-service
     ```
 
-Build the supplied recipe, which copies `app.py` into the image, runs it as
-the `ark` user and records `python /app/app.py` as its default command:
+Check `docker image ls ark-message` first. If the `first-build`, `exec` or
+`shell` tag belongs to another task, choose unused tags and use them
+throughout this chapter. Build the supplied recipe, which copies `app.py`
+into the image, runs it as the `ark` user and records `python /app/app.py`
+as its default command:
 
 ```text
 docker build -t ark-message:first-build .
@@ -166,5 +169,5 @@ docker image rm ark-message:first-build ark-message:exec ark-message:shell
 
 The supplied original recipe and signal examples remain unchanged on disk.
 The [Dockerfile reference](https://docs.docker.com/reference/dockerfile/#understand-how-cmd-and-entrypoint-interact)
-has the complete command-combination rules. Next we'll use build-time commands
-to [add a dependency while keeping its installation cached](05-dependencies-and-build-cache.md).
+has the complete command-combination rules. Next we'll see
+[how the builder follows stages and reuses work](06-what-buildkit-does.md).

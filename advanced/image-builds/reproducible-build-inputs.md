@@ -96,5 +96,5 @@ docker image rm ark-template:fresh
 Keep shared caches and base images. The official
 [cache invalidation rules](https://docs.docker.com/build/cache/invalidation/)
 describe exactly which inputs the builder compares, and the
-[multi-platform builds](multi-platform-builds.md) chapter adds the target
-platform to this inventory.
+[BuildKit chapter](../../04-building-images/06-what-buildkit-does.md#one-recipe-two-platforms)
+adds the target platform to this inventory.

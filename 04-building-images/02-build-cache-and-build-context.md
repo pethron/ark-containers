@@ -15,9 +15,15 @@ Let's follow that change through a build and see which work Docker repeats.
 
 ## Follow one changed file
 
-Check that the default message is still `Hello from ARK`, then build a
-reference image before editing. `--progress=plain` keeps the individual
-build steps in your terminal so you can compare them:
+Check that the default message is still `Hello from ARK` and that
+`app.py` has no edits you could lose. If it does, keep those edits and use a
+separate fresh checkout for this module. Check
+`docker image ls ark-message` too: if either the `context-before` or
+`context-after` tag belongs to other work, choose unused tags and use them
+throughout the chapter.
+
+Now build a reference image before editing. `--progress=plain` keeps the
+individual build steps in your terminal so you can compare them:
 
 ```text
 docker build --progress=plain -t ark-message:context-before .

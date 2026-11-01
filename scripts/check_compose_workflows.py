@@ -177,7 +177,7 @@ def main():
         request(18080, f"/books/{book_id}", "PUT", {"title": "Changed while cache was away"})
         compose(a, "start", "cache", cache=True)
         assert books(18080)[0]["title"] == "Changed while cache was away"
-        compose(a, "up", "-d", "--force-recreate", "cache", cache=True)
+        compose(a, "up", "-d", "--force-recreate", "--wait", "cache", cache=True)
         assert books(18080)[0]["title"] == "Changed while cache was away"
         assert request(18080, "/stats")[1]["cache_errors"] >= 1
         print("PASS cache hits/misses, edit invalidation, outage-safe revision keys and disposable replacement")
@@ -248,7 +248,11 @@ def main():
             source = work / "api" / "src" / "app.py"
             source.write_text(source.read_text().replace('GREETING = "Team reading list"',
                                                         'GREETING = "Watch updated the team list"'))
-            eventually(lambda: request(18080, "/info")[1]["greeting"] == "Watch updated the team list",
+            eventually(lambda: (
+                (response := request(18080, "/info"))[0] == 200
+                and isinstance(response[1], dict)
+                and response[1].get("greeting") == "Watch updated the team list"
+            ),
                        "Watch sync+restart source update")
             assert books(18080) == watch_records
             old_id = cid(a, "api")

@@ -11,13 +11,16 @@ and which give you a brand new instance? Getting this wrong is how a
 configuration change silently disappears, or how an old setting survives
 when you thought you had replaced it.
 
-We'll pick up a copy of the message service that lives in this module's
-directory, open a shell beside it and leave a file inside the running
-container. Seeing the server and the shell as separate processes explains what
-keeps a container alive, and the file shows what remains when execution ends.
-From there we'll follow a configuration change from the working service to its
-replacement, and finish by stopping the service and checking whether it
-actually shut down cleanly.
+We'll run the message service, open a shell beside it and leave a file inside
+the container. Seeing the server and the shell as separate processes explains
+what keeps a container alive, and the file shows what remains when execution
+ends. From there we'll follow a configuration change through replacement and
+check what happens when the service stops.
+
+Once we can operate the service, we'll follow a Docker request from the client
+to the engine and compare the views and resource settings of two containers.
+That gives us a more precise explanation for the process and filesystem
+behavior we just saw.
 
 You won't need to install Python, download the course files or build an image
 here. Everything runs from the course's message service image, so the attention

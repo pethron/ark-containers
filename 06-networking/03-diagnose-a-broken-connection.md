@@ -42,11 +42,11 @@ read its latest logs:
 The `-i` option makes curl print the HTTP status line too. The frontend
 answers `502 Bad Gateway` with `name_resolution`, and its log says
 `Backend request failed: name_resolution`. The API container is still
-running, yet the frontend can't find it. Containers that share no network
-you created get the same error, because only those networks look up
-container names. **A name that doesn't resolve points at the
-name itself or at network membership.** Check the spelling, then check that
-both containers are on the same network you created:
+running, yet the frontend can't find it. Containers attached only to Docker's
+default bridge also lack automatic lookup by container name. **A name that
+doesn't resolve points at the name, network membership or name service.**
+Check the spelling, then check that both containers are on the same network
+you created:
 
 ```text
 docker network inspect --format '{{range .Containers}}{{.Name}} {{end}}' ark-net
@@ -146,8 +146,8 @@ retry.
 
 | What the frontend reports | What it means | Where to look |
 |---|---|---|
-| `name_resolution` | The name doesn't match a container on a shared network | Spelling, `docker network inspect` |
-| `connection` | The address was found, but nothing answered on that port | The port in the URL, the API's listening port and status |
+| `name_resolution` | The name lookup failed | Spelling, `docker network inspect`, name service |
+| `connection` | The connection couldn't be established | The port in the URL, the API's listening port and status, the network path |
 | An HTTP error such as `404` | The API answered, but didn't like the request | The path in the URL, the API's logs |
 
 The last row belongs to the application: the
@@ -155,14 +155,6 @@ connection worked, and the frontend passes the API's status back to you.
 The same three checks work for any pair of services, whatever language
 they're written in.
 
-The chapter leaves `ark-api`, `ark-web` and `ark-net` running with the right
-URL. When you're done with them, remove only the resources created here:
-
-```text
-docker rm -f ark-web ark-api
-docker network rm ark-net
-```
-
-The [kata](katas/README.md) gives you a broken stack to repair on your own.
-It sets up its own containers and network, so you can start it with or
-without this stack running.
+Leave `ark-api`, `ark-web` and `ark-net` running with the right URL.
+Next we'll use that recovered stack to inspect
+[how the name becomes an address](02-how-the-request-finds-the-api.md).

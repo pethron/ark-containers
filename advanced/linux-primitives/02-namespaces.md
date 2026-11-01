@@ -46,13 +46,11 @@ the table into a claim that every row is enabled by default.
 ## A different mount table is not a copied disk
 
 A mount namespace controls which mounted filesystems and paths a process sees.
-Two namespaces can still refer to the same underlying files. Our read-only
-bind mount did exactly that: it made a host file visible at a chosen
-container path.
-
-The `readonly` option constrained writes through that mount. It did not prevent
-the owner from changing the host file, and it did not package its contents into
-the Python image. We will revisit this when we need durable application data.
+Two namespaces can still refer to the same underlying files. A read-only
+bind mount, for example, makes a host file visible at a chosen container path.
+The `readonly` option constrains writes through that mount; it doesn't prevent
+the owner from changing the host file or package its contents into the image.
+The storage module compares this with other ways to keep application data.
 
 Mount propagation adds another choice: whether later mount events propagate
 between related mounts. In a manual namespace experiment, making mounts
@@ -61,9 +59,9 @@ parent mount tree. That is why the sandbox kata explicitly performs that step.
 
 ## Sharing is a configuration, too
 
-The [Docker inspection lab](06-inspecting-namespaces-and-cgroups.md) uses two
-sleep processes to compare namespace views. Docker normally separates their
-networks, but a diagnostic process can be started with
+The [module-02 comparison](../../02-running-containers/07-namespaces-and-cgroups.md)
+uses two service processes to compare namespace views. Docker normally
+separates their networks, but a diagnostic process can be started with
 `--network container:<name>` to join another container's network namespace.
 
 That option shares the network stack, not the other container's filesystem or

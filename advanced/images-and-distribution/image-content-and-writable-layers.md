@@ -38,8 +38,8 @@ runtime choices can override several of these values.
 Image history can help explain how content was built:
 
 ```text
-docker image history --no-trunc docker.io/library/python:3.12-alpine
-docker image inspect docker.io/library/python:3.12-alpine --format 'user={{json .Config.User}} command={{json .Config.Cmd}} layers={{json .RootFS.Layers}}'
+docker image history --no-trunc ghcr.io/pethron/ark-message:1
+docker image inspect ghcr.io/pethron/ark-message:1 --format 'user={{json .Config.User}} command={{json .Config.Cmd}} layers={{json .RootFS.Layers}}'
 ```
 
 These are read-only inspections. History isn't a complete trustworthy build
@@ -70,18 +70,20 @@ engine's database or layer directories.
 
 ## Observe a write without altering the image
 
-Check that `ark-layer-note` is a free container name. This finite
-command writes a single small file; keep the stopped object for inspection:
+Check that `ark-layer-note` is a free container name and record the course
+image's ID. This finite command writes a single small file; keep the stopped
+object for inspection:
 
 ```text
-docker run --name ark-layer-note --pull never python:3.12-alpine sh -c 'echo one-instance > /tmp/ark-layer-note'
+docker image inspect ghcr.io/pethron/ark-message:1 --format '{{.Id}}'
+docker run --name ark-layer-note --pull never ghcr.io/pethron/ark-message:1 sh -c 'echo one-instance > /tmp/ark-layer-note'
 ```
 
 Then inspect the changes and compare the image ID:
 
 ```text
 docker diff ark-layer-note
-docker image inspect docker.io/library/python:3.12-alpine --format '{{.Id}}'
+docker image inspect ghcr.io/pethron/ark-message:1 --format '{{.Id}}'
 ```
 
 Expect the new path among the container's filesystem changes and the image ID
@@ -92,10 +94,10 @@ Remove only `ark-layer-note`. A fresh container from that image shouldn't have
 the note: its previous writable layer wasn't a new image layer. Module 05
 will give intentional data a separate persistence plan.
 
-For how mounts and root paths are assembled, see the optional
-[root filesystem deep dive](../linux-primitives/05-root-filesystems-chroot-and-pivot-root.md).
 The main decision is already available: image content is an input, container
-writes are instance state, and mounted data has its own lifecycle.
+writes are instance state, and mounted data has its own lifecycle. The
+[storage module](../../05-storage/README.md) follows that distinction through
+a backup and restore.
 
 Next, [tags, digests and manifests](digests-manifests-and-multi-arch-images.md)
 explain which of those inputs a name actually identifies.

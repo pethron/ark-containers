@@ -15,6 +15,7 @@ import argparse
 import json
 import subprocess
 import sys
+import tarfile
 import tempfile
 import time
 import urllib.error
@@ -111,7 +112,31 @@ def expect(condition: bool, message: str) -> None:
         raise CheckFailed(message)
 
 
-def check_message_service(docker: Docker) -> None:
+def check_image_archive(docker: Docker, image: str, workdir: Path) -> None:
+    handover = f"{PREFIX}-handover:test"
+    archive = workdir / "image-handover.tar"
+    docker.images.append(handover)
+    docker.run("image", "tag", image, handover)
+    identity = docker.run("image", "inspect", "--format", "{{.Id}} {{.Os}}/{{.Architecture}}", handover)
+    docker.run("image", "save", "--output", str(archive), handover)
+    with tarfile.open(archive, "r") as saved:
+        manifest_file = saved.extractfile("manifest.json")
+        if manifest_file is None:
+            raise CheckFailed("image archive has no manifest.json")
+        manifest = json.load(manifest_file)
+        entries = [entry for entry in manifest if handover in (entry.get("RepoTags") or [])]
+        expect(len(entries) == 1, f"handover tag missing from archive manifest: {manifest}")
+        files = set(saved.getnames())
+        referenced = [entries[0]["Config"], *entries[0]["Layers"]]
+        expect(all(path in files for path in referenced), "archive lacks a manifest-referenced object")
+
+    docker.run("image", "rm", handover)
+    docker.run("image", "load", "--input", str(archive))
+    restored = docker.run("image", "inspect", "--format", "{{.Id}} {{.Os}}/{{.Architecture}}", handover)
+    expect(restored == identity, f"image identity or platform changed after restore: {restored}")
+
+
+def check_message_service(docker: Docker, workdir: Path) -> None:
     context = ROOT / "04-building-images" / "message-service"
     # This recipe is published as ghcr.io/pethron/ark-message, used from module 01.
     image = docker.build(context)
@@ -125,6 +150,7 @@ def check_message_service(docker: Docker) -> None:
     expect(status == 200 and body.get("status") == "ok", f"unexpected health: {body}")
     user = docker.run("exec", container, "id", "-un")
     expect(user == "ark", f"service runs as {user!r}, expected 'ark'")
+    check_image_archive(docker, image, workdir)
 
     exec_image = docker.build(context, "Dockerfile.exec")
     container = docker.container("04-exec", exec_image)
@@ -164,6 +190,17 @@ def check_notes_service(docker: Docker) -> None:
     second = docker.container("05-notes-b", "--mount", mount, "-p", "127.0.0.1::8000", image)
     status, body = request(docker.published(second) + "/notes")
     expect("Water the plants" in body.get("notes", []), f"note lost after replacement: {body}")
+    mounts = json.loads(docker.run("inspect", "--format", "{{json .Mounts}}", second))
+    expect(
+        any(item["Type"] == "volume" and item["Name"] == volume
+            and item["Destination"] == "/data" for item in mounts),
+        f"notes mount missing from container inspection: {mounts}",
+    )
+    mountinfo = docker.run("exec", second, "grep", " /data ", "/proc/self/mountinfo")
+    expect(bool(mountinfo), "the process cannot see the /data mount")
+    owner = f'{docker.run("exec", second, "id", "-u")}:{docker.run("exec", second, "id", "-g")}'
+    owners = docker.run("exec", second, "stat", "-c", "%u:%g", "/data", "/data/notes.txt")
+    expect(owners.splitlines() == [owner, owner], f"notes ownership does not match the service: {owners}")
 
 
 def check_network_service(docker: Docker) -> None:
@@ -180,6 +217,17 @@ def check_network_service(docker: Docker) -> None:
     status, body = request(docker.published(web) + "/")
     expect(status == 200 and "backend" in body, f"frontend couldn't reach the API: {body}")
     expect(docker.run("port", api) == "", "the API should not publish any port")
+    expect(docker.run("network", "inspect", "--format", "{{.Driver}}", network) == "bridge",
+           "the application network is not a bridge")
+    interfaces = docker.run("exec", web, "ip", "addr")
+    expect("lo:" in interfaces and "eth0" in interfaces, f"expected interfaces missing: {interfaces}")
+    docker.run("network", "disconnect", network, api)
+    status, body = request(docker.published(web) + "/")
+    expect(status == 502 and body.get("error") == "name_resolution", f"unexpected network fault: {body}")
+    docker.run("network", "connect", network, api)
+    status, body = request(docker.published(web) + "/")
+    expect(status == 200 and body.get("backend", {}).get("status") == "ok",
+           f"frontend did not recover after reconnection: {body}")
 
 
 def check_compose_stack(docker: Docker, workdir: Path) -> None:
@@ -197,6 +245,39 @@ def check_compose_stack(docker: Docker, workdir: Path) -> None:
     address = docker.run("compose", *files, "-p", project, "port", "web", "8000", cwd=directory)
     status, body = request(f"http://127.0.0.1:{address.rsplit(':', 1)[1]}/")
     expect(status == 200 and "backend" in body, f"the stack's frontend failed: {body}")
+
+    def compose(*args: str) -> str:
+        return docker.run("compose", *files, "-p", project, *args, cwd=directory)
+
+    api_id, web_id = compose("ps", "-q", "api"), compose("ps", "-q", "web")
+    api_hash = compose("config", "--hash", "api").split()[-1]
+    web_hash = compose("config", "--hash", "web").split()[-1]
+    labels = json.loads(docker.run("inspect", "--format", "{{json .Config.Labels}}", web_id))
+    expect(labels.get("com.docker.compose.project") == project, f"wrong project label: {labels}")
+    expect(labels.get("com.docker.compose.service") == "web", f"wrong service label: {labels}")
+    expect(labels.get("com.docker.compose.config-hash") == web_hash, "web configuration hash doesn't match")
+
+    override.write_text(
+        'services:\n  web:\n    ports: !override\n      - "127.0.0.1::8000"\n'
+        '    environment:\n      INSPECTION_NOTE: "Ready for review"\n',
+        encoding="utf-8",
+    )
+    changed_api_hash = compose("config", "--hash", "api").split()[-1]
+    changed_web_hash = compose("config", "--hash", "web").split()[-1]
+    expect(api_hash == changed_api_hash and web_hash != changed_web_hash,
+           "the configuration change did not affect only the web hash")
+    compose("up", "-d")
+    new_api_id, new_web_id = compose("ps", "-q", "api"), compose("ps", "-q", "web")
+    expect(api_id == new_api_id and web_id != new_web_id, "Compose recreated the wrong services")
+    labels = json.loads(docker.run("inspect", "--format", "{{json .Config.Labels}}", new_web_id))
+    expect(labels.get("com.docker.compose.config-hash") == changed_web_hash,
+           "recreated web container has an unexpected configuration hash")
+    expect(compose("exec", "-T", "web", "printenv", "INSPECTION_NOTE") == "Ready for review",
+           "recreated web container lacks the inspection marker")
+    address = compose("port", "web", "8000")
+    status, body = request(f"http://127.0.0.1:{address.rsplit(':', 1)[1]}/")
+    expect(status == 200 and body.get("backend", {}).get("status") == "ok",
+           f"stack failed after web recreation: {body}")
 
 
 def run_unit_tests() -> list[str]:
@@ -219,14 +300,14 @@ def run_unit_tests() -> list[str]:
 def run_docker_checks() -> list[str]:
     docker = Docker()
     failures = []
-    checks = [
-        ("01-04 message service", lambda: check_message_service(docker)),
-        ("04 template service", lambda: check_template_service(docker)),
-        ("05 notes in a volume", lambda: check_notes_service(docker)),
-        ("06 two services on a network", lambda: check_network_service(docker)),
-    ]
     with tempfile.TemporaryDirectory() as workdir:
-        checks.append(("07 Compose stack", lambda: check_compose_stack(docker, Path(workdir))))
+        checks = [
+            ("01-04 message service and image archive", lambda: check_message_service(docker, Path(workdir))),
+            ("04 template service", lambda: check_template_service(docker)),
+            ("05 notes in a volume", lambda: check_notes_service(docker)),
+            ("06 two services on a network", lambda: check_network_service(docker)),
+            ("07 Compose stack", lambda: check_compose_stack(docker, Path(workdir))),
+        ]
         try:
             for label, check in checks:
                 try:

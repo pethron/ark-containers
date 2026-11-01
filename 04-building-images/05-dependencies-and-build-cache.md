@@ -19,9 +19,10 @@ The HTTP response and `/health` contract stay the same.
 
 ## Look at the new input
 
-The previous chapter leaves the terminal in `message-service`. Move into the
-supplied `template-service`, where this exercise adds a dependency; its builds
-need network access to fetch Alpine and Python packages:
+The previous chapter leaves the terminal in your own `my-message-service`
+directory. Move into the supplied `template-service`, where this exercise
+adds a dependency; its builds need network access to fetch Alpine and Python
+packages:
 
 === "Linux (Bash)"
 
@@ -40,8 +41,10 @@ installs its runtime dependency, MarkupSafe, from a prebuilt wheel. The
 recipe asks pip to use wheels, so this service needs no compiler.
 
 The `Dockerfile.baseline` copies both the dependency list and application
-before installation. Build that version and the supplied recipe, recording
-their output:
+before installation. Check `docker image ls ark-template` first; if the
+`baseline` or `cached` tag belongs to another task, choose unused tags and
+use them throughout the chapter. Build that version and the supplied recipe,
+recording their output:
 
 === "Linux (Bash)"
 
@@ -148,11 +151,7 @@ docker image rm ark-template:baseline ark-template:cached
 ```
 
 Keep the supplied files for the kata. These commands leave shared base images
-and the build cache alone, and the chapter leaves nothing running. You now have
-a dependency and a build whose log
-shows why the application copy belongs after installation. The packaging
-kata asks you to make that decision for a receiver of your own.
-
-When an application needs a compiler to build one of its dependencies, the
-[optional image-builds deep dive](../advanced/image-builds/README.md) shows
-how multi-stage builds keep those tools out of the runtime image.
+and the build cache alone, and the chapter leaves nothing running. You now
+have a dependency and a build whose log shows why the application copy belongs
+after installation. Next, let's follow the image's
+[start command and stop signals](04-commands-and-signals.md).

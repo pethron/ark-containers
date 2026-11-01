@@ -46,14 +46,13 @@ interchangeable descriptions of the same byte sequence.
 
 ## Inspect the runtime image
 
-These are read-only inspections after a pull, with no container or volume
-created. Use the same Docker context as your previous labs:
+These inspections use the course image already on your engine, with no
+container or volume created. The manifest command also needs registry access.
+Use the same Docker context as your previous labs:
 
-```bash
-docker pull docker.io/library/python:3.12-alpine
-docker image inspect docker.io/library/python:3.12-alpine --format \
-  'id={{.Id}} platform={{.Os}}/{{.Architecture}} digests={{json .RepoDigests}}'
-docker manifest inspect docker.io/library/python:3.12-alpine
+```text
+docker image inspect ghcr.io/pethron/ark-message:1 --format 'id={{.Id}} platform={{.Os}}/{{.Architecture}} digests={{json .RepoDigests}}'
+docker manifest inspect ghcr.io/pethron/ark-message:1
 ```
 
 The first inspection describes Docker's local image view. For ordinary images,
@@ -68,8 +67,8 @@ application platform. Record the actual media type and platform fields instead
 of expecting one fixed JSON document.
 
 These commands use a moving tag, so results can change between runs. Keep the
-observed references in your notes if you want to compare later. Module 03 will
-turn that observation into an artifact-delivery workflow.
+observed references in your notes if you want to compare later. Module 03
+uses the same distinction in its artifact-delivery workflow.
 
 ## Distribution moves content, not running containers
 
@@ -102,8 +101,6 @@ Before continuing, explain why two colleagues can report the same tag while
 running different platform content. Then distinguish an image configuration,
 a distribution manifest and a runtime bundle's `config.json`. They are all
 configuration-related objects, but they do different jobs.
-
-Next, [CRI and the wider ecosystem](05-cri-and-the-wider-ecosystem.md).
 
 If you opened this explanation from the core course, return to
 [tags, digests and manifests](../images-and-distribution/digests-manifests-and-multi-arch-images.md)

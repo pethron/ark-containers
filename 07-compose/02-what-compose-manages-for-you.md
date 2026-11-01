@@ -61,11 +61,12 @@ This time nothing is built or created. Compose reports both containers as
 **`up` describes the state you want:** Compose compares what the file asks
 for with what's running, and only changes the difference.
 
-Let's give it a difference. Open `compose.yaml` and change the frontend's
-port from `127.0.0.1:8080:8000` to `127.0.0.1:8081:8000`. If Docker reports
-that port 8081 is in use, choose another loopback host port in `compose.yaml`
-and use it in the URL too; keep the container port at 8000. Before saving, predict which
-containers Compose will touch, then run `docker compose up -d` once more.
+Let's give it a difference. Open `compose.yaml` and note the frontend's
+current host port. Temporarily change `127.0.0.1:8080:8000` to
+`127.0.0.1:8081:8000`, for example. If you already chose 8081 or Docker reports
+that it's in use, use another free loopback host port; keep the container
+port at 8000. Before saving, predict which containers Compose will touch,
+then run `docker compose up -d` once more.
 
 ```text
  Container ark-api-1 Running
@@ -79,9 +80,9 @@ Only the frontend was replaced. A published port is fixed when a container
 starts, so Compose removed `ark-web-1` and created a new one with the new
 setting, which is exactly what you would have to do by hand with
 `docker rm` and `docker run`. The API's
-settings didn't change, so it kept running. Check the page on the new port,
-`http://127.0.0.1:8081/`, then put `8080` back in the file and run
-`docker compose up -d` again.
+settings didn't change, so it kept running. Check the page on the temporary
+port, `http://127.0.0.1:8081/` in this example. Put your original host port
+back in the file and run `docker compose up -d` again.
 
 **When to use Compose:** for an application with more than one container or
 more than a couple of settings, keep the setup in a file. A single quick
@@ -115,6 +116,5 @@ reflex: it deletes the data the volume exists to protect.
 
 ![docker compose down removes the two containers and the ark_default network; the named volume survives until down -v, and the built images survive both](images/compose-down.svg)
 
-Stop the stack with `docker compose down` when you're done. It leaves
-nothing running, only the images. Then add the notes service yourself in
-the [kata](katas/README.md).
+Leave the stack running for
+[a closer look at Compose's requests to the engine](03-what-compose-asks-the-engine.md).

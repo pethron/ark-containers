@@ -1,9 +1,9 @@
 # Container networking
 
 In the networking module a frontend found an API by name, and two programs
-listened on port `8000` without conflict. The core module explains that with
-a picture: a private office network with a switch and a door. This optional
-deep dive opens the picture up.
+listened on port `8000` without conflict. The core module follows the bridge
+and published port behind that connection. This optional deep dive looks
+further at the host-side path and other network choices.
 
 We'll look at the interfaces inside a container, what a published port turns
 into on the host, why the default bridge doesn't resolve container names, and

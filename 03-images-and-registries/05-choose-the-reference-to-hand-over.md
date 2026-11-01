@@ -1,9 +1,9 @@
 ---
-title: "Tags, digests and platforms in a handover"
+title: "Manifests, digests and platforms"
 track: architecture
 ---
 
-# Tags, digests and platforms in a handover
+# Manifests, digests and platforms
 
 Your colleague can now receive an archive that you've loaded and used to
 run the service. What would you write in the accompanying message? They
@@ -24,10 +24,7 @@ a reference such as `repository@sha256:...` uses a **digest** to select
 particular content. Registry distribution involves several objects, so
 its digests and the local image ID may describe different things even
 though they use the same `sha256:` prefix. For our archive, use the local
-ID comparison we've already tested; the optional
-[manifest deep dive](../advanced/images-and-distribution/digests-manifests-and-multi-arch-images.md)
-follows those additional objects through a registry when you're ready
-to explore distribution in more detail.
+ID comparison we've already tested.
 
 ## Check the receiving platform
 
@@ -39,12 +36,40 @@ with suitable emulation before they can run it.
 
 Publishers can make several platform builds available under one tag, letting
 Docker select the appropriate build during a pull. The course image is
-published that way, for `linux/amd64` and `linux/arm64`, and your engine pulled
-the build that matches it. Our archive contains the image we saved locally, so
+published that way, for `linux/amd64` and `linux/arm64`. Our archive contains
+the image we saved locally, so
 the receiving environment needs to support that build, including its operating
 system requirements. For this handover,
 record the platform you've actually tested and leave testing on a different
 machine as an explicit next step.
+
+## Follow the registry's index
+
+With internet access, inspect the published reference:
+
+```text
+docker buildx imagetools inspect ghcr.io/pethron/ark-message:1
+```
+
+Look for the index digest near the top, then the separate manifest entries for
+`linux/amd64` and `linux/arm64`. The index is a list of descriptors: a pull
+can select the manifest for the intended platform, whose configuration and
+layers describe that particular image. Other entries may show
+`unknown/unknown` for attestations; don't treat those as runnable platforms.
+
+Compare the platform you recorded from `docker image inspect` with the
+appropriate entry. The index and platform manifests are different registry
+objects. A local image ID depends on the engine's image store, so don't assume
+it matches or differs from a particular registry digest: identify what each
+value describes before comparing them. A digest identifies content, not
+whether that content is safe or correctly configured. A tag can move to a
+new index; a digest identifies a particular object.
+
+If your Linux Docker installation doesn't include the Buildx plugin,
+`docker manifest inspect ghcr.io/pethron/ark-message:1` shows the registry's
+index as JSON instead. Find the `platform` and `digest` fields in its
+`manifests` list. A network or access error means you haven't verified the
+registry yet; the local archive comparison remains valid.
 
 ## Where a registry fits
 
@@ -64,44 +89,5 @@ and the `library` namespace reserved for official images. Our local
 `ark-message:handover` has no address either, so if you ever tried to push it,
 Docker would assume Docker Hub too.
 
-Access depends on the repository's policy: a public repository may allow
-anonymous pulls, while a private one can require authentication.
-`docker login` gives the client credentials to present, and the registry
-checks whether that account has permission for the requested repository
-and action. Once you have built your own application image, the optional
-[Docker Hub runbook](../04-building-images/optional/publish-to-docker-hub.md)
-lets you publish it in your own namespace. That route needs an account and
-permission to upload; the archive remains enough for this exercise.
-
-You now have the pieces for your colleague's handover: the archive, tag,
-full local ID, tested platform and the launch command. Include the chosen
-message setting in that command, since it was supplied when we created the
-container rather than stored in the image. Try putting those
-pieces together yourself in the [local handover kata](katas/README.md),
-then we'll find out how an image like ours is made by
-[building one ourselves](../04-building-images/README.md).
-
-When you're finished, remove only `ark-message:handover`, your
-exact archive file and its empty directory, leaving the course image and
-other exercises in place. From the directory where the archive exercise
-created them:
-
-=== "Linux (Bash)"
-
-    ```bash
-    docker image rm ark-message:handover
-    rm ark-image-handover/message.tar
-    rmdir ark-image-handover
-    ```
-
-=== "Windows (PowerShell)"
-
-    ```powershell
-    docker image rm ark-message:handover
-    Remove-Item .\ark-image-handover\message.tar
-    Remove-Item .\ark-image-handover
-    ```
-
-Skip the file commands if you didn't create the archive. A global prune
-would affect work outside this lab, so keep the cleanup limited to what
-you created here.
+Keep the archive and handover tag for one more question:
+[how does the registry deliver that content?](06-how-a-registry-serves-an-image.md)

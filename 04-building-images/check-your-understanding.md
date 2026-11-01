@@ -180,15 +180,31 @@ with `ghcr.io/pethron/ark-message:1`, and why?
 <details>
 <summary>Answer</summary>
 
-Only `ark-message:handover` does. `docker tag` adds another reference to
-content Docker already has, so both names lead to the same ID and the same
-layers. A build follows the recipe and creates new layers and a new
-configuration, which records details such as when each step ran, so the result
-has an identity of its own even though it follows the same instructions on the
-same Python base. The tagging experiment is in
+`ark-message:handover` is guaranteed to share the ID: `docker tag` adds
+another reference to content Docker already has. A build follows a recipe
+and may produce different content or configuration when its inputs or build
+details differ. If those happen to match, it can also produce the same ID, so
+inspect the result instead of assuming either outcome. The tagging experiment is in
 [Image names, tags and IDs](../03-images-and-registries/02-one-image-several-names.md#give-the-image-a-local-handover-name),
 and the comparison with a build in
 [Building and running your first image](01-package-the-service-in-an-image.md#your-build-and-the-course-image).
+
+</details>
+
+## 8. Two kinds of build cache
+
+A package-installation step has to run again after its inputs change. What
+could a cache mount still save, and why should the build work if that cache
+is empty?
+
+<details>
+<summary>Answer</summary>
+
+A cache mount can retain package-manager downloads or other reusable data
+even when BuildKit cannot skip the whole operation. It is separate from the
+image output and may be empty or reclaimed, so the build must still obtain
+what it needs without relying on a warm cache. See
+[A cache for work that runs again](06-what-buildkit-does.md#a-cache-for-work-that-runs-again).
 
 </details>
 

@@ -41,10 +41,12 @@ From the [root of your course checkout](../before-you-start.md#get-the-course-fi
 Run the commands in this chapter from that directory. Besides a short README,
 it contains `app.py`, the message service's code, and the `Dockerfile`; a few
 other files belong to later chapters. The chapter uses the container name
-`ark-built` and local port 8080. Check `docker ps -a` for a container already
-using that name. If port 8080 is unavailable, Docker reports a bind error when
-you start the service; change the host-side `-p` value to a free loopback port
-and update the URL.
+`ark-built`, the image tag `ark-message:first-build` and local port 8080.
+Check `docker ps -a` and `docker image ls ark-message` first. If the name or
+tag belongs to other work, choose an unused one and use it throughout this
+chapter. If port 8080 is unavailable, Docker reports a bind error when you
+start the service; change the host-side `-p` value to a free loopback port and
+update the URL.
 
 Open `Dockerfile` in your editor. It's short enough to read in full:
 
@@ -103,10 +105,11 @@ The output lists numbered steps such as `[1/4] FROM`, `[2/4] RUN adduser -D ark`
 `[3/4] WORKDIR /app` and `[4/4] COPY`, and ends by naming the image
 `ark-message:first-build`. `USER` and `CMD` have no step of their own because
 they only record settings in the image's configuration, with no files to
-produce. You'll also notice Docker loading metadata for `python:3.12-alpine`:
-the build checks the registry for that tag, so if its publisher has moved it
-since you last pulled it, your image will start from the newer Python build. We'll come
-back to that when we talk about how repeatable a build is.
+produce. You'll also notice Docker resolving `python:3.12-alpine` as the base.
+It can reuse a locally available version; adding `--pull` tells the builder to
+check for a newer base even when one is cached. Since the publisher can move
+that tag, a later build may start from different content. We'll come back to
+that when we discuss repeatable builds.
 
 Check that the image is now available locally:
 
@@ -114,11 +117,10 @@ Check that the image is now available locally:
 docker image ls ark-message
 ```
 
-You should find a row for `ark-message:first-build`, with an ID of its own.
-Our recipe added a user, a directory and a file to the Python image, so the
-result is new content with a new identity. Giving the Python image an extra
-name with `docker tag` would keep its ID; building changes what the image
-contains.
+You should find a row for `ark-message:first-build` with an ID. Our recipe
+added a user, a directory and a file to the Python image, so the result has
+different content from that base. Giving the Python image an extra name with
+`docker tag` would keep its ID; this build changes what the image contains.
 
 <details>
 <summary>The build stops before the first step</summary>
@@ -291,24 +293,24 @@ the steps that produced them:
 ```text
 docker image ls ark-message
 docker image ls ghcr.io/pethron/ark-message
+docker image inspect --format '{{.Id}}' ark-message:first-build
+docker image inspect --format '{{.Id}}' ghcr.io/pethron/ark-message:1
 docker image history ark-message:first-build
 docker image history ghcr.io/pethron/ark-message:1
 ```
 
-The two histories list the same instructions in the same order, from `RUN
-adduser -D ark` up to the `CMD`, on top of the Python layers. The IDs, though,
-are different. An image's ID is calculated from its content and configuration,
-and the configuration records details such as when each step ran, so two
-builds of the same recipe on different machines and days end up with
-different IDs. Your build may also have started from a newer
-`python:3.12-alpine` than the one the course image used, if its publisher has
-moved the tag in the meantime.
+The histories should show the same recipe instructions, from `RUN adduser -D
+ark` up to `CMD`, on top of Python layers. Compare the full IDs rather than
+assuming they differ: matching inputs and build results can produce the same
+identity. A different base, file content, configuration or build metadata can
+produce a different one. For example, your build may have used a different
+`python:3.12-alpine` from the one used for the published image.
 
 So which one should you give a colleague? Give them the image you've tested,
-identified by its ID. If they rebuilt it from the recipe, they'd get yet
-another ID and possibly a newer Python underneath, which is exactly the drift
-a handover is meant to avoid. The recipe stays useful to whoever makes the next
-version, and the published image saves everyone else from building it at all.
+identified by its ID. Rebuilding the recipe can give a different result, so
+the tested image is a stronger handover than asking each colleague to rebuild
+it independently. The recipe stays useful to whoever makes the next version,
+and the published image saves everyone else from building it at all.
 
 When you've finished comparing, stop and remove the container:
 

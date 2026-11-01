@@ -82,7 +82,10 @@ wait for the API to pass readiness and retry the read.
 
 If it stays unchanged, look for a Watch event first. A missing event suggests
 the editor saved a different file or the Watch session isn't observing this
-model. An event followed by an API error calls for API logs instead. This
+model. Under WSL, a checkout on the Windows drive (`/mnt/c/...`) can produce
+exactly that symptom, because Linux doesn't receive file events from it;
+move the checkout into the Linux filesystem, such as your home directory.
+An event followed by an API error calls for API logs instead. This
 separates file observation from application startup.
 
 ## Change a dependency and verify the installed result

@@ -5,11 +5,10 @@ track: runbook
 
 # Saving and loading image archives
 
-We have a name for our handover and know which parts of the service the
-image contains. Let's turn it into a file your colleague can receive:
-Docker can save the image's layers, configuration and tag in an archive,
-then load that archive back into an engine. We'll do both steps on your
-computer so that we can check the procedure before asking someone else
+We have a name for our handover, and our colleague needs a file they can
+receive. Docker can save the image's layers, configuration and tag in an
+archive, then load that archive back into an engine. We'll do both steps on
+your computer so that we can check the procedure before asking someone else
 to follow it.
 
 ## Save the named image
@@ -45,8 +44,8 @@ docker image save --output ark-image-handover/message.tar ark-message:handover
 
 The resulting `message.tar` contains what Docker needs to restore this
 image, including its configuration, layers and handover tag, so Python and
-`app.py` travel together. From the previous chapter, we can also predict what
-stays outside the archive: the message and port belong to the launch command,
+`app.py` travel together. We can also predict what stays outside the archive:
+the message and port belong to the launch command,
 the note belongs to a container's writable filesystem, and running processes
 belong to that container's execution.
 
@@ -58,52 +57,10 @@ archive with the metadata required by `image load`.
 
 ## A standard format inside the archive
 
-The archive has a structure you can look at without loading it. List its
-entries with `tar`, which is available in Bash and in current versions of
-Windows PowerShell:
-
-```text
-tar -tf ark-image-handover/message.tar
-```
-
-Most entries sit under `blobs/sha256/` and have long hexadecimal names.
-Each name is the **SHA-256 digest** of the file's content, a fingerprint
-computed from its bytes, so a reader can confirm that a blob is intact by
-computing it again. Alongside the blobs you'll find `oci-layout`, which
-declares the version of the layout, and `index.json`, the entry point from
-which a tool follows references to the image's manifest, configuration and
-layers. A third file, `manifest.json`, lists the same configuration and
-layers in Docker's older format, so that earlier versions of `docker load`
-can still read the archive.
-
-The first two files come from the **Open Container Initiative** (OCI),
-a Linux Foundation project that Docker, CoreOS and other companies launched
-in 2015 to agree on common container formats. Since Docker Engine 25,
-`docker image save` writes its archives in the OCI image layout. OCI
-maintains three specifications that fit together:
-
-- the **image specification** describes how image content and configuration
-  are recorded: manifests, layers, configuration and this directory layout;
-- the **distribution specification** defines the HTTP API that registries
-  offer for pushing and pulling that content;
-- the **runtime specification** describes how to run a container from an
-  unpacked filesystem and a configuration file, which is what low-level
-  runtimes such as `runc` implement.
-
-Thanks to these standards, our archive works beyond the engine that produced
-it. A tool that follows the image specification can read the same blobs and
-configuration, a registry that follows the distribution specification can
-store them, and the engine on the receiving side can start a container
-through any runtime that follows the runtime specification. That's why Docker,
-Podman and the containerd runtime behind many Kubernetes clusters can all
-handle the same image, although each still decides which features beyond
-the standards it supports.
-
-If you're curious about how manifests, indexes and runtime bundles relate,
-the optional deep dives on
-[the OCI image and distribution specs](../advanced/runtime-architecture/04-oci-image-and-distribution-specs.md)
-and [runc and the OCI runtime spec](../advanced/runtime-architecture/03-runc-and-the-oci-runtime-spec.md)
-go further.
+Docker includes a manifest in the archive to connect the tag with the image's
+configuration and layer files. We'll open it after the restore and follow
+those pieces in [Image layers](03-what-an-image-contains.md). First, let's
+check that the handover can restore the reference and start the service.
 
 ## Restore the name from the archive
 
@@ -173,7 +130,7 @@ docker stop ark-image-service
 docker rm ark-image-service
 ```
 
-The tag and `ark-image-handover/message.tar` remain available for the
-handover. Use them to put together
-[the information your colleague will need](05-choose-the-reference-to-hand-over.md)
-to use the archive.
+The tag and `ark-image-handover/message.tar` remain available. Now that the
+restored service works, let's look at
+[the layers and configuration](03-what-an-image-contains.md) that made
+the handover possible.

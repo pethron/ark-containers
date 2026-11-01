@@ -71,7 +71,7 @@ different questions.
 
 If the application isn't busy, you won't see dramatic throttling. That's fine:
 reading a configured ceiling and observing it under sustained load are two
-different experiments. Module 02 will connect those counters to operational
+different experiments. Module 09 will connect those counters to operational
 symptoms.
 
 ## Memory isn't just the language heap
@@ -103,9 +103,9 @@ setup for these controls. If the engine warns that a setting isn't supported,
 that warning is the result of the exercise, not permission to pretend the
 limit applied.
 
-In the [inspection lab](06-inspecting-namespaces-and-cgroups.md), read the
-configured values alongside Docker's request. Then explain why namespaces
-alone wouldn't have imposed any of those budgets.
+In the [module-02 comparison](../../02-running-containers/07-namespaces-and-cgroups.md),
+read the configured values alongside Docker's request. Then explain why
+namespaces alone wouldn't have imposed either budget.
 
 ## Before moving on
 
@@ -119,8 +119,8 @@ runaway memory allocation. What problem does that solve, and what is missing?
 Now suppose a container has a 64 MiB limit inside a VM with a 2 GiB limit.
 Which boundary could affect it first?
 
-Next, [credentials and security policy](04-capabilities-seccomp-and-lsms.md)
-explain why resource budgets still don't answer what a process may do.
+Return to the [bounded example in module 02](../../02-running-containers/07-namespaces-and-cgroups.md)
+and distinguish the resource budget from the process's view.
 
 ## Further reading
 

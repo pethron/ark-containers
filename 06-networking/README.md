@@ -11,10 +11,10 @@ from outside at all. We'll start both from one supplied image with
 `docker run`, connect them on a network we create, and publish only the
 frontend.
 
-Once the request works, we'll follow it from the frontend to the API, to see
-how a container name becomes an address and why the API needs no published
-port. Then we'll break the connection in two different ways and learn to tell
+Once the request works, we'll break it in two different ways and learn to tell
 a name problem from a port problem by reading what the frontend tells us.
+Then we'll follow the restored request from the frontend to the API, looking
+at name resolution, the bridge and the published port.
 
 Everything stays on one Docker host, with networks you create yourself. The
 two services have no database or saved state, so you can recreate them as

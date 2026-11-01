@@ -119,7 +119,7 @@ does it?
 ## Prove it can be restored
 
 Before telling the team the move is done, give them a backup they can trust.
-Using the procedure from [chapter 04](../04-back-up-and-restore-the-notes.md)
+Using the procedure from [Backing up and restoring a volume](../04-back-up-and-restore-the-notes.md)
 as a reference:
 
 - Archive `ark-kata-notes` into a backup folder outside the course checkout,
@@ -153,7 +153,7 @@ If your choice depends on the host's permissions or on a setting such as
 <summary>Hint: the trade-off behind each option</summary>
 
 Look at the comparison table in
-[chapter 03](../03-choose-a-volume-bind-mount-or-tmpfs.md#choosing-a-mount).
+[Choosing a mount](../03-choose-a-volume-bind-mount-or-tmpfs.md#choosing-a-mount).
 For a bind mount on Linux, think about which numeric owner the host folder
 has and which one `ark` uses. For tmpfs, Docker's documentation warns that the
 host can move memory pages to swap space on disk; is that acceptable for

@@ -36,9 +36,9 @@ short-lived diagnostic container:
 
 ```text
 docker info --format 'engine={{.OSType}}/{{.Architecture}}'
-docker image inspect docker.io/library/python:3.12-alpine --format 'image={{.Os}}/{{.Architecture}}'
-docker run --rm docker.io/library/python:3.12-alpine uname -m
-docker run --rm docker.io/library/python:3.12-alpine uname -r
+docker image inspect ghcr.io/pethron/ark-message:1 --format 'image={{.Os}}/{{.Architecture}}'
+docker run --rm ghcr.io/pethron/ark-message:1 uname -m
+docker run --rm ghcr.io/pethron/ark-message:1 uname -r
 ```
 
 Engine architecture naming may use `x86_64` where image descriptors use `amd64`,
@@ -57,7 +57,8 @@ architecture through its documented emulation setup. Docker Desktop commonly
 provides this integration; a native Linux engine may not. Don't install a
 privileged binfmt helper on a shared host just for this course.
 
-On an amd64 engine with arm64 emulation available:
+On an amd64 engine with arm64 emulation available, this separate Python
+example may pull an image if it isn't already present:
 
 ```text
 docker run --rm --platform linux/arm64 docker.io/library/python:3.12-alpine python --version
@@ -80,17 +81,16 @@ that an older engine's seccomp policy handles differently. Diagnose the actual
 error, image identity, host/kernel version and policy rather than assuming
 "same image" eliminates environmental differences.
 
-The optional [kernel-policy example](../linux-primitives/04-capabilities-seccomp-and-lsms.md#same-image-a-different-host-result)
-shows why an unavailable syscall and a denied syscall can have different
-effects. No unsupported kernel installation is needed to understand the case.
+An unavailable syscall and a denied syscall can have different effects. No
+unsupported kernel installation is needed to understand that distinction.
 
 ## Finish the handover
 
 Your artifact notes should now name the repository digest, intended platform,
-observed local image ID and any material host requirements. They should also
-admit what isn't yet inside the image: our service code and launch settings.
+observed local image ID and any material host requirements. Record the launch
+settings too: image identity alone doesn't capture the options chosen when a
+container starts.
 
 Return to the [local handover kata](../../03-images-and-registries/katas/README.md), then continue to
-[Building images](../../04-building-images/README.md). That's where we finally
-remove the source-mount shortcut instead of pretending the runtime image
-already contains our application.
+[Building images](../../04-building-images/README.md), where you write a
+recipe for an image containing the service.

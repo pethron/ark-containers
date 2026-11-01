@@ -1,4 +1,4 @@
-# Compose application workflows
+# Compose in practice: the reading list
 
 Your team has a reading list, and people expect it to survive more than the
 container that first saved it. They also want to edit the application without
@@ -6,10 +6,11 @@ repeating a build after every source change. Here you'll run a supplied
 application, recover its records into another stack, and prepare a handover
 someone else can check.
 
-This optional track follows the build, storage, networking and Compose skills
-from core 04–07. It starts from its own files and creates its own resources;
-keep the core examples and capstone as they are. You need Docker running Linux
-containers, a Compose version supporting `sync+restart` and `initial_sync`
+This second part of the Compose module puts the small stack's lessons to work
+on an application with a database, alongside the build, storage and networking
+skills from earlier modules. It starts from its own files and creates its own
+resources, so the small stack can stay as you left it. You need Docker running
+Linux containers, a Compose version supporting `sync+restart` and `initial_sync`
 (2.32 or later), an editor, and a browser or curl. The first build downloads
 images and Python packages, but Python runs inside the supplied image. No
 local Python installation, registry account or cloud service is needed.
@@ -38,8 +39,10 @@ superuser for simplicity, rather than a production security baseline.
    separate routing from dependency failures and write an evidence-based runbook.
 
 After the guided work, take on the [independent kata](katas/README.md) and the
-[self-checks](check-your-understanding.md). CI/CD, automatic deployment and
-Kubernetes are outside this track.
+[self-checks](check-your-understanding.md). If you only need the commands,
+the module's [fast track](../../07-compose/fast-track.md) runs the same
+application from the first request to a live code change in one page. CI/CD, automatic deployment and
+Kubernetes are outside this course.
 
 ## Start from a clean directory, not a running core lab
 
@@ -106,5 +109,5 @@ enough information to run a backing service.
 Application integration, documentation-reading and independent development
 practice were teaching inspiration from the University of Helsinki's
 [DevOps with Docker](https://courses.mooc.fi/org/uh-cs/courses/devops-with-docker-fall-2026).
-This track's narrative, exercises, code and configuration are original ARK
+This part's narrative, exercises, code and configuration are original ARK
 material; that course's deployment and daemon-access examples are not used here.

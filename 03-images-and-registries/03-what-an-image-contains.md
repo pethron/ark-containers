@@ -1,15 +1,36 @@
 ---
-title: "Image layers"
+title: "Layers and the root filesystem"
 track: architecture
 ---
 
-# Image layers
+# Layers and the root filesystem
 
-Before saving `ark-message:handover`, let's go back to how our service
-starts. Since module 01 the launch command has named only the image, plus a
-message and a port, and yet a Python program came up listening on port 8000.
-Everything else had to come from the image, and our handover depends on
-knowing what that "everything" includes.
+Your restored `ark-message:handover` brought the service back without a
+separate copy of `app.py`. The launch supplied a message and a port, and a
+Python program came up listening on port 8000. Let's open the archive we just
+tested and follow the files and defaults that made that possible.
+
+## Look inside the handover
+
+From the same directory where you saved `message.tar`, list its entries and
+read the manifest Docker included:
+
+```text
+tar -tf ark-image-handover/message.tar
+tar -xOf ark-image-handover/message.tar manifest.json
+```
+
+In the manifest, find `RepoTags`, `Config` and `Layers`. They identify the
+handover tag, an image configuration file and the filesystem changes needed
+to assemble the image. Match the configuration and layer paths to entries in
+the listing; the long names and number of layers depend on the image and
+engine. Some engines also include `oci-layout`, `index.json` and content
+under `blobs/sha256/`. Older archive layouts can use different paths, so
+follow the manifest you actually received.
+
+The **Open Container Initiative** (OCI) defines common image and distribution
+formats. A digest such as `sha256:...` identifies the bytes of a particular
+object; we'll compare the kinds of objects when we inspect the registry.
 
 Along with its files, an image carries **configuration defaults** for the
 containers created from it, such as a command, a working directory or a user.
@@ -81,22 +102,16 @@ it, so the image layers never change. Every container created from the same
 image can therefore share those layers, and each one stores only its own
 changes.
 
-Inside the engine, the component that unpacks layers and prepares these
-mounts has traditionally been called the **storage driver**. Docker Engine 29
-uses the containerd image store by default on new installations, where the
-same job belongs to a containerd **snapshotter**. You can check which one
-your engine uses:
+Engines can use different storage implementations to prepare these mounts.
+You can ask Docker which driver your engine reports:
 
 ```text
-docker info --format '{{.Driver}} {{.DriverStatus}}'
+docker info --format '{{.Driver}}'
 ```
 
-On a recent installation you'll see something like
-`overlayfs [[driver-type io.containerd.snapshotter.v1]]`, meaning the
-`overlayfs` snapshotter of the containerd image store. An engine upgraded
-from an earlier version may still report the classic `overlay2` driver.
-Both assemble the container's filesystem from read-only image layers and
-a writable layer, so the rest of this chapter applies to either.
+You might see `overlayfs` or `overlay2`; the precise storage layout depends
+on the engine. The useful model here is the same: image content provides the
+starting filesystem and each container receives a place for its own changes.
 
 If you'd like to see how the lower, upper and merged directories fit
 together and what copying up costs, the optional
@@ -120,7 +135,5 @@ filesystem holds the note. Saving the image will capture the first group,
 which is enough to start the service. Our colleague will still need the launch
 settings to make it say what we want and reach it from their browser.
 
-The [local archive exercise](04-transfer-an-image-locally.md) will test which
-of these inputs the image preserves. Keep `ark-message:handover` for the
-archive exercise, or remove just that tag with
-`docker image rm ark-message:handover` if you stop here.
+The archive exercise tested that distinction. Keep the tag and archive while
+we compare [manifest identities and platforms](05-choose-the-reference-to-hand-over.md).

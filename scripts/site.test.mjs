@@ -21,6 +21,19 @@ test('ordinary Markdown stays CommonMark; only generated home gets a slug', () =
   assert.equal(convertMarkdown(original, 'index.md'), `---\nslug: /\n---\n\n${original}`);
 });
 
+test('links to source web pages follow their staged location without changing code', () => {
+  const source = '[Setup](../web/before-you-start.md#install-docker)\n\n`literal](../web/file)`\n\n```text\ncat ../web/file\n```\n';
+  const result = convertMarkdown(source, '01-why-containers/fast-track.md', {webLinkDepth: 1});
+  assert.ok(result.includes('[Setup](../before-you-start.md#install-docker)'));
+  assert.ok(result.includes('`literal](../web/file)`'));
+  assert.deepEqual(fencedBlocks(result), fencedBlocks(source));
+  assert.equal(convertMarkdown(source, 'web-page.md'), source);
+  const nested = '[Setup](../../web/before-you-start.md)\n';
+  assert.equal(convertMarkdown(nested, '01-why-containers/katas/example.md', {webLinkDepth: 2}),
+    '[Setup](../../before-you-start.md)\n');
+  assert.throws(() => convertMarkdown(source, 'chapter.md', {webLinkDepth: 0}), /positive integer/);
+});
+
 test('nested tabs, details and checkpoints preserve fenced commands and select MDX', () => {
   const original = [
     '---', 'title: Example', '---', '',
@@ -197,6 +210,122 @@ test('malformed markup fails visibly instead of silently dropping content', () =
   assert.throws(() => convertMarkdown('=== "Other"\n\n    Text.\n', 'bad.md'), /Unexpected tab/);
   assert.throws(() => convertMarkdown('??? missing title\n', 'bad.md'), /Unsupported/);
   assert.throws(() => convertMarkdown('```sh\ntrue\n', 'bad.md'), /Unclosed/);
+});
+
+test('each core module puts an unnumbered fast track immediately after its overview', () => {
+  const core = require('../sidebars.js').courseSidebar.find((item) => item.label === 'Core course');
+  assert.ok(core);
+  const directories = [
+    '01-why-containers', '02-running-containers', '03-images-and-registries',
+    '04-building-images', '05-storage', '06-networking', '07-compose',
+  ];
+  for (const [index, directory] of directories.entries()) {
+    const number = String(index + 1).padStart(2, '0');
+    const module = core.items.find((item) => item.label?.startsWith(`${number}:`));
+    assert.ok(module, number);
+    assert.equal(module.items[0].id, `${directory}/README`);
+    assert.deepEqual(module.items[1], {type: 'doc', id: `${directory}/fast-track`, label: 'Fast track'});
+    assert.equal(module.items.filter((item) => item.id === `${directory}/fast-track`).length, 1);
+    const content = fs.readFileSync(path.join(root, directory, 'fast-track.md'), 'utf8');
+    assert.match(content, /^track: runbook$/m, directory);
+    assert.match(content, /^# Fast track:/m, directory);
+    assert.doesNotMatch(content.replaceAll('advanced/compose-workflows/', ''), /\]\([^)]*advanced\//i, directory);
+    for (const [, target] of content.matchAll(/\]\(([^)#?\s]+)(?:[#?][^)]*)?\)/g)) {
+      if (/^(?:[a-z]+:|\/)/i.test(target)) continue;
+      assert.ok(fs.existsSync(path.resolve(root, directory, target)), `${directory}: missing source link ${target}`);
+    }
+  }
+});
+
+test('modules 02–07 put the approved architecture after the practical work', () => {
+  const sidebar = require('../sidebars.js').courseSidebar;
+  const core = sidebar.find((item) => item.label === 'Core course');
+  assert.ok(core);
+  const sequences = {
+    '02': ['01-pick-up-the-service', '02-inside-the-running-container', '03-restarting-isnt-replacing',
+      '04-stopping-a-service', '05-choose-the-fix', '06-from-docker-run-to-a-process', '07-namespaces-and-cgroups'],
+    '03': ['01-find-the-image-behind-the-container', '02-one-image-several-names', '04-transfer-an-image-locally',
+      '03-what-an-image-contains', '05-choose-the-reference-to-hand-over', '06-how-a-registry-serves-an-image'],
+    '04': ['01-package-the-service-in-an-image', '02-build-cache-and-build-context', '03-write-the-services-dockerfile',
+      '05-dependencies-and-build-cache', '04-commands-and-signals', '06-what-buildkit-does'],
+    '05': ['01-give-the-service-a-memory', '03-choose-a-volume-bind-mount-or-tmpfs', '04-back-up-and-restore-the-notes',
+      '02-where-container-files-live', '05-how-a-mount-appears'],
+    '06': ['01-connect-two-services', '03-diagnose-a-broken-connection',
+      '02-how-the-request-finds-the-api', '04-bridges-and-published-ports'],
+    '07': ['01-describe-the-stack-in-a-file', '02-what-compose-manages-for-you', '03-what-compose-asks-the-engine',
+      '01-run-the-application-stack', '02-configuration-and-readiness', '03-persistence-backup-and-restore',
+      '04-add-a-disposable-cache', '05-develop-and-rebuild', '06-diagnose-and-hand-over'],
+  };
+  const firstArchitecture = {'02': 5, '03': 3, '04': 5, '05': 3, '06': 2, '07': 1};
+  let total = 0;
+  for (const [number, files] of Object.entries(sequences)) {
+    const module = core.items.find((item) => item.label?.startsWith(`${number}:`));
+    assert.ok(module, number);
+    const numbered = module.items.filter((item) => item.type === 'doc' && /^\d+\.\d+ /.test(item.label));
+    assert.deepEqual(numbered.map((item) => item.id.split('/').at(-1)), files, number);
+    assert.deepEqual(numbered.map((item) => item.label.split(' ')[0]),
+      files.map((_, index) => `${Number(number)}.${index + 1}`), number);
+    const architecture = module.items.findIndex((item) => item.value === 'How it works');
+    const practice = module.items.findIndex((item) => item.value === 'Practice');
+    assert.ok(architecture > module.items.indexOf(numbered[firstArchitecture[number] - 1]), number);
+    assert.ok(architecture < module.items.indexOf(numbered[firstArchitecture[number]]), number);
+    assert.ok(practice > module.items.indexOf(numbered.at(-1)), number);
+    total += numbered.length;
+  }
+  assert.equal(total, 37);
+});
+
+test('module 07 hosts the reading-list application instead of a separate track', () => {
+  const sidebar = require('../sidebars.js').courseSidebar;
+  assert.ok(!sidebar.some((item) => item.label === 'Advanced application workflows'));
+  const core = sidebar.find((item) => item.label === 'Core course');
+  const module = core.items.find((item) => item.label?.startsWith('07:'));
+  const ids = module.items.map((item) => item.id ?? item.value);
+  const group = ids.indexOf('Compose in practice');
+  assert.ok(group > ids.indexOf('07-compose/03-what-compose-asks-the-engine'));
+  assert.equal(ids[group + 1], 'advanced/compose-workflows/README');
+  assert.ok(ids.indexOf('advanced/compose-workflows/katas/README') > ids.indexOf('Practice'));
+  assert.ok(ids.indexOf('advanced/compose-workflows/check-your-understanding') > ids.indexOf('Practice'));
+  const fastTrack = fs.readFileSync(path.join(root, '07-compose', 'fast-track.md'), 'utf8');
+  assert.match(fastTrack, /advanced\/compose-workflows\/application/);
+  assert.match(fastTrack, /pg_restore/);
+  assert.match(fastTrack, /compose\.cache\.yaml/);
+  assert.match(fastTrack, /watch --no-up/);
+});
+
+test('navigation and linked pages defer runtime-component and security deep dives', () => {
+  const sidebar = require('../sidebars.js').courseSidebar;
+  const documents = [];
+  function collect(items) {
+    for (const item of items) {
+      if (item.type === 'doc') documents.push(item.id);
+      if (item.items) collect(item.items);
+    }
+  }
+  collect(sidebar);
+  const deferred = new Set([
+    'advanced/runtime-architecture/README',
+    'advanced/runtime-architecture/01-the-docker-engine',
+    'advanced/runtime-architecture/02-containerd-and-the-shim',
+    'advanced/runtime-architecture/03-runc-and-the-oci-runtime-spec',
+    'advanced/runtime-architecture/05-cri-and-the-wider-ecosystem',
+    'advanced/runtime-architecture/06-docker-nerdctl-and-ctr-side-by-side',
+    'advanced/runtime-architecture/katas/README',
+    'advanced/linux-primitives/04-capabilities-seccomp-and-lsms',
+    'advanced/image-builds/multi-platform-builds',
+  ]);
+  for (const id of documents) {
+    assert.ok(!deferred.has(id), `Deferred page in navigation: ${id}`);
+    const rootFile = path.join(root, `${id}.md`);
+    const file = fs.existsSync(rootFile) ? rootFile : path.join(root, 'web', `${id}.md`);
+    const content = fs.readFileSync(file, 'utf8');
+    for (const match of content.matchAll(/\]\(([^)#?\s]+)(?:[#?][^)]*)?\)/g)) {
+      if (/^(?:[a-z]+:|\/)/i.test(match[1])) continue;
+      const target = path.relative(root, path.resolve(path.dirname(file), match[1]))
+        .replaceAll('\\', '/').replace(/\.md$/, '');
+      assert.ok(!deferred.has(target), `${id} links to deferred page ${target}`);
+    }
+  }
 });
 
 test('legacy version anchor is an alias, leaving the original heading intact', () => {

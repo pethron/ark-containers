@@ -73,9 +73,9 @@ builds on this example to explain SemVer, calendar versions and build
 identifiers. You can come back to it when you start choosing a convention
 for your own images.
 
-For now, keep `ark-message:handover` available and let's look at
-[what the image contains](03-what-an-image-contains.md). That will help us
-decide which parts of the service will travel in the archive and which
-parts our colleague will need alongside it. This chapter leaves no container
-running; if you stop here, `docker image rm ark-message:handover` removes
-only the extra tag and leaves the course image in place.
+For now, keep `ark-message:handover` available and
+[save it for your colleague](04-transfer-an-image-locally.md). We'll inspect
+what travels inside the archive after we've checked that it works. This
+chapter leaves no container running; if you stop here, `docker image rm
+ark-message:handover` removes only the extra tag and leaves the course image
+in place.
