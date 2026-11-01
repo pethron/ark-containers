@@ -39,7 +39,7 @@ docker compose -p ark-reading -f compose.yaml -f compose.cache.yaml up -d --wait
 
 The runtime model now contains four services. From this point, include both
 files in commands that create or update this stack; omitting an overlay
-changes the desired configuration. A `tests` profile remains off during normal
+changes the desired configuration. The `test` profile remains off during normal
 operation.
 
 ## Count work, then change the result
@@ -87,7 +87,7 @@ edit advances the revision; deletion and insertion use the same mechanism.
 The API reads revision and rows in one repeatable-read transaction, so a
 concurrent edit cannot make it cache old rows under a new revision.
 
-## Test a failed invalidation
+## Keep working through a cache outage
 
 Predict what would happen if Redis disappeared between reading and editing.
 Stop only the cache, edit the book again in the UI, then start Redis and
@@ -108,10 +108,14 @@ docker compose -p ark-reading -f compose.yaml -f compose.cache.yaml logs --tail 
 The edit should succeed through Postgres while the cache is unavailable;
 `cache_errors` makes the fallback observable. The cache client uses short
 socket timeouts and no automatic request retry, so an optional dependency
-doesn't turn each read into a long wait. When Redis returns, a
-previously cached value cannot be selected for the newer database revision,
-even though the attempt to delete it failed. This addresses stale data
-after a cache outage rather than relying on expiry alone.
+doesn't turn each read into a long wait. When Redis returns, the next read
+fetches the current rows from Postgres and repopulates the cache.
+
+This stop/start discards Redis's keys because persistence is disabled.
+It demonstrates fallback and recovery, but leaves no old entry behind to
+test failed deletion. If an old entry survived a connection failure instead,
+the newer database revision would select a different key. That follows from
+the revision-key design above; it is not something this restart demonstrates.
 
 If the database is stopped instead, the API reports 503, including on a
 cached read. That follows our source-of-truth decision from chapter 2.

@@ -6,7 +6,7 @@ track: architecture
 # The Docker engine
 
 > **Under the hood: optional advanced material.** This deep dive is not
-> required for the core course or its final project.
+> required for the core course.
 > [About these deep dives](../README.md).
 
 You typed `docker run`, and a service appeared. The CLI didn't personally

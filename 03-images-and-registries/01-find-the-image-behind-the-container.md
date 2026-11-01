@@ -1,6 +1,7 @@
 ---
 title: "Finding and running local images"
 track: runbook
+pagination_prev: 03-images-and-registries/README
 ---
 
 # Finding and running local images

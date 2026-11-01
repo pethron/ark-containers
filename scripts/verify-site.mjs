@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import config from '../docusaurus.config.js';
+import sidebars from '../sidebars.js';
 import {redirects} from './redirects.mjs';
 import {withNoIndex} from './site-html.mjs';
 import {verifyLocalUrl} from './site-links.mjs';
@@ -56,4 +57,34 @@ const compatibility = fs.readFileSync(path.join(build, '04-building-images', 'ch
 if (!compatibility.includes('id="4-passing-version-to-two-images"')) throw new Error('Legacy --version anchor missing');
 const searchIndexes = files(build).filter((file) => /search-index.*\.json$/.test(path.basename(file)));
 if (!searchIndexes.length || !searchIndexes.some((file) => fs.statSync(file).size > 1000)) throw new Error('Local search index missing or empty');
-console.log(`Verified ${htmlPages.length} HTML pages: noindex/nofollow, baseUrl, local links/assets, all 105 historical routes, source routes, legacy anchor and local search.`);
+for (const directory of ['.site-docs', 'static']) {
+  if (fs.existsSync(path.join(root, directory, 'capstone'))) throw new Error(`Withdrawn project staged in ${directory}`);
+}
+for (const file of files(path.join(build, 'capstone'))) {
+  const route = path.relative(build, file).replaceAll('\\', '/');
+  if (!Object.hasOwn(redirects, route)) throw new Error(`Withdrawn project content published: ${route}`);
+}
+for (const file of searchIndexes) {
+  const index = JSON.stringify(JSON.parse(fs.readFileSync(file, 'utf8')));
+  if (index.includes('/capstone/')) throw new Error(`Withdrawn project in search index: ${file}`);
+}
+
+const core = sidebars.courseSidebar.find((item) => item.label === 'Core course');
+const guided = core.items.flatMap((module) => module.items
+  .filter((item) => item.type === 'doc' && !item.id.endsWith('/fast-track') && !item.label.startsWith('Optional:'))
+  .map((item) => item.id));
+guided.push('glossary');
+const routeFor = (id) => `${id.replace(/\/README$/, '')}/`;
+for (let index = 0; index < guided.length; index += 1) {
+  const id = guided[index];
+  const html = fs.readFileSync(path.join(build, ...routeFor(id).split('/'), 'index.html'), 'utf8');
+  const anchors = [...html.matchAll(/<a\b[^>]*>/g)].map(([tag]) => tag);
+  for (const [direction, target] of [['prev', guided[index - 1]], ['next', guided[index + 1]]]) {
+    if (!target) continue;
+    const anchor = anchors.find((tag) => tag.includes(`pagination-nav__link--${direction}`));
+    const href = anchor?.match(/\bhref=["']([^"']+)["']/)?.[1];
+    const expected = `${config.baseUrl}${routeFor(target)}`;
+    if (href !== expected) throw new Error(`${id}: guided ${direction} is ${href}, expected ${expected}`);
+  }
+}
+console.log(`Verified ${htmlPages.length} HTML pages: noindex/nofollow, baseUrl, local links/assets, all 105 historical routes, source routes, legacy anchor, local search, project withdrawal and guided pagination.`);

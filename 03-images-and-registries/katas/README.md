@@ -1,6 +1,7 @@
 ---
 title: "A local image handover"
 track: kata
+pagination_prev: 03-images-and-registries/06-how-a-registry-serves-an-image
 ---
 
 # A local image handover

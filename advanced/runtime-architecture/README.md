@@ -1,7 +1,6 @@
 # Runtime architecture
 
-**Optional advanced deep dive, not required to complete the core course or
-its final project.**
+**Optional advanced deep dive, not required to complete the core course.**
 
 When you type `docker run`, several programs cooperate before Python starts
 inside the container. This deep dive follows them with the message service

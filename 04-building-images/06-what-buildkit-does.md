@@ -1,6 +1,7 @@
 ---
 title: "What BuildKit does with a recipe"
 track: architecture
+pagination_next: 04-building-images/katas/README
 ---
 
 # What BuildKit does with a recipe

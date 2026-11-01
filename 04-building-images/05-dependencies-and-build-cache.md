@@ -81,14 +81,10 @@ and Docker has to run it again.
 
 Now make an application-only change, the kind that happens far more often
 than a new dependency. Append a comment such as `# rebuild observation` to
-`serve.py`, leaving its behavior unchanged, then repeat the two builds above.
-In the baseline log, `pip install` runs again. In the supplied recipe, it says
-`CACHED`; the changed source is copied afterward. If you've done this
-experiment before with the same comment, the builder may still hold a result
-for that exact `serve.py` and report `CACHED` in both logs, so pick a comment
-it hasn't seen. The log shows which work repeated, while the elapsed time tells
-you how that difference felt on your machine. Time both rebuilds with the
-timer for your shell:
+`serve.py`, leaving its behavior unchanged. If you've done this experiment
+before, pick a comment the builder hasn't seen: it may still hold a result for
+an earlier version of that file. Run your first post-edit rebuilds with the
+timer below, rather than running the untimed commands again first:
 
 === "Linux (Bash)"
 
@@ -103,6 +99,11 @@ timer for your shell:
     Measure-Command { docker build --progress=plain -f Dockerfile.baseline -t ark-template:baseline . | Out-Host }
     Measure-Command { docker build --progress=plain -t ark-template:cached . | Out-Host }
     ```
+
+In the baseline log, `pip install` runs again. In the supplied recipe, it says
+`CACHED`; the changed source is copied afterward. Repeating these commands
+without another edit can give two fully cached builds, which no longer
+compares the work caused by a source change.
 
 The elapsed times depend on the builder's cache and other activity on your
 machine, so treat them as observations rather than a universal speed claim.

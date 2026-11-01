@@ -1,6 +1,7 @@
 ---
 title: "A build you can hand over"
 track: kata
+pagination_prev: 04-building-images/06-what-buildkit-does
 ---
 
 # A build you can hand over

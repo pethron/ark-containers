@@ -1,6 +1,7 @@
 ---
 title: "The problem containers solve"
 track: architecture
+pagination_prev: 01-why-containers/README
 ---
 
 # The problem containers solve
@@ -51,27 +52,29 @@ A container is a **process**, just like your shell or your browser. It's not a s
 
 It's **packaged**: the process brings its own filesystem, with everything inside the box. This is the part that solves the "works on my machine" problem.
 
-And it's **isolated**: the process has its own view of the system, with its own list of processes, its own network, its own hostname, and a limited share of CPU and memory. From the inside, it looks like it's alone on the machine.
+And it's **isolated**: the process has its own view of the system, with its own list of processes, network and hostname. From the inside, it looks like it's alone on the machine, even though CPU and memory are shared. We can configure budgets for those resources; isolation alone doesn't set them.
 
 ## What do we get out of it?
 
 Once the environment travels together with the application, a few nice things follow:
 
-- **Reproducibility**: the same box runs the same way on your laptop, in CI, and in production;
+- **Reproducibility**: the same image carries the same application files and dependencies to your laptop, CI, and production;
 - **No dependency conflicts**: two applications that need different versions of Python can run side by side on the same host, each in its own box;
 - **Density**: containers share the host kernel, so you can run a lot more of them on a single machine compared to virtual machines;
 - **Speed**: starting a container means starting a process, so it takes seconds, not minutes;
 - **A common contract**: developers hand over a box, operations run the box. No more 40-step installation guides on a wiki.
 
-And now for the downsides. All containers on a host share the same kernel, so the isolation is weaker than with a virtual machine, and that's why we'll have a whole module on security. Containers are also a Linux thing: on macOS and Windows, Docker runs a small Linux virtual machine behind the scenes. And they don't magically solve the problem of data: a container is meant to be thrown away and recreated, your database is not.
+And now for the downsides. All containers on a host share the same kernel, so ordinary containers provide a weaker isolation boundary than a virtual machine. In this course we use Linux containers: on macOS and Windows, Docker runs a small Linux virtual machine behind the scenes. And they don't magically solve the problem of data: a container is meant to be thrown away and recreated, your database is not.
 
-There's a catch, though. The box contains everything above the kernel, but not the kernel itself: that one always comes from the host. The box is also built for a specific CPU architecture, so an image for an Intel server is not the same as the one your Apple Silicon laptop pulls. And a Dockerfile is a recipe, not a box: two people building it on different days can end up with different results. So the promise is more precisely: **the same image, on a compatible kernel and architecture, behaves the same way.** We'll dig into each of these in the next modules.
+There's a catch, though. The box contains the application, its runtime and libraries, but not the kernel itself: that one always comes from the host. The box is also built for a specific CPU architecture, so an image for an Intel server is not the same as the one your Apple Silicon laptop pulls.
+
+And a Dockerfile is a recipe, not a box: two people building it on different days can end up with different results. The useful promise is **the same image carries the same packaged contents**. Compatible hosts can run those contents, but runtime settings, mounted files and external services can still change the application's behavior.
 
 ![Three containers sit above a dashed line: the Linux kernel and the hardware below it always come from the host](images/kernel-line.svg)
 
 ## Common misconceptions
 
-The most common one I hear is that **a container is a lightweight virtual machine**. It's not, and it's worth getting this right from day one. A virtual machine emulates hardware and boots its own kernel; a container is a process on the host kernel that can only see a part of the system. If you want to inspect those mechanisms yourself, the optional [Linux primitives deep dive](../advanced/linux-primitives/README.md) includes a deliberately limited manual sandbox. You don't need it to continue the course.
+The most common one I hear is that **a container is a lightweight virtual machine**. It's not, and it's worth getting this right from day one. A virtual machine emulates hardware and boots its own kernel; a container is a process on the host kernel that can only see a part of the system. The optional [namespaces deep dive](../advanced/linux-primitives/02-namespaces.md) lets you inspect those different views. You don't need it to continue the course.
 
 Another one is that **containers are Docker**. Docker made containers popular, but it didn't invent them, and today it's one tool among many. We'll use Docker throughout the main course, then look underneath it to understand which parts of the work it handles for us.
 
@@ -79,6 +82,6 @@ The last one is that **with containers, you don't have to care about the environ
 
 ## Recap
 
-So, to sum up: your application is your code plus its environment, and environments tend to drift apart from machine to machine. Containers solve this by putting the application and its environment in the same box, a box with a standard format that can run anywhere. Under the hood, **a container is just a packaged and isolated process that shares the kernel with the host**.
+So, to sum up: your application is your code plus its environment, and environments tend to drift apart from machine to machine. Containers reduce that drift by putting the application and its dependencies in the same box, a box with a standard format that can move between compatible hosts. Under the hood, **a container is just a packaged and isolated process that shares the kernel with the host**.
 
 Next, we'll [run the service in a container](03-your-first-application.md). If Docker isn't installed yet or the course files aren't on your machine, go through [Before you start](../before-you-start.md) first. You don't need to understand every part of the configuration before trying it; we'll use the result to give those details a purpose.

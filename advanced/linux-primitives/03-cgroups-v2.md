@@ -71,8 +71,8 @@ different questions.
 
 If the application isn't busy, you won't see dramatic throttling. That's fine:
 reading a configured ceiling and observing it under sustained load are two
-different experiments. Module 09 will connect those counters to operational
-symptoms.
+different experiments. A configured quota tells you the budget; increasing
+throttling counters would show that the application is reaching it.
 
 ## Memory isn't just the language heap
 
@@ -109,10 +109,9 @@ namespaces alone wouldn't have imposed either budget.
 
 ## Before moving on
 
-When investigating resource failures in module 09 (in preparation),
-return to its OOM and explicit-kill comparison. Which additional accounting
-would help you distinguish memory pressure from a shutdown timeout in a real
-service? Don't repeat a memory-exhaustion experiment without its small limits.
+Suppose a service exits with code 137. Which accounting and logs would help
+you distinguish memory pressure from a shutdown timeout? Use the evidence
+described above; don't exhaust the host's memory to test a hypothesis.
 
 Your colleague proposes separate network namespaces as protection against a
 runaway memory allocation. What problem does that solve, and what is missing?

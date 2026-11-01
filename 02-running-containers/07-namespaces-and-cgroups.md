@@ -1,6 +1,7 @@
 ---
 title: "Namespaces and cgroups"
 track: architecture
+pagination_next: 02-running-containers/katas/README
 ---
 
 # Namespaces and cgroups

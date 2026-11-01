@@ -6,7 +6,7 @@ track: kata
 # Check your understanding
 
 The whole stack now lives in `compose.yaml`, and one command brings it up or
-takes it down. Before you extend that file on your own, see whether you can
+takes it down. After extending that file in the kata, see whether you can
 predict what Compose will do with it. Write down your answer to each question
 first, then open the answer and compare the reasoning; a mismatch is a good
 reason to reread the chapter it links to.
@@ -170,5 +170,6 @@ page and inspect logs when necessary. See
 
 </details>
 
-If these felt comfortable, try writing the third service yourself in the
-[kata](katas/README.md), this time without a file to read from.
+If a question was difficult, return to that part of the
+[kata](katas/README.md) and check your prediction. Once you've finished its
+cleanup, continue with the [reading-list application](../advanced/compose-workflows/README.md).

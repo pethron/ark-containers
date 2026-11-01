@@ -1,7 +1,6 @@
 # Linux primitives
 
-**Optional advanced deep dive, not required to complete the core course or
-its final project.**
+**Optional advanced deep dive, not required to complete the core course.**
 
 The first service worked, and it seemed to have an environment of its own.
 Let's find out what that really meant: a process with different views of the

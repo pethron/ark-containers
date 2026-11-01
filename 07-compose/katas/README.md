@@ -111,3 +111,6 @@ docker compose down -v
 That leaves nothing running and no project volume; only the built images
 remain. If you want to keep the file as it was, undo your changes to
 `compose.yaml` afterwards.
+
+Continue to [Check your understanding](../check-your-understanding.md)
+before moving on to the reading-list application.

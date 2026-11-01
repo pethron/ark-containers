@@ -28,8 +28,9 @@ wouldn't you fix it by writing the API's IP address into `BACKEND_URL`?
 
 Without a `--network` option, Docker attaches both containers to its default
 network. They could reach each other there by IP address, but that network
-has no name server, so the name `ark-api` never becomes an address. Writing the
-IP address into `BACKEND_URL` would work only until Docker replaces the API
+doesn't provide automatic container-name resolution, so `ark-api` never
+becomes an address. DNS for names outside the container network can still
+work. Writing the IP address into `BACKEND_URL` would work only until Docker replaces the API
 container and gives it a different address, and then the configuration would
 silently point at nothing. A network you create, such as `ark-net`, gives the
 containers Docker's name server and lets the name stay stable while addresses

@@ -31,16 +31,17 @@ const numberedChapters = (prefix, directory, sections) => {
 const deepDive = (label, directory, pages) => group(label, pages.map(([file, title]) => doc(`advanced/${directory}/${file}`, title)));
 const underTheHood = dives => dives.length ? [group('Under the hood (optional)', dives)] : [];
 
-const coreModule = (number, label, directory, sections, kata, dives = [], practice = []) => group(
+const coreModule = (number, label, directory, sections, kata, dives = [], practice = [
+  doc(`${directory}/katas/README`, kata),
+  doc(`${directory}/check-your-understanding`, 'Check your understanding'),
+]) => group(
   `${String(number).padStart(2, '0')}: ${label}`, [
     doc(`${directory}/README`, 'Overview'),
     doc(`${directory}/fast-track`, 'Fast track'),
     ...numberedChapters(`${number}.`, directory, sections),
     ...underTheHood(dives),
     heading('Practice'),
-    doc(`${directory}/katas/README`, kata),
     ...practice,
-    doc(`${directory}/check-your-understanding`, 'Check your understanding'),
   ]);
 
 // The application lives under advanced/ so its fixture paths and doc ids stay stable.
@@ -133,6 +134,10 @@ module.exports = {
       coreModule(7, 'Compose', '07-compose', [
         ['Start the stack', ['01-describe-the-stack-in-a-file']],
         ['How it works', ['02-what-compose-manages-for-you', '03-what-compose-asks-the-engine']],
+        ['Try the small stack', [
+          doc('07-compose/katas/README', 'Kata: add the notes service'),
+          doc('07-compose/check-your-understanding', 'Check your understanding: the small stack'),
+        ]],
         ['Compose in practice', [
           doc(app('README'), 'The reading-list application'),
           app('01-run-the-application-stack'),
@@ -145,12 +150,6 @@ module.exports = {
       ], 'Kata: add the notes service', [], [
         doc(app('katas/README'), 'Kata: application handover'),
         doc(app('check-your-understanding'), 'Check your understanding: the application'),
-      ]),
-      group('Final project', [
-        doc('capstone/README', 'Project brief'),
-        doc('capstone/rubric', 'Rubric'),
-        doc('capstone/starter/README', 'Starter files'),
-        doc('capstone/starter/REPORT-template', 'Report template'),
       ]),
     ]),
     doc('glossary', 'Glossary'),

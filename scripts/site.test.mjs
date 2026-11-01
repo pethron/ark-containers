@@ -282,15 +282,62 @@ test('module 07 hosts the reading-list application instead of a separate track',
   const module = core.items.find((item) => item.label?.startsWith('07:'));
   const ids = module.items.map((item) => item.id ?? item.value);
   const group = ids.indexOf('Compose in practice');
-  assert.ok(group > ids.indexOf('07-compose/03-what-compose-asks-the-engine'));
+  const architecture = ids.indexOf('07-compose/03-what-compose-asks-the-engine');
+  assert.deepEqual(ids.slice(architecture + 1, group), [
+    'Try the small stack', '07-compose/katas/README', '07-compose/check-your-understanding',
+  ]);
   assert.equal(ids[group + 1], 'advanced/compose-workflows/README');
   assert.ok(ids.indexOf('advanced/compose-workflows/katas/README') > ids.indexOf('Practice'));
   assert.ok(ids.indexOf('advanced/compose-workflows/check-your-understanding') > ids.indexOf('Practice'));
+  assert.deepEqual(ids.slice(ids.indexOf('Practice') + 1), [
+    'advanced/compose-workflows/katas/README', 'advanced/compose-workflows/check-your-understanding',
+  ]);
+  assert.equal(ids.filter((id) => id === '07-compose/katas/README').length, 1);
+  assert.equal(ids.filter((id) => id === '07-compose/check-your-understanding').length, 1);
   const fastTrack = fs.readFileSync(path.join(root, '07-compose', 'fast-track.md'), 'utf8');
   assert.match(fastTrack, /advanced\/compose-workflows\/application/);
   assert.match(fastTrack, /pg_restore/);
   assert.match(fastTrack, /compose\.cache\.yaml/);
   assert.match(fastTrack, /watch --no-up/);
+});
+
+test('guided pagination bypasses fast tracks and optional branches in both directions', () => {
+  const core = require('../sidebars.js').courseSidebar.find((item) => item.label === 'Core course');
+  function checkMetadata(id, key, target) {
+    const source = fs.readFileSync(path.join(root, `${id}.md`), 'utf8');
+    const converted = convertMarkdown(source, `${id}.md`);
+    for (const content of [source, converted]) {
+      const metadata = content.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+      assert.ok(metadata, `${id}: missing front matter`);
+      const value = metadata[1].match(new RegExp(`^${key}: (.+)$`, 'm'));
+      assert.equal(value?.[1].trim(), target, `${id}: ${key}`);
+    }
+  }
+  for (const module of core.items) {
+    const numbered = module.items.filter((item) => item.type === 'doc' && /^\d+\.\d+ /.test(item.label));
+    const overview = module.items[0].id;
+    checkMetadata(overview, 'pagination_next', numbered[0].id);
+    checkMetadata(numbered[0].id, 'pagination_prev', overview);
+    if (module.items.some((item) => item.label === 'Under the hood (optional)')) {
+      const kata = module.items[module.items.findIndex((item) => item.value === 'Practice') + 1].id;
+      checkMetadata(numbered.at(-1).id, 'pagination_next', kata);
+      checkMetadata(kata, 'pagination_prev', numbered.at(-1).id);
+    }
+  }
+});
+
+test('withdrawn final project keeps its sources but only publishes historical redirects', () => {
+  assert.ok(!publicSections.includes('capstone'));
+  assert.doesNotMatch(JSON.stringify(require('../sidebars.js')), /capstone|Final project/i);
+  for (const id of ['README', 'rubric', 'starter/README', 'starter/REPORT-template']) {
+    assert.ok(fs.existsSync(path.join(root, 'capstone', `${id}.md`)), `Missing retained source: ${id}`);
+  }
+  assert.deepEqual(Object.entries(redirects).filter(([route]) => route.startsWith('capstone/')), [
+    ['capstone/index.html', '07-compose/'],
+    ['capstone/rubric/index.html', '07-compose/'],
+    ['capstone/starter/index.html', '07-compose/'],
+    ['capstone/starter/REPORT-template/index.html', '07-compose/'],
+  ]);
 });
 
 test('navigation and linked pages defer runtime-component and security deep dives', () => {
@@ -313,6 +360,8 @@ test('navigation and linked pages defer runtime-component and security deep dive
     'advanced/runtime-architecture/katas/README',
     'advanced/linux-primitives/04-capabilities-seccomp-and-lsms',
     'advanced/image-builds/multi-platform-builds',
+    '08-security/README',
+    '09-production-and-troubleshooting/README',
   ]);
   for (const id of documents) {
     assert.ok(!deferred.has(id), `Deferred page in navigation: ${id}`);
@@ -411,6 +460,7 @@ test('all current public source pages preserve every fenced code block', () => {
       if (entry.isDirectory()) visit(source, target);
       else if (entry.isFile() && entry.name.endsWith('.md')) {
         const original = fs.readFileSync(source, 'utf8');
+        assert.doesNotMatch(original, /\]\([^)]*\bcapstone\//i, `Link to withdrawn project: ${target}`);
         const result = convertMarkdown(original, target.replaceAll('\\', '/'));
         assert.deepEqual(fencedBlocks(result), fencedBlocks(original), target);
         pages += 1;

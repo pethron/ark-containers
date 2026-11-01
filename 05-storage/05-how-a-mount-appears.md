@@ -1,6 +1,7 @@
 ---
 title: "How a mount appears inside the container"
 track: architecture
+pagination_next: 05-storage/katas/README
 ---
 
 # How a mount appears inside the container

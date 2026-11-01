@@ -1,6 +1,7 @@
 ---
 title: "How a registry serves an image"
 track: architecture
+pagination_next: 03-images-and-registries/katas/README
 ---
 
 # How a registry serves an image

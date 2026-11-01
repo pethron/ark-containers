@@ -9,7 +9,7 @@ You have an application to deploy, and someone asks whether it should run in a v
 
 Slow down a minute. Lighter is useful, but it doesn't tell us which kernel the application needs, who we trust to run code, or what happens when something goes wrong.
 
-Let's use those questions to compare the two. By the end, you should be able to explain why you'd choose one, the other, or both for an application. We'll leave the security flags for later.
+Let's use those questions to compare the two. By the end, you should be able to explain why you'd choose one, the other, or both for an application. Configuring a production security policy is outside this comparison.
 
 ## Where does the kernel live?
 
@@ -56,7 +56,7 @@ That is why ordinary containers are generally not the first boundary I would cho
 
 Configuration can weaken either model. A container given broad privileges, sensitive host mounts, or access to the Docker socket may gain control over the host without needing a kernel vulnerability at all.
 
-So when someone tells you that an application is safe because it's "in a container," ask how that container is configured. We'll work through those choices in [module 08](../08-security/README.md), including rootless execution, capabilities and syscall filtering.
+So when someone tells you that an application is safe because it's "in a container," ask how that container is configured. For choices such as rootless execution, capabilities and syscall filtering, consult Docker's [security documentation](https://docs.docker.com/engine/security/); this course does not provide a production hardening checklist.
 
 ## If something uses all the memory
 

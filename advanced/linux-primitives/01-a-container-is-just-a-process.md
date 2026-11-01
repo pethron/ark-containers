@@ -6,7 +6,7 @@ track: architecture
 # A container is just a process
 
 > **Under the hood: optional advanced material.** This deep dive is not
-> required for the core course or its final project.
+> required for the core course.
 > [About these deep dives](../README.md).
 
 You started two copies of the message service, and both believed they had port

@@ -25,15 +25,13 @@ module, run the same exercises and are assessed by the same criteria.
 
 You don't need Linux administration, a paid cloud account or local Python for
 the core modules. Ideas such as processes, users, permissions, ports and name
-resolution are explained when an exercise first needs them. Two parts of the
-course ask for more, and say so where they begin: optional host-side
-inspections need the actual Linux engine host and sometimes `sudo`, and the
-final project needs Python 3.10 or later to run the starter's tests and its
-incident tool. Most optional Docker inspections also work on Docker Desktop.
+resolution are explained when an exercise first needs them. Optional host-side
+inspections need the actual Linux engine host and sometimes `sudo`; they say
+so where they begin. Most optional Docker inspections also work on Docker Desktop.
 
 ## What you'll be able to do
 
-By the end of the core course and the final project, you can:
+By the end of the course, you can:
 
 1. **Run and diagnose a containerized service**, using its state, logs and
    responses to tell a configuration mistake from an unreachable port or a
@@ -96,8 +94,8 @@ show that you can:
 
 The supplied application has its own fixtures and needs Docker, Compose and
 internet access to retrieve images, not a local database installation or a
-cloud account. Its kata checks that workflow separately; the core capstone
-and rubric remain unchanged.
+cloud account. Its kata checks that workflow after the small stack's kata
+and self-check.
 
 The optional [Docker Hub runbook](04-building-images/optional/publish-to-docker-hub.md)
 adds manual publication of your own application image after module 04. It
@@ -114,13 +112,13 @@ route to a result with its checks and cleanup, and **Katas** hand you a
 problem with acceptance criteria and hints instead of a recipe.
 
 The **Under the hood** section is optional depth. Everything you need to
-complete the exercises and the final project is in the core modules; the deep
-dives are where to go when you want to see how namespaces, cgroups, runtimes
+complete the exercises is in the core modules; the deep dives are where to
+go when you want to see how namespaces, cgroups, builds
 or image formats work in detail.
 
 ## How you check your progress
 
-Learning is checked in three ways, from the lightest to the most demanding:
+Use two kinds of practice to check your progress:
 
 - **Check your understanding.** Each module ends with a few prediction,
   diagnosis and decision questions. Answer from memory, then open the
@@ -129,11 +127,6 @@ Learning is checked in three ways, from the lightest to the most demanding:
 - **Katas.** Each module has at least one task with acceptance criteria and
   graduated hints. You're done when the criteria hold, whichever route you
   took.
-- **The final project.** The [final project](capstone/README.md) asks you to
-  package, run, connect and preserve a two-service application you haven't
-  seen before, diagnose an incident introduced on purpose and handle a changed
-  requirement. It's assessed with a published [rubric](capstone/rubric.md)
-  that looks at the working result, the evidence and your reasoning.
 
 ## Sources and versions
 

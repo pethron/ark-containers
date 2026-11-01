@@ -1,6 +1,7 @@
 ---
 title: "Checking a running service"
 track: runbook
+pagination_prev: 02-running-containers/README
 ---
 
 # Checking a running service

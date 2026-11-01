@@ -5,7 +5,7 @@ have a PID 1, or which component actually starts Python when you type
 `docker run`. This is where we open up those mechanisms.
 
 **These are optional advanced deep dives. You don't need them to complete the
-core course or its final project.** The numbered modules already explain the
+core course.** The numbered modules already explain the
 concepts needed to operate the application and justify your decisions; here
 we go further into implementation and kernel behavior.
 

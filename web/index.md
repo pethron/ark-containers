@@ -29,8 +29,8 @@ container to a complete stack. You'll start it and reach it from the browser,
 then keep it running and replace it with a new version. You'll package it as
 an image and hand it to a colleague, write the recipe that builds it, keep its
 data safe across replacements, connect it to a second service and finally
-describe the whole stack in a single file. The core finishes with an unfamiliar
-application to package, diagnose and change.
+describe the whole stack in a single file. In the last module, you'll use
+Compose to operate a reading-list application with a database and a cache.
 
 | Module | Topic | Guided chapters |
 |--------|-------|--------|
@@ -59,6 +59,10 @@ independent practice, start that module's guided chapters from the beginning
 and try its kata. The fast track alone doesn't establish all the module's
 outcomes.
 
+From a module's overview, **Next** follows the guided chapters and practice,
+with **Previous** taking you back along that route. Use the sidebar to choose
+a fast track or an optional deep dive.
+
 Most chapters are practical: you run a command, observe what happens and only
 then look at why. At the end of each module, a kata gives you a similar
 problem without step-by-step instructions, so you can check that you can solve
@@ -66,11 +70,7 @@ it on your own, and a short *Check your understanding* page asks you to
 predict, diagnose and decide before showing the explanation. When you pause,
 keep what the next chapter needs and clean up when you finish the module.
 
-When the seven modules are done, the [final project](capstone/README.md)
-gives you a small application you haven't seen before: you package it, run
-it, keep its data, diagnose an incident introduced on purpose and handle a
-changed requirement. A published [rubric](capstone/rubric.md) explains how
-it's assessed. The [syllabus](syllabus.md) lists what you'll be able to do at
+The [syllabus](syllabus.md) lists what you'll be able to do at
 the end of each module, and the [glossary](glossary.md) collects the terms
 the course defines along the way.
 
@@ -83,7 +83,7 @@ Module 07 ends with a fuller application: a database, a disposable cache and
 a reverse proxy around an original reading-list service. You'll run the stack
 before investigating readiness, backup and restore, cache behavior, source
 synchronization and dependency rebuilds. It starts with its own files and
-resources, and doesn't change the final project's assessment.
+resources, and closes with a kata and questions about the whole workflow.
 
 ## Before you start
 

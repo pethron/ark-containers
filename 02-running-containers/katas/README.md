@@ -1,3 +1,7 @@
+---
+pagination_prev: 02-running-containers/07-namespaces-and-cgroups
+---
+
 # A service change someone else can repeat
 
 A team has adopted your message service for a small status page. They want

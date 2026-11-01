@@ -1,6 +1,7 @@
 ---
 title: "Kata: reconnect the services"
 track: kata
+pagination_prev: 06-networking/04-bridges-and-published-ports
 ---
 
 # Kata: reconnect the services

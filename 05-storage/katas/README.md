@@ -1,6 +1,7 @@
 ---
 title: "Notes from the old release"
 track: kata
+pagination_prev: 05-storage/05-how-a-mount-appears
 ---
 
 # Notes from the old release

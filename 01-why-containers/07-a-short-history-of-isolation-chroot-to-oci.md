@@ -55,7 +55,7 @@ The distinction between these mechanisms is worth keeping:
 - **Namespaces** change which resources a process can see and interact with.
 - **Cgroups** account for and control its use of resources.
 
-Neither one automatically provides every protection an application needs. Capabilities, syscall filtering, filesystem permissions, and security modules also contribute to the result. The core security module will help you choose those protections. For the kernel mechanisms behind them, the optional [Linux primitives deep dive](../advanced/linux-primitives/README.md) lets you inspect what each boundary actually changes.
+Neither one automatically provides every protection an application needs. Capabilities, syscall filtering, filesystem permissions, and security modules also contribute to the result. Choosing a full production security policy is outside this course. The optional [namespaces](../advanced/linux-primitives/02-namespaces.md) and [cgroups](../advanced/linux-primitives/03-cgroups-v2.md) chapters let you inspect the views and budgets we've just distinguished.
 
 ## LXC makes the pieces usable
 
@@ -95,7 +95,7 @@ These are contracts, not an operating system or a guarantee that every image run
 
 **runc** is a low-level implementation of the OCI runtime specification. **containerd** is a service that manages concerns such as image content and container execution, using a low-level runtime to create the container processes.
 
-Docker Engine uses containerd internally, so using Docker doesn't mean containerd is absent: Docker is managing that part for us. We'll follow those steps in the runtime architecture module. If you want to use containerd directly after that, there will be a separate advanced lab; for now, keep using Docker.
+Docker Engine uses containerd internally, so using Docker doesn't mean containerd is absent: Docker is managing that part for us. Here, those names help connect Docker's history to the shared specifications. The course uses Docker throughout; operating these components directly is outside its current scope.
 
 ## Recap
 

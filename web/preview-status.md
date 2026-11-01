@@ -10,6 +10,7 @@ Module 01's existing chapters have completed their first editorial review.
 The fast tracks, core modules 02–07 and the optional Under the hood deep dives
 are drafts, and the current scope
 ends at module 07, whose second part runs a Compose reading-list application.
+The final project is temporarily excluded from this preview.
 CI/CD and Kubernetes teaching are outside that scope. This public preview
 asks search engines not to index its pages, but it isn't private or
 access-controlled.
@@ -62,14 +63,14 @@ compared with those earlier chapters; it doesn't mean every kata variation or
 the entire revised sequence has been tried. The newer checks and their limits
 are listed below.
 
-| Platform | Shell | Core modules 01–07 | Final project | Under the hood | Advanced Compose |
-|----------|-------|--------------------|---------------|----------------|------------------|
-| Windows amd64, Docker Desktop | PowerShell 7 | Checked | Reference solution and all incidents checked | Docker exercises checked | Container tests, integration, Watch and native backup checked |
-| Windows amd64, Docker Desktop | Bash in WSL or Git Bash, Windows Docker client | Checked | Not yet | Docker exercises checked | Not yet |
-| Linux amd64, Docker Engine (GitHub Actions) | Bash | Earlier automated smoke checks; revised checks not yet run here | Starter unit tests | Not yet | Workflow configured; new run not yet |
-| Linux amd64, Docker Engine on a workstation | Bash | Not yet | Not yet | Manual sandbox and containerd labs not yet | Not yet |
-| macOS, Docker Desktop (Apple silicon or Intel) | Bash or zsh | Not yet | Not yet | Not yet | Not yet |
-| Linux arm64 | Bash | Not yet | Not yet | Not yet | Not yet |
+| Platform | Shell | Core modules 01–07 | Under the hood | Advanced Compose |
+|----------|-------|--------------------|----------------|------------------|
+| Windows amd64, Docker Desktop | PowerShell 7 | Checked | Docker exercises checked | Container tests, integration, Watch and native backup checked |
+| Windows amd64, Docker Desktop | Bash in WSL or Git Bash, Windows Docker client | Checked | Docker exercises checked | Not yet |
+| Linux amd64, Docker Engine (GitHub Actions) | Bash | Earlier automated smoke checks; revised checks not yet run here | Not yet | Workflow configured; new run not yet |
+| Linux amd64, Docker Engine on a workstation | Bash | Not yet | Manual sandbox and containerd labs not yet | Not yet |
+| macOS, Docker Desktop (Apple silicon or Intel) | Bash or zsh | Not yet | Not yet | Not yet |
+| Linux arm64 | Bash | Not yet | Not yet | Not yet |
 
 The automated checks in `scripts/check_labs.py` run the fixtures' unit tests
 and Docker smoke checks for the message image and archive, notes and their

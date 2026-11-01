@@ -1,8 +1,8 @@
 # ARK: Containers
 
 A course on Linux containers, using **Docker** throughout the main learning path.
-We'll also explain the components underneath it, including containerd; using
-containerd directly is reserved for optional advanced labs.
+We'll also explain how the client and engine turn a command into running
+processes, and how Linux supplies their resource and isolation boundaries.
 
 You can read the chapters here on GitHub, or in the
 [public preview](https://pethron.github.io/ark-containers/) of the website.
@@ -47,13 +47,11 @@ start a guided module from its first chapter rather than its later steps.
 
 The core includes the theory needed to explain observations and justify
 decisions, not just commands to copy. You don't need the optional deep dives
-to complete the course or its final project.
+to complete the course.
 
 The [syllabus](web/syllabus.md) lists the prerequisites and what you'll be
 able to do at the end of each module. Every module closes with an ungraded
-*Check your understanding* page, and the [final project](capstone/README.md)
-asks you to deploy, diagnose and change an application you haven't seen,
-assessed with a published [rubric](capstone/rubric.md). The
+*Check your understanding* page and includes a kata with acceptance criteria. The
 [glossary](web/glossary.md) and the [references](web/references.md), with
 the software versions the exercises were checked with, cover the whole course.
 
@@ -74,7 +72,7 @@ that starts with PostgreSQL and Nginx, adds Redis as a disposable cache, and
 follows configuration, readiness, logical backup and restore, Compose Watch
 development and an isolated handover. Its files live under
 `advanced/compose-workflows/` and its resources are independent of the small
-Compose stack and the existing capstone. The module's fast track runs this
+Compose stack. The module's fast track runs this
 application.
 
 After module 04, the optional [Docker Hub runbook](04-building-images/optional/publish-to-docker-hub.md)
@@ -89,14 +87,13 @@ Want to understand how Linux and the runtime arrange those boundaries?
 [Under the hood](advanced/README.md) connects advanced explanations and
 experiments to the same application:
 
-- [Linux primitives](advanced/linux-primitives/README.md): processes,
-  namespaces, cgroups, credentials and filesystems.
-- [Runtime architecture](advanced/runtime-architecture/README.md): Docker
-  Engine, containerd, shims, OCI and the wider ecosystem.
+- [Namespaces](advanced/linux-primitives/02-namespaces.md) and
+  [cgroups](advanced/linux-primitives/03-cgroups-v2.md): process views and
+  resource controls.
 - [Images and distribution](advanced/images-and-distribution/README.md):
   versioning conventions, layers, manifests, registries and platform compatibility.
 - [Image builds](advanced/image-builds/README.md): multi-stage builds,
-  BuildKit cache mounts, reproducible inputs and multi-platform builds.
+  BuildKit cache mounts and reproducible inputs.
 - [Container networking](advanced/container-networking/README.md): network
   namespaces, bridges, published ports and the other network drivers.
 
@@ -152,9 +149,11 @@ npm run serve
 ```
 
 The preview server listens on `http://127.0.0.1:4173/ark-containers/`.
-The build includes modules 01–07, the capstone and the optional advanced
-material. Source chapters retain the existing Bash/PowerShell markup; a
-tested staging adapter supplies Docusaurus tabs without making React a
+The build includes modules 01–07 and the advanced material. The final project
+is temporarily excluded from the site; its sources remain in `capstone/`.
+Historical project URLs redirect to module 07. Source chapters retain the
+existing Bash/PowerShell markup; a tested staging adapter supplies Docusaurus
+tabs without making React a
 requirement for writing course prose.
 
 The build inserts and verifies

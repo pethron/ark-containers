@@ -1,3 +1,7 @@
+---
+pagination_next: 04-building-images/01-package-the-service-in-an-image
+---
+
 # 04: Building images
 
 So far the message service has arrived ready-made: you pulled

@@ -1,3 +1,7 @@
+---
+pagination_next: 05-storage/01-give-the-service-a-memory
+---
+
 # 05: Storage
 
 Before starting, predict what happens to a file a container wrote when you

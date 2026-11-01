@@ -1,3 +1,7 @@
+---
+pagination_next: 07-compose/01-describe-the-stack-in-a-file
+---
+
 # 07: Compose
 
 Think about how the frontend and the API started in the networking exercises:
@@ -21,8 +25,9 @@ The example is a local exercise. It doesn't configure health checks or
 secrets, so treat it as a clear starting point for describing a stack and not
 as a deployment template.
 
-Once the small stack is familiar, we'll run a
+After adding a notes service in the kata and checking your understanding
+of the small stack, we'll run a
 [reading-list application](../advanced/compose-workflows/README.md) with a
 database, a proxy and later a cache. That's where health checks, secrets,
-backups and live code changes come in. It starts from its own supplied files,
-so the small stack can stay as it is.
+backups and live code changes come in. Finish the kata's cleanup before
+switching to the application's supplied files.

@@ -1,6 +1,7 @@
 ---
 title: "Bridges and published ports"
 track: architecture
+pagination_next: 06-networking/katas/README
 ---
 
 # Bridges and published ports

@@ -7,7 +7,7 @@ export const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 export const publicSections = [
   '01-why-containers', '02-running-containers', '03-images-and-registries',
   '04-building-images', '05-storage', '06-networking', '07-compose',
-  'advanced', 'capstone',
+  'advanced',
 ];
 const excludedDirectories = new Set(['__pycache__', 'node_modules', 'sources', 'private', 'secrets']);
 const publicExtensions = new Set(['.md', '.py', '.sh', '.ps1', '.mjs', '.js', '.html', '.css', '.json', '.yaml', '.yml', '.txt', '.svg', '.png', '.jpg', '.jpeg', '.webp', '.gif']);

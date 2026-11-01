@@ -18,9 +18,10 @@ not enough evidence.
    application-level result would establish successful recovery from a dump?
 7. Why write a custom-format dump inside the container and copy its file,
    rather than redirecting binary output through every host shell?
-8. Redis returns after an edit it couldn't invalidate. How does the database
-   revision prevent selection of the old entry? Which database queries remain
-   even on a cache hit?
+8. Why does stopping this Redis service leave no old entry to test after
+   restart? Suppose instead a connection failure prevented deletion while
+   Redis kept the old key: how would the database revision prevent its
+   selection? Which database queries remain even on a cache hit?
 9. Watch updates a source file without rebuilding. What causes the running
    Python process to use it, and when does that source become part of an image?
 10. A dependency edit rebuilds the API. Which two checks distinguish a real
@@ -45,7 +46,10 @@ The named volume outlives containers, and a separate logical backup covers
 loss of that storage. Recovery requires matching records through a distinct
 project's API. File-based transfer preserves archive bytes across shells.
 Redis holds expendable query results under revision keys; Postgres remains
-the durable source and supplies a revision check on every read.
+the durable source and supplies a revision check on every read. Stopping this
+non-persistent cache discards its keys. If a connection failure left an old
+key in Redis, a subsequent read would use the newer committed revision
+instead; that is a prediction from the design, not evidence from the restart.
 
 Watch sync plus restart updates imported source, while a manifest edit
 rebuilds and replaces the API with installed dependencies. Building again

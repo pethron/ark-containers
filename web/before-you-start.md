@@ -20,7 +20,6 @@ which folder to open.
 | Git, or a way to download a ZIP | Getting the course files, used from module 04 |
 | A browser or `curl` | Talking to the services you run |
 | `tar` | Inspecting an image archive in module 03 |
-| Python 3.10 or later | Only the final project's tests and incident tool |
 | A Docker Hub account | Only the optional publishing page in module 04 |
 | Access to the Linux engine host, sometimes with `sudo` | Only optional host-side inspections |
 
@@ -28,7 +27,7 @@ You don't need Python for the modules, because the images we run already
 contain it. Most Linux and macOS installations and current Windows versions
 include `tar`; check with `tar --version` before module 03 and install it
 through your operating system's package manager if it is missing. The last
-three rows can wait until you reach those parts of the course.
+two rows can wait until you choose those optional parts of the course.
 
 ## Choose your shell
 
@@ -41,7 +40,6 @@ if needed.
 
 On macOS, use the Bash commands with Docker Desktop, without `sudo`. WSL is an
 optional way to follow the Bash examples on Windows, not a required terminal.
-Later modules are still being adapted to these paired command tabs.
 
 The examples publish ports on the Docker host's `127.0.0.1` address. Docker
 Desktop makes those ports available on your computer; with a remote engine or
@@ -62,9 +60,9 @@ set up a second environment just for this course.
 | Windows or macOS | Docker Desktop, running Linux containers |
 | Linux | Docker Engine, following the guide for your distribution |
 
-For now, use whichever is easiest on your machine. Later, when we inspect Linux
-kernel features directly, we'll need a Linux host or VM we can administer. You
-don't need to prepare that before running your first application.
+Use whichever is easiest on your machine. Some optional inspections of Linux
+kernel features need access to the engine host or a Linux VM you can administer.
+You don't need to prepare that to follow the guided course.
 
 ### Windows and macOS: Docker Desktop
 

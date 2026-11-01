@@ -1,4 +1,8 @@
 export const redirects = {
+  'capstone/index.html': '07-compose/',
+  'capstone/rubric/index.html': '07-compose/',
+  'capstone/starter/index.html': '07-compose/',
+  'capstone/starter/REPORT-template/index.html': '07-compose/',
   '01-why-containers/02-installing-docker/index.html': 'before-you-start/',
   '01-why-containers/first-app/index.html': '04-building-images/message-service/',
   '02-running-containers/first-app/index.html': '04-building-images/message-service/',

@@ -127,5 +127,6 @@ repeats the error because it keeps the same configuration. Read its log
 before removing it and launching a corrected replacement.
 
 The [process explanation](../../../02-running-containers/06-from-docker-run-to-a-process.md)
-provides the underlying context. Module 09 revisits the operational
-implications for recovery and work in progress.
+provides the underlying context. Use the log to distinguish a completed
+shutdown from a forced stop before deciding whether unfinished work needs
+recovery.

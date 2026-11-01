@@ -1,6 +1,7 @@
 ---
 title: "Defining a stack with Compose"
 track: runbook
+pagination_prev: 07-compose/README
 ---
 
 # Defining a stack with Compose

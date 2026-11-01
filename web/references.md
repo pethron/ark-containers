@@ -23,7 +23,6 @@ the chapters explain what to look for rather than an exact match.
 | Advanced Compose database | `postgres:17.6-alpine` |
 | Advanced Compose disposable cache | `redis:7.4.5-alpine` |
 | Advanced Compose proxy | `nginx:1.28.0-alpine` |
-| Python for the final project's tests and incident tool | 3.10 or later (checked with 3.14) |
 
 The [preview status](preview-status.md) page lists the platforms and shells
 the exercises have been run on, and those that haven't been checked yet.
